@@ -27,6 +27,14 @@ namespace Homework_1.MyTree
         /*
             Public interface for getNodeCount, pass in root 
          */
+        public int getDepth()
+        {
+            return 1 + getDepth(this.root); 
+        }
+
+        /*
+            Public interface for getNodeCount, pass in root 
+         */
         public int getNodeCount()
         {
             return getNodeCount(this.root); 
@@ -50,7 +58,19 @@ namespace Homework_1.MyTree
         }
 
         /*
-            Privat getNodeCount - Left, Right, Process -> Post order traversal
+            Private getDepth() - recursively traverse through the tree to find the max depth to get total level count
+         */
+        private int getDepth(Node node)
+        {
+            if (node != null)
+            {
+                return 1 + Math.Max(getDepth(node.Left), getDepth(node.Right));
+            }
+            return -1; 
+        }
+
+        /*
+            Private getNodeCount - Left, Right, Process -> Post order traversal
             Traverse left until null is reached, pop the stack frame to traverse up the tree, then go right until null is reached.
             Once both children are null, we can process the current node by doing + 1. 0 Is returned if node is null
          */

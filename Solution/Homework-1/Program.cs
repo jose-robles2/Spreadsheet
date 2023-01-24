@@ -43,7 +43,8 @@ namespace Homework_1 // Note: actual namespace depends on the project name.
         {
             Console.WriteLine("\nDisplaying tree stats...");
             Console.WriteLine("--------------------------------");
-            Console.WriteLine("Number of items: " + t.getNodeCount()); 
+            Console.WriteLine("Number of items: " + t.getNodeCount());
+            Console.WriteLine("Number of levels: " + t.getDepth());
             Console.WriteLine("--------------------------------");
         }
         static void Main(string[] args)
