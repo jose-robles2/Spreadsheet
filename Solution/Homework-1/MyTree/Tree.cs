@@ -22,10 +22,21 @@ namespace Homework_1.MyTree
             root = null;
         }
 
+        /*
+            Public interface for insertNode, pass in root and the data
+         */
         public bool insertNode(int newData)
         {
             return insertNode(this.root, newData); 
         }
+
+        /*
+            Private insertNode. Recursive function that traverses the tree to insert the newData in the according spot. 
+            Go left if newData is less than current node's data
+            Go right if newData is less than current node's data
+            Insert once left/right node is null
+            Do not allow duplicates to be inserted
+         */
         private bool insertNode(Node tree, int newData)
         {
             if (tree == null)
