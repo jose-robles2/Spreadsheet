@@ -16,9 +16,9 @@ namespace Homework_1.MyTree
         private Node? left; 
         private Node? right;
 
-        public int Data { get; set; }
-        public Node? Left { get; set; }
-        public Node? Right { get; set; }
+        public int Data { get { return data; } set { data = value; } }
+        public Node? Left { get { return left; } set { left = value; } }
+        public Node? Right { get { return right; } set { right = value; } }
 
         public Node (int newData = 0)
         {
