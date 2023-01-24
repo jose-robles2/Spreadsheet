@@ -24,11 +24,36 @@ namespace Homework_1.MyTree
         }
 
         /*
+            Public interface for inOrderTraversal, pass in root 
+         */
+        public void inOrderTraversal()
+        {
+            inOrderTraversal(this.root);
+            Console.Write("\n"); 
+        }
+
+        /*
             Public interface for insertNode, pass in root and the data
          */
         public bool insertNode(int newData)
         {
             return insertNode(this.root, newData); 
+        }
+
+        /*
+            Private inOrderTraversal - Left, Process, Right. 
+            Traverse left until null is reach, pop the stack frame to traverse up the tree, print current node,
+            then check right node. If null, then pop stack frame again to traverse up the tree, else traverse right 
+            sub tree and repeat the process of Left, process, right. 
+         */
+        private void inOrderTraversal(Node node)
+        {
+            if (node != null)
+            {
+                inOrderTraversal(node.Left);
+                Console.Write(node.Data + " ");
+                inOrderTraversal(node.Right);
+            }
         }
 
         /*
@@ -42,7 +67,7 @@ namespace Homework_1.MyTree
         private bool insertNode(Node tree, int newData)
         {
             // Lambda helper functions to traverse left and right
-            Func<Node, int, bool>traverseLeft = (node, newData) => {
+            Func<Node, int, bool> traverseLeft = (node, newData) => {
                 if (tree.Left == null)
                 {
                     tree.Left = new Node(newData);
