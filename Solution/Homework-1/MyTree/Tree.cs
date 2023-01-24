@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Homework_1.MyTree
 {
@@ -24,6 +25,14 @@ namespace Homework_1.MyTree
         }
 
         /*
+            Public interface for getNodeCount, pass in root 
+         */
+        public int getNodeCount()
+        {
+            return getNodeCount(this.root); 
+        }
+
+        /*
             Public interface for inOrderTraversal, pass in root 
          */
         public void inOrderTraversal()
@@ -38,6 +47,23 @@ namespace Homework_1.MyTree
         public bool insertNode(int newData)
         {
             return insertNode(this.root, newData); 
+        }
+
+        /*
+            Privat getNodeCount - Left, Right, Process -> Post order traversal
+            Traverse left until null is reached, pop the stack frame to traverse up the tree, then go right until null is reached.
+            Once both children are null, we can process the current node by doing + 1. 0 Is returned if node is null
+         */
+        private int getNodeCount(Node node)
+        {
+            int count = 0; 
+            if (node != null)
+            {
+                count += getNodeCount(node.Left);
+                count += getNodeCount(node.Right);
+                return count + 1; 
+            }
+            return 0;
         }
 
         /*
