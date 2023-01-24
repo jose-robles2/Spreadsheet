@@ -45,6 +45,7 @@ namespace Homework_1 // Note: actual namespace depends on the project name.
             Console.WriteLine("--------------------------------");
             Console.WriteLine("Number of items: " + t.getNodeCount());
             Console.WriteLine("Number of levels: " + t.getDepth());
+            Console.WriteLine("Theoretical min number of levels this tree could have: " + t.getMinDepth());
             Console.WriteLine("--------------------------------");
         }
         static void Main(string[] args)

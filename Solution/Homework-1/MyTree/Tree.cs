@@ -25,6 +25,25 @@ namespace Homework_1.MyTree
         }
 
         /*
+            Get min depth of a tree given it's node count -> perfect BST has min depth
+            In CptS 317 we did a mathematical proof of induction saying that 2^(h+1) - 1
+            is equal to the number of nodes in a perfect binary tree of height h. This was 
+            proven to be true so that is where the formula is coming from. But, we have the
+            number of nodes already and are looking for the height. When solving for h we get:
+            h = ln(x+1) / ln(2) - 1 where x==num of nodes
+            Height of a tree == depth of a tree. Math.Log(number being log'd, base of the log)
+         */
+        public double getMinDepth()
+        {
+            int nodeCount = getNodeCount();
+            double numerator = 0.0, denominator = 0.0, height = 0.0;
+            numerator = Math.Log(nodeCount+1, Math.E); 
+            denominator = Math.Log(2, Math.E);
+            height = numerator / denominator - 1;
+            return Math.Floor(numerator) + 1;
+        }
+
+        /*
             Public interface for getNodeCount, pass in root 
          */
         public int getDepth()
