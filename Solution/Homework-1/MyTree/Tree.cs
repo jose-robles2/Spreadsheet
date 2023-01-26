@@ -9,21 +9,17 @@ using System.Xml.Linq;
 
 namespace Homework_1.MyTree
 {
-    /*
-        Tree class. Made up of Node class objects. Has a single data member named root which points
-        to the root, or the beginning of the tree. Nodes must be nullable types so add the '?'
-     */
+    /********************************************************************************************
+     * Class: Tree																				*
+     * Description:	Tree class. Made up of Node objects. Has a single data member damed root    *
+     * which points to the start of the tree. Has default constructor                           *
+     *******************************************************************************************/
     internal class Tree
     {
         private Node? root;
-
-        public Node? Root { get { return root; } } 
-
-        public Tree()
-        {
-            root = null;
-        }
-
+        public Node? Root { get { return root; } }
+        public Tree() => root = null;
+        
         /*
             Get min depth of a tree given it's node count -> perfect BST has min depth
             In CptS 317 we did a mathematical proof of induction saying that 2^(h+1) - 1
@@ -35,6 +31,7 @@ namespace Homework_1.MyTree
          */
         public double getMinDepth()
         {
+            //https://www.javatpoint.com/relationship-between-number-of-nodes-and-height-of-binary-tree
             int nodeCount = getNodeCount();
             double numerator = 0.0, denominator = 0.0, height = 0.0;
             numerator = Math.Log(nodeCount+1, Math.E); 
@@ -44,7 +41,7 @@ namespace Homework_1.MyTree
         }
 
         /*
-            Public interface for getNodeCount, pass in root 
+            Public interface for getDepth, pass in root 
          */
         public int getDepth()
         {
