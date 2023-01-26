@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -19,7 +21,7 @@ namespace Homework_1.MyTree
         private Node? root;
         public Node? Root { get { return root; } }
         public Tree() => root = null;
-        
+
         /*
             Get min depth of a tree given it's node count -> perfect BST has min depth
             In CptS 317 we did a mathematical proof of induction saying that 2^(h+1) - 1
@@ -29,123 +31,143 @@ namespace Homework_1.MyTree
             h = ln(x+1) / ln(2) - 1 where x==num of nodes
             Height of a tree == depth of a tree. Math.Log(number being log'd, base of the log)
          */
-        public double getMinDepth()
+        /// <summary>
+        /// Get min depth of a tree given it's node count -> perfect BST has min depth
+        /// In CptS 317 we did a mathematical proof of induction saying that 2^(h+1) - 1
+        /// is equal to the number of nodes in a perfect binary tree of height h.This was
+        /// proven to be true so that is where the formula is coming from.But, we have the
+        /// number of nodes already and are looking for the height. When solving for h we get:
+        /// h = ln(x + 1) / ln(2) - 1 where x==num of nodes
+        /// Height of a tree == depth of a tree. Math.Log(number being log'd, base of the log)
+        /// </summary>
+        /// <returns> integer for min level count</returns>
+        public int GetMinDepth()
         {
             //https://www.javatpoint.com/relationship-between-number-of-nodes-and-height-of-binary-tree
-            int nodeCount = getNodeCount();
+            int nodeCount = GetNodeCount();
             double numerator = 0.0, denominator = 0.0, height = 0.0;
             numerator = Math.Log(nodeCount+1, Math.E); 
             denominator = Math.Log(2, Math.E);
             height = numerator / denominator - 1;
-            return Math.Floor(numerator) + 1;
+            return (int)Math.Floor(numerator) + 1;
         }
 
-        /*
-            Public interface for getDepth, pass in root 
-         */
-        public int getDepth()
+        /// <summary>
+        /// Public interface for GetDepth, pass in root 
+        /// </summary>
+        public int GetDepth()
         {
-            return 1 + getDepth(this.root); 
+            return 1 + GetDepth(this.root); 
         }
 
-        /*
-            Public interface for getNodeCount, pass in root 
-         */
-        public int getNodeCount()
+        /// <summary>
+        /// Public interface for GetNodeCount, pass in root 
+        /// </summary>
+        public int GetNodeCount()
         {
-            return getNodeCount(this.root); 
+            return GetNodeCount(this.root); 
         }
 
-        /*
-            Public interface for inOrderTraversal, pass in root 
-         */
-        public void inOrderTraversal()
+        /// <summary>
+        /// Public interface for InOrderTraversal, pass in root 
+        /// </summary>
+        public void InOrderTraversal()
         {
-            inOrderTraversal(this.root);
+            InOrderTraversal(this.root);
             Console.Write("\n"); 
         }
 
-        /*
-            Public interface for insertNode, pass in root and the data
-         */
-        public bool insertNode(int newData)
+        /// <summary>
+        /// Public interface for InsertNode, pass in root and newData
+        /// </summary>
+        public bool InsertNode(int newData)
         {
-            return insertNode(this.root, newData); 
+            return InsertNode(this.root, newData); 
         }
 
-        /*
-            Private getDepth() - recursively traverse through the tree to find the max depth to get total level count
-         */
-        private int getDepth(Node node)
+        /// <summary>
+        /// Private getDepth() - recursively traverse through the tree to find the max depth to get total level count
+        /// </summary>
+        private int GetDepth(Node node)
         {
             if (node != null)
             {
-                return 1 + Math.Max(getDepth(node.Left), getDepth(node.Right));
+                return 1 + Math.Max(GetDepth(node.Left), GetDepth(node.Right));
             }
             return -1; 
         }
 
-        /*
-            Private getNodeCount - Left, Right, Process -> Post order traversal
-            Traverse left until null is reached, pop the stack frame to traverse up the tree, then go right until null is reached.
-            Once both children are null, we can process the current node by doing + 1. 0 Is returned if node is null
-         */
-        private int getNodeCount(Node node)
+        /// <summary>
+        /// Private getNodeCount - Left, Right, Process -> Post order traversal
+        /// Traverse left until null is reached, pop the stack frame to traverse up the tree, then go right until null is reached.
+        /// Once both children are null, we can process the current node by doing + 1. 0 Is returned if node is null
+        /// </summary>
+        /// <param name="node"> Node object, will represent root initially then internal nodes due to recursion </param>
+        /// <returns> Integer total node count </returns>
+        private int GetNodeCount(Node node)
         {
             int count = 0; 
             if (node != null)
             {
-                count += getNodeCount(node.Left);
-                count += getNodeCount(node.Right);
+                count += GetNodeCount(node.Left);
+                count += GetNodeCount(node.Right);
                 return count + 1; 
             }
             return 0;
         }
 
-        /*
-            Private inOrderTraversal - Left, Process, Right. 
-            Traverse left until null is reach, pop the stack frame to traverse up the tree, print current node,
-            then check right node. If null, then pop stack frame again to traverse up the tree, else traverse right 
-            sub tree and repeat the process of Left, process, right. 
-         */
-        private void inOrderTraversal(Node node)
+        /// <summary>
+        /// Private inOrderTraversal - Left, Process, Right.
+        /// Traverse left until null is reach, pop the stack frame to traverse up the tree, print current node,
+        /// then check right node.If null, then pop stack frame again to traverse up the tree, else traverse right
+        /// sub tree and repeat the process of Left, process, right.
+        /// </summary>
+        /// <param name="node"> Node object, will represent root initially then internal nodes due to recursion </param>
+        /// <returns> void </returns>
+        private void InOrderTraversal(Node node)
         {
             if (node != null)
             {
-                inOrderTraversal(node.Left);
+                InOrderTraversal(node.Left);
                 Console.Write(node.Data + " ");
-                inOrderTraversal(node.Right);
+                InOrderTraversal(node.Right);
             }
         }
 
-        /*
-            Private insertNode. Recursive function that traverses the tree to insert the newData in the according spot. 
-            Utilizes lambda functions to traverse both left and right subtrees of the tree.
-            Go left if newData is less than current node's data
-            Go right if newData is less than current node's data
-            Insert once left/right node is null
-            Do not allow duplicates to be inserted
-         */
-        private bool insertNode(Node tree, int newData)
+        /// <summary>
+        /// Private insertNode.Recursive function that traverses the tree to insert the newData in the according spot.
+        /// Utilizes lambda functions to traverse both left and right subtrees of the tree.Go left if newData is less
+        /// than current node's data Go right if newData is less than current node's data. Insert once left/right node 
+        /// is null. Do not allow duplicates to be inserted
+        /// </summary>
+        /// <param name="tree"> Node object, will represent root initially then internal nodes due to recursion </param>
+        /// <param name="newData"> Integer to be inserted in tree </param>
+        /// <returns> bool - successful or failed insert </returns>
+        private bool InsertNode(Node tree, int newData)
         {
-            // Lambda helper functions to traverse left and right
-            Func<Node, int, bool> traverseLeft = (node, newData) => {
-                if (tree.Left == null)
+            /// <summary>
+            /// Lambda helper to traverse left. Check if null to insert, else recursion
+            /// </summary>            
+            Func<Node, int, bool> TraverseLeft = (node, newData) => {
+            if (tree.Left == null)
                 {
                     tree.Left = new Node(newData);
                     return true;
                 }
-                insertNode(tree.Left, newData);
+                InsertNode(tree.Left, newData);
                 return false; 
             };
-            Func<Node, int, bool> traverseRight = (node, newData) =>
+            /// <summary>
+            /// Lambda helper to traverse right. Check if null to insert, else recursion
+            /// </summary>  
+            Func<Node, int, bool> TraverseRight = (node, newData) =>
             {
                 if (tree.Right == null)
                 {
                     tree.Right = new Node(newData);
                     return true;
                 }
-                insertNode(tree.Right, newData);
+                InsertNode(tree.Right, newData);
                 return false;
             };
 
@@ -157,11 +179,11 @@ namespace Homework_1.MyTree
             {
                 if (newData < tree.Data)
                 {
-                    return traverseLeft(tree.Left, newData);
+                    return TraverseLeft(tree.Left, newData);
                 }
                 else if (newData > tree.Data)
                 {
-                    return traverseRight(tree.Right, newData);  
+                    return TraverseLeft(tree.Right, newData);  
                 }
                 else
                 {
