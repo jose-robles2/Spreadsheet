@@ -22,34 +22,24 @@ namespace Homework_1.MyTree
         public Node? Root { get { return root; } }
         public Tree() => root = null;
 
-        /*
-            Get min depth of a tree given it's node count -> perfect BST has min depth
-            In CptS 317 we did a mathematical proof of induction saying that 2^(h+1) - 1
-            is equal to the number of nodes in a perfect binary tree of height h. This was 
-            proven to be true so that is where the formula is coming from. But, we have the
-            number of nodes already and are looking for the height. When solving for h we get:
-            h = ln(x+1) / ln(2) - 1 where x==num of nodes
-            Height of a tree == depth of a tree. Math.Log(number being log'd, base of the log)
-         */
+        //https://www.javatpoint.com/relationship-between-number-of-nodes-and-height-of-binary-tree
+
         /// <summary>
         /// Get min depth of a tree given it's node count -> perfect BST has min depth
         /// In CptS 317 we did a mathematical proof of induction saying that 2^(h+1) - 1
-        /// is equal to the number of nodes in a perfect binary tree of height h.This was
-        /// proven to be true so that is where the formula is coming from.But, we have the
-        /// number of nodes already and are looking for the height. When solving for h we get:
-        /// h = ln(x + 1) / ln(2) - 1 where x==num of nodes
-        /// Height of a tree == depth of a tree. Math.Log(number being log'd, base of the log)
+        /// is equal to the number of nodes in a perfect binary tree of height h. But, we 
+        /// have the number of nodes already and are looking for the height. So a variation
+        /// of this equation will be needed. When searching online, I found the following article: 
+        /// https://www.javatpoint.com/relationship-between-number-of-nodes-and-height-of-binary-tree
+        /// h = ln(x) where x==num of nodes, we will do ln(x) + 1 since the article talks about height
+        /// and the root isnt included in the height whereas we're doing "levels" and the root is included
         /// </summary>
         /// <returns> integer for min level count</returns>
         public int GetMinDepth()
         {
-            //https://www.javatpoint.com/relationship-between-number-of-nodes-and-height-of-binary-tree
             int nodeCount = GetNodeCount();
-            double numerator = 0.0, denominator = 0.0, height = 0.0;
-            numerator = Math.Log(nodeCount+1, Math.E); 
-            denominator = Math.Log(2, Math.E);
-            height = numerator / denominator - 1;
-            return (int)Math.Floor(numerator) + 1;
+            double res = Math.Floor(Math.Log2(nodeCount)) + 1;
+            return (int)res;
         }
 
         /// <summary>
