@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace Homework_1
 {
-    /********************************************************************************************
-     * Class: App																				*
-     * Description:	Node class object. The BST is composed of these objects. An integer datatype*
-     * is stored in each node, as well as the left and right child nodes. Nodes must be nullable*
-     * types so the '?' is included after theyre declared. Contains parameterized constructor   *
-     *******************************************************************************************/
+    /// <summary>
+    /// Class: App
+    /// Instantiated from main, contains driving code for the application's lifetime. First asks for user
+    /// input, then creates a Tree and calls Tree functions to product output onto the console. 
+    /// </summary>
     internal class App
     {
         /// <summary>

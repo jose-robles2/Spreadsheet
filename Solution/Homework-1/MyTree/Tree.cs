@@ -11,18 +11,15 @@ using System.Xml.Linq;
 
 namespace Homework_1.MyTree
 {
-    /********************************************************************************************
-     * Class: Tree																				*
-     * Description:	Tree class. Made up of Node objects. Has a single data member damed root    *
-     * which points to the start of the tree. Has default constructor                           *
-     *******************************************************************************************/
+    /// <summary>
+    /// Class: Tree
+    /// Made up of Node objects. Has a single data member damed root 
+    /// which points to the start of the tree.Has default constructor
+    /// </summary>
     internal class Tree
     {
         private Node? root;
         public Node? Root { get { return root; } }
-        public Tree() => root = null;
-
-        //https://www.javatpoint.com/relationship-between-number-of-nodes-and-height-of-binary-tree
 
         /// <summary>
         /// Get min depth of a tree given it's node count -> perfect BST has min depth
@@ -183,5 +180,11 @@ namespace Homework_1.MyTree
             }
             return true;  
         }
+        
+        /// <summary>
+        /// Default Constructor 
+        /// </summary>
+        public Tree() => root = null;
+
     }
 }
