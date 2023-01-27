@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Homework_1.MyTree
+namespace HomeworkOne.MyTree
 {
     /// <summary>
     /// Class: Node
