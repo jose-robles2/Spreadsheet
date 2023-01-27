@@ -15,6 +15,23 @@ namespace HomeworkOne
     internal class App
     {
         /// <summary>
+        /// Default constructor 
+        /// </summary>
+        public App() => RunApp();
+        
+        /// <summary>
+        /// Driving code to run the app
+        /// </summary>
+        /// <returns> void </returns>
+        private void RunApp()
+        {
+            int[] input = GetUserInput();
+            Tree t = CreateTree(input);
+            DisplaySortedTree(t);
+            DisplayTreeStats(t);
+        }
+
+        /// <summary>
         /// Get user input from user, assume input is entered correctly EVERY time. Read input and
         /// parse into an array of strings, then into an array of ints using ConvertAll() method
         /// </summary>
@@ -71,22 +88,5 @@ namespace HomeworkOne
             Console.WriteLine("Theoretical min number of levels this tree could have: " + t.GetMinDepth());
             Console.WriteLine("--------------------------------");
         }
-
-        /// <summary>
-        /// Driving code to run the app
-        /// </summary>
-        /// <returns> void </returns>
-        private void RunApp()
-        {
-            int[] input = GetUserInput();
-            Tree t = CreateTree(input);
-            DisplaySortedTree(t);
-            DisplayTreeStats(t);
-        }
-
-        /// <summary>
-        /// Default constructor - arrow function
-        /// </summary>
-        public App() => RunApp(); 
     }
 }

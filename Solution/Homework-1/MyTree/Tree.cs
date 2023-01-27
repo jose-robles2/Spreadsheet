@@ -22,6 +22,11 @@ namespace HomeworkOne.MyTree
         public Node? Root { get { return root; } }
 
         /// <summary>
+        /// Default Constructor 
+        /// </summary>
+        public Tree() => root = null;
+
+        /// <summary>
         /// Get min depth of a tree given it's node count -> perfect BST has min depth
         /// In CptS 317 we did a mathematical proof of induction saying that 2^(h+1) - 1
         /// is equal to the number of nodes in a perfect binary tree of height h. But, we 
@@ -170,7 +175,7 @@ namespace HomeworkOne.MyTree
                 }
                 else if (newData > tree.Data)
                 {
-                    return TraverseLeft(tree.Right, newData);  
+                    return TraverseRight(tree.Right, newData);  
                 }
                 else
                 {
@@ -180,11 +185,5 @@ namespace HomeworkOne.MyTree
             }
             return true;  
         }
-        
-        /// <summary>
-        /// Default Constructor 
-        /// </summary>
-        public Tree() => root = null;
-
     }
 }

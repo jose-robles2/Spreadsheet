@@ -21,14 +21,14 @@ namespace HomeworkOne.MyTree
         private Node? left; 
         private Node? right;
 
-        public int Data { get { return data; } set { data = value; } }
-        public Node? Left { get { return left; } set { left = value; } }
-        public Node? Right { get { return right; } set { right = value; } }
-
         /// <summary>
         /// Parameterized constructor. 
         /// </summary>
         /// <param name="newData"> Data passed in to initialize the Node. Optional parameter due to the "= 0"</param>
-        public Node (int newData = 0) => data = newData;
+        public Node(int newData = 0) => data = newData;
+
+        public int Data { get { return data; } set { data = value; } }
+        public Node? Left { get { return left; } set { left = value; } }
+        public Node? Right { get { return right; } set { right = value; } }
     }
 }
