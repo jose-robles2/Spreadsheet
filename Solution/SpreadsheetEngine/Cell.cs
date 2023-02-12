@@ -16,12 +16,17 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Index for a row.
         /// </summary>
-        protected int rowIndex;
+        protected readonly int rowIndex;
 
         /// <summary>
         /// Index for a column.
         /// </summary>
-        protected int columnIndex;
+        protected readonly int columnIndex;
+
+        /// <summary>
+        /// Name of a cell. Ex: "2,3, 4,2" -> "row,column".
+        /// </summary>
+        protected readonly string name;
 
         /// <summary>
         /// The actual text contained in the cell.
@@ -44,6 +49,7 @@ namespace SpreadsheetEngine
         {
             this.rowIndex = rowIndex;
             this.columnIndex = columnIndex;
+            this.name = columnIndex + "," + rowIndex;
             this.text = text;
             this.value = value;
         }
@@ -70,6 +76,14 @@ namespace SpreadsheetEngine
         public int ColumnIndex
         {
             get { return this.columnIndex; }
+        }
+
+        /// <summary>
+        /// Gets readonly name.
+        /// </summary>
+        public string Name
+        {
+            get { return this.name; }
         }
 
         /// <summary>
