@@ -50,7 +50,9 @@ namespace SpreadsheetEngine
 
         /// <summary>
         /// Event object representing a list of delegates (subscribers) that need to be notified
-        /// when a certain event is triggered. Can add or remove delegates.
+        /// when a certain event is triggered. Can add or remove delegates. When a cell's Text
+        /// property is changed, we must call this.PropertyChanges() to invoke the delegates
+        /// subsribed to this event.
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged = (sender, e) => { };
 
@@ -73,6 +75,8 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Gets or sets the text for the cell. If new text is being set, notify all
         /// delegates subscribed (Spreadsheet.cs) to this observer about a change in property "Text".
+        /// Since each cell has this PropertyChanged field, if any cell is changed, the corresponding
+        /// cell will invoke the delegate so that spreadsheet.cs knows that that specific cell was changed.
         /// </summary>
         public string Text
         {

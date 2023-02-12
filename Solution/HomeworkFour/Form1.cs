@@ -12,7 +12,7 @@ namespace HomeworkFour
     public partial class Form1 : Form
     {
         /// <summary>
-        /// Constant pointing to the number of rows for the app.
+        /// Constant pointing to the number of rows for the UI of the app.
         /// </summary>
         private const int NUMROWS = 50;
 
@@ -26,13 +26,14 @@ namespace HomeworkFour
         }
 
         /// <summary>
-        /// Initialize the data grid by creating columns A to Z. Create a list of 26 chars and convert
-        /// to string so that they can be inserted as column name, and header using the Add() method.
+        /// Initialize the data grid front end component by creating columns A to Z. Create a list of 26
+        /// chars and use ToString() so that they can be inserted as column name, and header using the Add() method.
         /// Then create 50 rows.
         /// </summary>
         private void InitializeDataGrid()
         {
-            List<char> alphabet = Enumerable.Range('A', 26).Select(i => (char)i).ToList();
+            IEnumerable<int> range = Enumerable.Range('A', 26);
+            List<char> alphabet = range.Select(i => (char)i).ToList();
 
             foreach (char c in alphabet)
             {
