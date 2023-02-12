@@ -47,7 +47,7 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Event that is triggered when any property of cells in the 2D array changes.
         /// </summary>
-        public event EventHandler<PropertyChangedEventArgs>? CellPropertyChanged;
+        public event PropertyChangedEventHandler CellPropertyChanged;
 
         /// <summary>
         /// Gets the row count.
