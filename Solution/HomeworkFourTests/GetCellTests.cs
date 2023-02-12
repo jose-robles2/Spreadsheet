@@ -53,8 +53,7 @@ namespace HomeworkFourTests
         /// <returns> 2D Concrete cell array. </returns>
         public SpreadsheetTest CreateSpreadsheet(string[,] content)
         {
-            int rows = content.Length, cols = content.Length;
-            SpreadsheetTest s = new SpreadsheetTest(rows, cols);
+            SpreadsheetTest s = new SpreadsheetTest(2, 2);
             return s;
         }
 
@@ -65,8 +64,8 @@ namespace HomeworkFourTests
         public void GetCellTestNormal()
         {
             this.spreadsheet.SetCell(0, 0, this.content[0, 0]);
-            Cell cell = this.spreadsheet.GetCell(0, 0);
-            Assert.That(cell.Text, Is.EqualTo("hello"));
+            Cell? cell = this.spreadsheet.GetCell(0, 0);
+            Assert.That(cell?.Text, Is.EqualTo("hello"));
         }
 
         /// <summary>
@@ -76,7 +75,7 @@ namespace HomeworkFourTests
         public void GetCellTestEdge()
         {
             this.spreadsheet.SetCell(1, 1, this.content[1, 1]);
-            Cell cell = this.spreadsheet.GetCell(1, 1);
+            Cell? cell = this.spreadsheet.GetCell(1, 1);
             Assert.That(cell?.Text, Is.EqualTo("world"));
         }
 

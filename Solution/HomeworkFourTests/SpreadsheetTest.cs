@@ -71,7 +71,16 @@ namespace HomeworkFourTests
         /// <returns> Return abstract Cell base type. </returns>
         public Cell? GetCell(int row, int column)
         {
-            return null;
+            if (row >= this.RowCount && column >= this.ColumnCount)
+            {
+                throw new ArgumentException("Row or column exceed the index size of the matrix.");
+            }
+            else if (this.matrix[row, column] == null)
+            {
+                return null;
+            }
+
+            return (Cell)this.matrix[row, column];
         }
 
         /// <summary>
