@@ -52,7 +52,7 @@ namespace SpreadsheetEngine
         /// Event object representing a list of delegates (subscribers) that need to be notified
         /// when a certain event is triggered. Can add or remove delegates.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
+        public event PropertyChangedEventHandler? PropertyChanged = (sender, e) => { };
 
         /// <summary>
         /// Gets readonly rowIndex.

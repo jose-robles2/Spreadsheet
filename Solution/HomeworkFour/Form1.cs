@@ -10,6 +10,11 @@ namespace HomeworkFour
     public partial class Form1 : Form
     {
         /// <summary>
+        /// Constant pointing to the number of rows for the app.
+        /// </summary>
+        private const int NUMROWS = 50;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
         /// </summary
         public Form1()
@@ -32,7 +37,7 @@ namespace HomeworkFour
                 this.dataGridView1.Columns.Add(c.ToString(), c.ToString());
             }
 
-            for (int i = 1; i <= 50; i++)
+            for (int i = 1; i <= NUMROWS; i++)
             {
                 this.dataGridView1.Rows.Add(i.ToString());
             }

@@ -9,11 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="stylecop.json" />
+    <None Remove="Stylecop\stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
+    <AdditionalFiles Include="Stylecop\stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
