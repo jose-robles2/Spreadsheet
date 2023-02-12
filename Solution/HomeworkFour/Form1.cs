@@ -15,6 +15,21 @@ namespace HomeworkFour
         public Form1()
         {
             this.InitializeComponent();
+            this.InitializeDataGrid();
+        }
+
+        /// <summary>
+        /// Initialize the data grid by creating columns A to Z. Create a list of 26 chars and convert
+        /// to string so that they can be inserted as column name, and header using the Add() method.
+        /// </summary>
+        private void InitializeDataGrid()
+        {
+            List<char> alphabet = Enumerable.Range('A', 26).Select(i => (char)i).ToList();
+
+            foreach (char c in alphabet)
+            {
+                this.dataGridView1.Columns.Add(c.ToString(), c.ToString());
+            }
         }
     }
 }
