@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HomeworkFour\HomeworkFour.csproj" />
+    <ProjectReference Include="..\SpreadsheetEngine\SpreadsheetEngine.csproj" />
   </ItemGroup>
 
 </Project>

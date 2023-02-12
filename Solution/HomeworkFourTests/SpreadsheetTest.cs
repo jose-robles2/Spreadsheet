@@ -1,20 +1,18 @@
-﻿// <copyright file="Spreadsheet.cs" company="Jose Robles">
+﻿// <copyright file="SpreadsheetTest.cs" company="Jose Robles">
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SpreadsheetEngine;
 
-namespace SpreadsheetEngine
+namespace HomeworkFourTests
 {
     /// <summary>
-    /// Container and factory object for a 2D array of cell objects.
+    /// Testing class for the spreadsheet.cs class. In order to test certain methods, some setup needs
+    /// to occur first, which cannot be done with the production version of spreadsheet.cs. We need access
+    /// to certain internal methods like setCell() to setup our test spreadsheet.
     /// </summary>
-    public class Spreadsheet
+    public class SpreadsheetTest
     {
         /// <summary>
         /// Number of rows.
@@ -32,11 +30,11 @@ namespace SpreadsheetEngine
         private ConcreteCell[,] matrix;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Spreadsheet"/> class.
+        /// Initializes a new instance of the <see cref="SpreadsheetTest"/> class.
         /// </summary>
         /// <param name="rows"> Number of rows. </param>
         /// <param name="cols"> Number of columns. </param>
-        public Spreadsheet(int rows, int cols)
+        public SpreadsheetTest(int rows, int cols)
         {
             this.matrix = new ConcreteCell[rows, cols];
             this.rowCount = rows;
@@ -71,9 +69,20 @@ namespace SpreadsheetEngine
         /// <param name="row"> Row index. </param>
         /// <param name="column"> Column index. </param>
         /// <returns> Return abstract Cell base type. </returns>
-        public Cell GetCell(int row, int column)
+        public Cell? GetCell(int row, int column)
         {
             return null;
+        }
+
+        /// <summary>
+        /// Internal SetCell method used for testing the GetCell method.
+        /// </summary>
+        /// <param name="row"> Row index. </param>
+        /// <param name="col"> Col index. </param>
+        /// <param name="text"> Text value. </param>
+        internal void SetCell(int row, int col, string text)
+        {
+            this.matrix[row, col].Text = text;
         }
 
         /// <summary>
