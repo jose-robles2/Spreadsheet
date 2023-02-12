@@ -72,7 +72,7 @@ namespace SpreadsheetEngine
 
         /// <summary>
         /// Gets or sets the text for the cell. If new text is being set, notify all
-        /// delegates subscribed to this observer about a change in property "Text".
+        /// delegates subscribed (Spreadsheet.cs) to this observer about a change in property "Text".
         /// </summary>
         public string Text
         {
