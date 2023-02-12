@@ -39,16 +39,9 @@ namespace SpreadsheetEngine
         public Spreadsheet(int rows, int cols)
         {
             this.matrix = new ConcreteCell[rows, cols];
-            for (int row = 0; row < rows; row++)
-            {
-                for (int col = 0; col < cols; col++)
-                {
-                    // Instantiate each cell and make the Spreadsheet's CellPropertyChanged
-                    // delegate subscribe to the Cell objects event.
-                    this.matrix[row, col] = new ConcreteCell(row, col);
-                    this.matrix[row, col].PropertyChanged += this.HandleCellPropertyChanged;
-                }
-            }
+            this.rowCount = rows;
+            this.columnCount = cols;
+            this.FillMatrix();
         }
 
         /// <summary>
@@ -81,6 +74,20 @@ namespace SpreadsheetEngine
         public Cell GetCell(int row, int column)
         {
             return null;
+        }
+
+        private void FillMatrix()
+        {
+            for (int row = 0; row < this.RowCount; row++)
+            {
+                for (int col = 0; col < this.ColumnCount; col++)
+                {
+                    // Instantiate each cell and make the Spreadsheet's CellPropertyChanged
+                    // delegate subscribe to the Cell objects event.
+                    this.matrix[row, col] = new ConcreteCell(row, col);
+                    this.matrix[row, col].PropertyChanged += this.HandleCellPropertyChanged;
+                }
+            }
         }
 
         /// <summary>
