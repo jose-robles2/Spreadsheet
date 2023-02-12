@@ -2,6 +2,8 @@
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
 
+using SpreadsheetEngine;
+
 namespace HomeworkFour
 {
     /// <summary>
