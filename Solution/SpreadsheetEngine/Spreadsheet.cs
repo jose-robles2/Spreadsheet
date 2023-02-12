@@ -76,6 +76,9 @@ namespace SpreadsheetEngine
             return null;
         }
 
+        /// <summary>
+        /// Instantiates each cell of the matrix with a new concrete cell object.
+        /// </summary>
         private void FillMatrix()
         {
             for (int row = 0; row < this.RowCount; row++)
