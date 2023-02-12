@@ -36,16 +36,16 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
-        /// <param name="newRowIndex"> Index of the row. </param>
-        /// <param name="newColumnIndex"> Index of the column. </param>
-        /// <param name="newText"> Text content. </param>
-        /// <param name="newValue"> Cell's value content. </param>
-        public Cell(int newRowIndex = 0, int newColumnIndex = 0, string newText = "", string newValue = "")
+        /// <param name="rowIndex"> Index of the row. </param>
+        /// <param name="columnIndex"> Index of the column. </param>
+        /// <param name="text"> Text content. </param>
+        /// <param name="value"> Cell's value content. </param>
+        public Cell(int rowIndex = 0, int columnIndex = 0, string text = "", string value = "")
         {
-            this.rowIndex = newRowIndex;
-            this.columnIndex = newColumnIndex;
-            this.text = newText;
-            this.value = newValue;
+            this.rowIndex = rowIndex;
+            this.columnIndex = columnIndex;
+            this.text = text;
+            this.value = value;
         }
 
         /// <summary>
