@@ -88,7 +88,10 @@ namespace SpreadsheetEngine
                     this.text = value;
                 }
 
-                this.PropertyChanged(this, new PropertyChangedEventArgs("Text"));
+                if (this.PropertyChanged != null)
+                {
+                    this.PropertyChanged(this, new PropertyChangedEventArgs("Text"));
+                }
             }
         }
 
