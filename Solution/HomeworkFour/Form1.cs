@@ -21,6 +21,7 @@ namespace HomeworkFour
         /// <summary>
         /// Initialize the data grid by creating columns A to Z. Create a list of 26 chars and convert
         /// to string so that they can be inserted as column name, and header using the Add() method.
+        /// Then create 50 rows.
         /// </summary>
         private void InitializeDataGrid()
         {
@@ -29,6 +30,11 @@ namespace HomeworkFour
             foreach (char c in alphabet)
             {
                 this.dataGridView1.Columns.Add(c.ToString(), c.ToString());
+            }
+
+            for (int i = 1; i <= 50; i++)
+            {
+                this.dataGridView1.Rows.Add(i.ToString());
             }
         }
     }
