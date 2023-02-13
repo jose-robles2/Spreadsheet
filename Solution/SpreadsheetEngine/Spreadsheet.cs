@@ -22,12 +22,12 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Number of rows.
         /// </summary>
-        private int rowCount;
+        private readonly int rowCount;
 
         /// <summary>
         /// Number of columns.
         /// </summary>
-        private int columnCount;
+        private readonly int columnCount;
 
         /// <summary>
         /// 2D array that contains the cells that correspond to the UI's cells.
@@ -134,20 +134,20 @@ namespace SpreadsheetEngine
                         // the remaining part is the name of the cell we need to copy a value from.
                         string cellName = cell.Text.Substring(1);
 
-                        Cell? refCell = this.SearchCell(cellName);
+                        Cell refCell = this.SearchCell(cellName);
+                        cell.Value = refCell.Value;
+                        this.CellPropertyChanged?.Invoke(cell, e);
                     }
                     else
                     {
                         cell.Value = cell.Text;
                     }
-
-                    this.CellPropertyChanged?.Invoke(cell, e);
                 }
             }
         }
 
         /// <summary>
-        /// Return the cell corresponding to the cellName. Make 
+        /// Return the cell corresponding to the cellName.
         /// </summary>
         /// <param name="cellName"> Cell name to search for. </param>
         /// <returns> Cell base object. </returns>
