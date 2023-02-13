@@ -3,9 +3,9 @@
 // </copyright>
 
 using System.ComponentModel;
-using SpreadsheetEngine;
+using HomeworkFour;
 
-namespace HomeworkFourTests
+namespace HomeworkFourTests.SpreadsheetEngineTests.TestClasses
 {
     /// <summary>
     /// Testing class for the spreadsheet.cs class. In order to test certain methods, some setup needs
@@ -27,7 +27,12 @@ namespace HomeworkFourTests
         /// <summary>
         /// 2D array that contains the cells that correspond to the UI's cells.
         /// </summary>
-        private ConcreteCell[,] matrix;
+        private ConcreteCellTest[,] matrix;
+
+        /// <summary>
+        /// Dictionary that serves to allow for quick access of Cells when only given a cell name.
+        /// </summary>
+        private Dictionary<string, Tuple<int, int>> cellIndexes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpreadsheetTest"/> class.
@@ -36,7 +41,8 @@ namespace HomeworkFourTests
         /// <param name="cols"> Number of columns. </param>
         public SpreadsheetTest(int rows, int cols)
         {
-            this.matrix = new ConcreteCell[rows, cols];
+            this.matrix = new ConcreteCellTest[rows, cols];
+            this.cellIndexes = new Dictionary<string, Tuple<int, int>>();
             this.rowCount = rows;
             this.columnCount = cols;
             this.FillMatrix();
@@ -69,7 +75,7 @@ namespace HomeworkFourTests
         /// <param name="row"> Row index. </param>
         /// <param name="column"> Column index. </param>
         /// <returns> Return abstract Cell base type. </returns>
-        public Cell? GetCell(int row, int column)
+        public CellTest? GetCell(int row, int column)
         {
             if (row >= this.RowCount && column >= this.ColumnCount)
             {
@@ -80,7 +86,7 @@ namespace HomeworkFourTests
                 return null;
             }
 
-            return (Cell)this.matrix[row, column];
+            return this.matrix[row, column];
         }
 
         /// <summary>
@@ -105,24 +111,53 @@ namespace HomeworkFourTests
                 {
                     // Instantiate each cell and make the Spreadsheet's CellPropertyChanged
                     // delegate subscribe to the Cell objects event.
-                    this.matrix[row, col] = new ConcreteCell(row, col);
+                    this.matrix[row, col] = new ConcreteCellTest(row, col);
                     this.matrix[row, col].PropertyChanged += this.HandleCellPropertyChanged;
                 }
             }
         }
 
         /// <summary>
-        /// Method for the observer. The broadcaster (Cell) will add this method as a delegate and will notify
-        /// this observer of property changes. This observer will need to update accordingly. In this case,
-        /// the broadcasting Cell will tell the Spreadsheet that a certain Cell's property changed, so the
+        /// Method for the observer. The broadcaster (Cell) will add this method as a
+        /// delegate subscriber and will notify this observer of property changes in broadcaster cell.
+        /// The broadcasting Cell will tell the Spreadsheet that a certain Cell's property changed, so the
         /// spreadsheet will invoke the CellPropertyChanged event, which has its own subscribers (the UI).
         /// </summary>
         /// <param name="sender"> Object sender. </param>
         /// <param name="e"> Event. </param>
-        private void HandleCellPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void HandleCellPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            Cell cell = (Cell)sender;
-            this.CellPropertyChanged?.Invoke(cell, e);
+            if (e.PropertyName == "Text")
+            {
+                CellTest? cell = (CellTest?)sender;
+                if (cell != null)
+                {
+                    if (cell.Text[0] == '=')
+                    {
+                        // Support pulling the value from another cell. if starting with ‘=’ then assume
+                        // the remaining part is the name of the cell we need to copy a value from.
+                        string cellName = cell.Text.Substring(1);
+
+                        CellTest refCell = this.SearchCell(cellName);
+                    }
+                    else
+                    {
+                        cell.Value = cell.Text;
+                    }
+
+                    this.CellPropertyChanged?.Invoke(cell, e);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Return the cell corresponding to the cellName.
+        /// </summary>
+        /// <param name="cellName"> Cell name to search for. </param>
+        /// <returns> Cell base object. </returns>
+        private CellTest SearchCell(string cellName)
+        {
+            return null;
         }
     }
 }

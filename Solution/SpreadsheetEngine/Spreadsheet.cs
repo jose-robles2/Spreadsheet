@@ -121,25 +121,28 @@ namespace SpreadsheetEngine
         /// </summary>
         /// <param name="sender"> Object sender. </param>
         /// <param name="e"> Event. </param>
-        private void HandleCellPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void HandleCellPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Text")
             {
-                Cell cell = (Cell)sender;
-                if (cell.Text[0] == '=')
+                Cell? cell = (Cell?)sender;
+                if (cell != null)
                 {
-                    // Support pulling the value from another cell. if starting with ‘=’ then assume
-                    // the remaining part is the name of the cell we need to copy a value from.
-                    string cellName = cell.Text.Substring(1);
+                    if (cell.Text[0] == '=')
+                    {
+                        // Support pulling the value from another cell. if starting with ‘=’ then assume
+                        // the remaining part is the name of the cell we need to copy a value from.
+                        string cellName = cell.Text.Substring(1);
 
-                    Cell refCell = SearchCell(cellName);
-                }
-                else
-                {
-                    cell.Value = cell.Text;
-                }
+                        Cell? refCell = this.SearchCell(cellName);
+                    }
+                    else
+                    {
+                        cell.Value = cell.Text;
+                    }
 
-                this.CellPropertyChanged?.Invoke(cell, e);
+                    this.CellPropertyChanged?.Invoke(cell, e);
+                }
             }
         }
 
@@ -148,7 +151,7 @@ namespace SpreadsheetEngine
         /// </summary>
         /// <param name="cellName"> Cell name to search for. </param>
         /// <returns> Cell base object. </returns>
-        private Cell SearchCell(string cellName)
+        private Cell? SearchCell(string cellName)
         {
             return null;
         }

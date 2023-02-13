@@ -1,17 +1,17 @@
-﻿// <copyright file="Cell.cs" company="Jose Robles">
+﻿// <copyright file="CellTest.cs" company="Jose Robles">
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
 
 using System.ComponentModel;
 
-namespace SpreadsheetEngine
+namespace HomeworkFourTests.SpreadsheetEngineTests.TestClasses
 {
     /// <summary>
     /// Abstract base class that represents a Cell object in the spreadsheet.
     /// Implements the INotifyPropertyChanged class since this class follows
     /// the observer/subscriber pattern.
     /// </summary>
-    public abstract class Cell : INotifyPropertyChanged
+    public abstract class CellTest : INotifyPropertyChanged
     {
         /// <summary>
         /// Index for a row.
@@ -39,13 +39,13 @@ namespace SpreadsheetEngine
         protected string value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Cell"/> class.
+        /// Initializes a new instance of the <see cref="CellTest"/> class.
         /// </summary>
         /// <param name="rowIndex"> Index of the row. </param>
         /// <param name="columnIndex"> Index of the column. </param>
         /// <param name="text"> Text content. </param>
         /// <param name="value"> Cell's value content. </param>
-        public Cell(int rowIndex = 0, int columnIndex = 0, string text = "", string value = "")
+        public CellTest(int rowIndex = 0, int columnIndex = 0, string text = "", string value = "")
         {
             this.rowIndex = rowIndex;
             this.columnIndex = columnIndex;

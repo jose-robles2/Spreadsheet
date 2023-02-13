@@ -18,7 +18,7 @@ namespace HomeworkFour
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
-        /// </summary
+        /// </summary>
         public Form1()
         {
             this.InitializeComponent();

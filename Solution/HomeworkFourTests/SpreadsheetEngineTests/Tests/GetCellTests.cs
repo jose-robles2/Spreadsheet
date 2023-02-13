@@ -3,9 +3,9 @@
 // </copyright>
 
 using HomeworkFour;
-using SpreadsheetEngine;
+using HomeworkFourTests.SpreadsheetEngineTests.TestClasses;
 
-namespace HomeworkFourTests
+namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
 {
     /// <summary>
     /// Temp class tests.
@@ -64,7 +64,7 @@ namespace HomeworkFourTests
         public void GetCellTestNormal()
         {
             this.spreadsheet.SetCell(0, 0, this.content[0, 0]);
-            Cell? cell = this.spreadsheet.GetCell(0, 0);
+            CellTest? cell = this.spreadsheet.GetCell(0, 0);
             Assert.That(cell?.Text, Is.EqualTo("hello"));
         }
 
@@ -75,7 +75,7 @@ namespace HomeworkFourTests
         public void GetCellTestEdge()
         {
             this.spreadsheet.SetCell(1, 1, this.content[1, 1]);
-            Cell? cell = this.spreadsheet.GetCell(1, 1);
+            CellTest? cell = this.spreadsheet.GetCell(1, 1);
             Assert.That(cell?.Text, Is.EqualTo("world"));
         }
 

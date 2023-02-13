@@ -3,9 +3,9 @@
 // </copyright>
 
 using HomeworkFour;
-using SpreadsheetEngine;
+using HomeworkFourTests.SpreadsheetEngineTests.TestClasses;
 
-namespace HomeworkFourTests
+namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
 {
     /// <summary>
     /// Temp class tests.
@@ -53,31 +53,30 @@ namespace HomeworkFourTests
         /// <returns> 2D Concrete cell array. </returns>
         public SpreadsheetTest CreateSpreadsheet(string[,] content)
         {
-            SpreadsheetTest s = new SpreadsheetTest(2, 2);
-            return s;
+            return new SpreadsheetTest(2, 2);
         }
 
         /// <summary>
-        /// Test for Spreadsheet.GetClass() under normal conditions.
+        /// Test for Spreadsheet.SearchCell() under normal conditions.
         /// </summary>
         [Test]
-        public void GetCellTestNormal()
+        public void SearchCellTestNormal()
         {
         }
 
         /// <summary>
-        /// Test for Spreadsheet.GetClass() under edge conditions.
+        /// Test for Spreadsheet.SearchCell() under edge conditions.
         /// </summary>
         [Test]
-        public void GetCellTestEdge()
+        public void SearchCellTestEdge()
         {
         }
 
         /// <summary>
-        /// Test for Spreadsheet.GetClass() under exception conditions.
+        /// Test for Spreadsheet.SearchCell() under exception conditions.
         /// </summary>
         [Test]
-        public void GetCellTestException()
+        public void SearchCellTestException()
         {
         }
     }
