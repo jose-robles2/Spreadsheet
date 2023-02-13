@@ -49,7 +49,7 @@ namespace SpreadsheetEngine
         {
             this.rowIndex = rowIndex;
             this.columnIndex = columnIndex;
-            this.name = columnIndex + "," + rowIndex;
+            this.name = rowIndex + "," + columnIndex;
             this.text = text;
             this.value = value;
         }

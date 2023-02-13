@@ -147,13 +147,22 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
-        /// Return the cell corresponding to the cellName.
+        /// Return the cell corresponding to the cellName. Make 
         /// </summary>
         /// <param name="cellName"> Cell name to search for. </param>
         /// <returns> Cell base object. </returns>
-        private Cell? SearchCell(string cellName)
+        private Cell SearchCell(string cellName)
         {
-            return null;
+            try
+            {
+                Tuple<int, int> indices = this.cellIndexes[cellName];
+                ConcreteCell cell = this.matrix[indices.Item1, indices.Item2];
+                return (Cell)cell;
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new KeyNotFoundException("Cell with name '" + cellName + "' not found.");
+            }
         }
     }
 }
