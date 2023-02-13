@@ -4,6 +4,7 @@
 
 using HomeworkFour;
 using HomeworkFourTests.SpreadsheetEngineTests.TestClasses;
+using SpreadsheetEngine;
 
 namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
 {
@@ -62,6 +63,8 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void SearchCellTestNormal()
         {
+            CellTest? cell = this.spreadsheet.SearchCell("0,0");
+            Assert.That(cell.Text, Is.EqualTo(this.content[0,0]));
         }
 
         /// <summary>
@@ -70,6 +73,8 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void SearchCellTestEdge()
         {
+            CellTest? cell = this.spreadsheet.SearchCell("1,1");
+            Assert.That(cell.Text, Is.EqualTo(this.content[1, 1]));
         }
 
         /// <summary>
@@ -78,6 +83,7 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void SearchCellTestException()
         {
+            Assert.Throws<KeyNotFoundException>(() => this.spreadsheet.SearchCell("nonExistent"));
         }
     }
 }

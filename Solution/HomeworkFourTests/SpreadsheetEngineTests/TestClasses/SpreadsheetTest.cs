@@ -90,6 +90,16 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.TestClasses
         }
 
         /// <summary>
+        /// Return the cell corresponding to the cellName. Make 
+        /// </summary>
+        /// <param name="cellName"> Cell name to search for. </param>
+        /// <returns> Cell base object. </returns>
+        public CellTest SearchCell(string cellName)
+        {
+            return null;
+        }
+
+        /// <summary>
         /// Internal SetCell method used for testing the GetCell method.
         /// </summary>
         /// <param name="row"> Row index. </param>
@@ -148,16 +158,6 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.TestClasses
                     this.CellPropertyChanged?.Invoke(cell, e);
                 }
             }
-        }
-
-        /// <summary>
-        /// Return the cell corresponding to the cellName.
-        /// </summary>
-        /// <param name="cellName"> Cell name to search for. </param>
-        /// <returns> Cell base object. </returns>
-        private CellTest SearchCell(string cellName)
-        {
-            return null;
         }
     }
 }
