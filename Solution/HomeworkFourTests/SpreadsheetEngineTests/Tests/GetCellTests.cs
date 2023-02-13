@@ -28,15 +28,15 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [SetUp]
         public void Setup()
         {
-            this.content = this.CreateContent();
-            this.spreadsheet = this.CreateSpreadsheet(this.content);
+            this.content = CreateContent();
+            this.spreadsheet = CreateSpreadsheet();
         }
 
         /// <summary>
         /// Setup function to create a 2D array of content strings.
         /// </summary>
         /// <returns> 2D String array. </returns>
-        public string[,] CreateContent()
+        private static string[,] CreateContent()
         {
             string[,] content = new string[2, 2];
             content[0, 0] = "hello";
@@ -51,10 +51,9 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         /// </summary>
         /// <param name="content"> 2D array of string content to set the cells with. </param>
         /// <returns> 2D Concrete cell array. </returns>
-        public SpreadsheetTest CreateSpreadsheet(string[,] content)
+        private static SpreadsheetTest CreateSpreadsheet()
         {
-            SpreadsheetTest s = new SpreadsheetTest(2, 2);
-            return s;
+            return new SpreadsheetTest(2, 2);
         }
 
         /// <summary>

@@ -29,15 +29,15 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [SetUp]
         public void Setup()
         {
-            this.content = this.CreateContent();
-            this.spreadsheet = this.CreateSpreadsheet(this.content);
+            this.content = CreateContent();
+            this.spreadsheet = CreateSpreadsheet();
         }
 
         /// <summary>
         /// Setup function to create a 2D array of content strings.
         /// </summary>
         /// <returns> 2D String array. </returns>
-        public string[,] CreateContent()
+        private static string[,] CreateContent()
         {
             string[,] content = new string[2, 2];
             content[0, 0] = "hello";
@@ -52,7 +52,7 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         /// </summary>
         /// <param name="content"> 2D array of string content to set the cells with. </param>
         /// <returns> 2D Concrete cell array. </returns>
-        public SpreadsheetTest CreateSpreadsheet(string[,] content)
+        private static SpreadsheetTest CreateSpreadsheet()
         {
             return new SpreadsheetTest(2, 2);
         }
@@ -63,7 +63,8 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void SearchCellTestNormal()
         {
-            CellTest? cell = this.spreadsheet.SearchCell("0,0");
+            this.spreadsheet.SetCell(0, 0, this.content[0, 0]);
+            CellTest cell = this.spreadsheet.SearchCell("0,0");
             Assert.That(cell.Text, Is.EqualTo(this.content[0,0]));
         }
 
@@ -73,7 +74,8 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void SearchCellTestEdge()
         {
-            CellTest? cell = this.spreadsheet.SearchCell("1,1");
+            this.spreadsheet.SetCell(1, 1, this.content[1, 1]);
+            CellTest cell = this.spreadsheet.SearchCell("1,1");
             Assert.That(cell.Text, Is.EqualTo(this.content[1, 1]));
         }
 

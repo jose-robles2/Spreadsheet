@@ -3,7 +3,6 @@
 // </copyright>
 
 using System.ComponentModel;
-using HomeworkFour;
 
 namespace HomeworkFourTests.SpreadsheetEngineTests.TestClasses
 {
@@ -17,12 +16,12 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.TestClasses
         /// <summary>
         /// Number of rows.
         /// </summary>
-        private int rowCount;
+        private readonly int rowCount;
 
         /// <summary>
         /// Number of columns.
         /// </summary>
-        private int columnCount;
+        private readonly int columnCount;
 
         /// <summary>
         /// 2D array that contains the cells that correspond to the UI's cells.
@@ -96,7 +95,16 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.TestClasses
         /// <returns> Cell base object. </returns>
         public CellTest SearchCell(string cellName)
         {
-            return null;
+            try
+            {
+                Tuple<int, int> indices = this.cellIndexes[cellName];
+                ConcreteCellTest cell = this.matrix[indices.Item1, indices.Item2];
+                return (CellTest)cell;
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new KeyNotFoundException("Cell with name '" + cellName + "' not found."); 
+            }
         }
 
         /// <summary>
@@ -119,9 +127,11 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.TestClasses
             {
                 for (int col = 0; col < this.ColumnCount; col++)
                 {
-                    // Instantiate each cell and make the Spreadsheet's CellPropertyChanged
-                    // delegate subscribe to the Cell objects event.
-                    this.matrix[row, col] = new ConcreteCellTest(row, col);
+                    // Instantiate each cell and make the Spreadsheet's HandleCellPropertyChanged
+                    // delegate subscribe to the Cell objects event. Also add name, indices to dict.
+                    ConcreteCellTest cell = new ConcreteCellTest(row, col);
+                    this.cellIndexes.Add(cell.Name, new Tuple<int, int>(row, col));
+                    this.matrix[row, col] = cell;
                     this.matrix[row, col].PropertyChanged += this.HandleCellPropertyChanged;
                 }
             }
@@ -148,7 +158,7 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.TestClasses
                         // the remaining part is the name of the cell we need to copy a value from.
                         string cellName = cell.Text.Substring(1);
 
-                        CellTest refCell = this.SearchCell(cellName);
+                        CellTest? refCell = this.SearchCell(cellName);
                     }
                     else
                     {
