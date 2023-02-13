@@ -82,7 +82,7 @@ namespace SpreadsheetEngine
         /// <returns> Return abstract Cell base type. </returns>
         public Cell? GetCell(int row, int column)
         {
-            if (row >= this.RowCount && column >= this.ColumnCount)
+            if (row >= this.RowCount || column >= this.ColumnCount)
             {
                 throw new ArgumentException("Row or column exceed the index size of the matrix.");
             }
@@ -123,27 +123,27 @@ namespace SpreadsheetEngine
         /// <param name="e"> Event. </param>
         private void HandleCellPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Text")
+            Cell? cell = (Cell?)sender;
+            if (cell == null || e.PropertyName != "Text")
             {
-                Cell? cell = (Cell?)sender;
-                if (cell != null)
-                {
-                    if (cell.Text[0] == '=')
-                    {
-                        // Support pulling the value from another cell. if starting with ‘=’ then assume
-                        // the remaining part is the name of the cell we need to copy a value from.
-                        string cellName = cell.Text.Substring(1);
-
-                        Cell refCell = this.SearchCell(cellName);
-                        cell.Value = refCell.Value;
-                        this.CellPropertyChanged?.Invoke(cell, e);
-                    }
-                    else
-                    {
-                        cell.Value = cell.Text;
-                    }
-                }
+                return;
             }
+
+            if (cell.Text[0] == '=')
+            {
+                // Support pulling the value from another cell. if starting with ‘=’ then assume
+                // the remaining part is the name of the cell we need to copy a value from.
+                string cellName = cell.Text.Substring(1);
+                Cell refCell = this.SearchCell(cellName);
+                cell.Value = refCell.Value;
+            }
+            else
+            {
+                cell.Value = cell.Text;
+            }
+
+            // Notify Form1.cs that a cell was changed
+            this.CellPropertyChanged?.Invoke(cell, e);
         }
 
         /// <summary>

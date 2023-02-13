@@ -1,7 +1,7 @@
 // <copyright file="Form1.cs" company="Jose Robles">
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
-
+using System.ComponentModel;
 using SpreadsheetEngine;
 
 namespace HomeworkFour
@@ -17,12 +17,23 @@ namespace HomeworkFour
         private const int NUMROWS = 50;
 
         /// <summary>
+        /// Constant pointint to the number of cols for the UI of the app.
+        /// </summary>
+        private const int NUMCOLS = 26;
+
+        /// <summary>
+        /// Spreadsheet object that runs in the backend of the UI.
+        /// </summary>
+        private Spreadsheet? spreadsheet;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
         /// </summary>
         public Form1()
         {
             this.InitializeComponent();
             this.InitializeDataGrid();
+            this.InitializeSpreadSheetObject();
         }
 
         /// <summary>
@@ -43,6 +54,37 @@ namespace HomeworkFour
             for (int i = 1; i <= NUMROWS; i++)
             {
                 this.dataGridView1.Rows.Add(i.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Initialize the spreadsheet object with 26 rows and 50 columns, also
+        /// subscribe to the spreadsheet's CellPropertyChanged event. So that the
+        /// datagridview object can be updated accordingly.
+        /// </summary>
+        private void InitializeSpreadSheetObject()
+        {
+            this.spreadsheet = new Spreadsheet(NUMROWS, NUMCOLS);
+            this.spreadsheet.CellPropertyChanged += this.HandleCellPropertyChanged;
+        }
+
+        /// <summary>
+        /// On CellPropertyChanged, update the datagridview on the UI.
+        /// </summary>
+        /// <param name="sender"> Object associated with the event. </param>
+        /// <param name="e"> The event. </param>
+        private void HandleCellPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            ConcreteCell? cell = (ConcreteCell?)sender;
+
+            if (cell != null)
+            {
+                DataGridViewCell dgvCell = this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex - 'A'];
+
+                if (e.PropertyName == "Value")
+                {
+                    dgvCell.Value = cell.Value;
+                }
             }
         }
     }

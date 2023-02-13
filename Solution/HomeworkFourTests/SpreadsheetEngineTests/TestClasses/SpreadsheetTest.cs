@@ -76,7 +76,7 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.TestClasses
         /// <returns> Return abstract Cell base type. </returns>
         public CellTest? GetCell(int row, int column)
         {
-            if (row >= this.RowCount && column >= this.ColumnCount)
+            if (row >= this.RowCount || column >= this.ColumnCount)
             {
                 throw new ArgumentException("Row or column exceed the index size of the matrix.");
             }
