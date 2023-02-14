@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.demoButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,11 +45,25 @@
             this.dataGridView1.Size = new System.Drawing.Size(1022, 604);
             this.dataGridView1.TabIndex = 0;
             // 
+            // demoButton
+            // 
+            this.demoButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.demoButton.Location = new System.Drawing.Point(455, 622);
+            this.demoButton.Name = "demoButton";
+            this.demoButton.Size = new System.Drawing.Size(141, 26);
+            this.demoButton.TabIndex = 1;
+            this.demoButton.Text = "Demo";
+            this.demoButton.UseVisualStyleBackColor = true;
+            this.demoButton.Click += new System.EventHandler(this.DemoButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1046, 637);
+            this.ClientSize = new System.Drawing.Size(1046, 655);
+            this.Controls.Add(this.demoButton);
             this.Controls.Add(this.dataGridView1);
             this.Name = "Form1";
             this.Text = "Spreadsheet - CptS 321";
@@ -60,5 +75,6 @@
         #endregion
 
         private DataGridView dataGridView1;
+        private Button demoButton;
     }
 }

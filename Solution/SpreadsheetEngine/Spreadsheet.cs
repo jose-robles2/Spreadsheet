@@ -95,6 +95,46 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// Set the text in 50 random cells to "Hello 321".
+        /// Then set the text in every cell in column B to "This is cell B#" where # is the row number.
+        /// Then set the text in every cell in column A to "=B#" where # is the row number. This will make
+        /// every cell in column A equal the value contained within column B's cells.
+        /// </summary>
+        public void HomeworkFourDemo()
+        {
+            // Lambda expression to generate unique random indices to assign "Hello 321" to cells randomly.
+            // Stylcop treated this lambda as a variable so camelcase was used.
+            Func<List<Tuple<int, int>>, Tuple<int, int>> generateIndices = (indicesOfRandomCells) =>
+            {
+                Random random = new Random();
+                Tuple<int, int> tuple = new Tuple<int, int>(random.Next(0, this.rowCount), random.Next(0, this.columnCount));
+
+                while (true)
+                {
+                    if (indicesOfRandomCells.Contains(tuple))
+                    {
+                        Tuple<int, int> newTuple = new Tuple<int, int>(random.Next(0, this.rowCount), random.Next(0, this.columnCount));
+                        tuple = newTuple;
+                        continue;
+                    }
+
+                    indicesOfRandomCells.Add(tuple);
+                    break;
+                }
+
+                return tuple;
+            };
+
+            List<Tuple<int, int>> indicesOfRandomCells = new List<Tuple<int, int>>();
+
+            for (int i = 0; i < this.ColumnCount; i++)
+            {
+                Tuple<int, int> tuple = generateIndices(indicesOfRandomCells);
+                this.matrix[tuple.Item1, tuple.Item2].Text = "Hello 321";
+            }
+        }
+
+        /// <summary>
         /// Instantiates each cell of the matrix with a new concrete cell object.
         /// </summary>
         private void FillMatrix()

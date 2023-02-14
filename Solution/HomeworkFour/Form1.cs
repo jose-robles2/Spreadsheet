@@ -53,8 +53,12 @@ namespace HomeworkFour
 
             for (int i = 1; i <= NUMROWS; i++)
             {
-                this.dataGridView1.Rows.Add(i.ToString());
+                this.dataGridView1.Rows.Add();
+                this.dataGridView1.Rows[i - 1].HeaderCell.Value = i.ToString();
             }
+
+            // Increase header width so that the full number can be shown without the user manually expanding it.
+            this.dataGridView1.RowHeadersWidth += 10;
         }
 
         /// <summary>
@@ -79,13 +83,29 @@ namespace HomeworkFour
 
             if (cell != null)
             {
-                DataGridViewCell dgvCell = this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex - 'A'];
+                DataGridViewCell dgvCell = this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex];
 
-                if (e.PropertyName == "Value")
+                if (e.PropertyName == "Text")
                 {
                     dgvCell.Value = cell.Value;
+
+                    // dgvCell.Value = cell.Text;
                 }
+
+                // No e.PropertyName == "Value" Yet
             }
+        }
+
+        /// <summary>
+        /// Button that initiates a demo of the spreadsheet by filling random cells with text values in order
+        /// to show that the broadcaster/observer pattern is working. When a cell object is modified, the cell
+        /// signals to the spreadsheet object, which signals to the UI (Form.cs).
+        /// </summary>
+        /// <param name="sender"> Object sender. </param>
+        /// <param name="e"> The event. </param>
+        private void DemoButton_Click(object sender, EventArgs e)
+        {
+            this.spreadsheet?.HomeworkFourDemo();
         }
     }
 }
