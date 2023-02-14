@@ -125,12 +125,27 @@ namespace SpreadsheetEngine
                 return tuple;
             };
 
+            // Set the text in 50 random Cells
             List<Tuple<int, int>> indicesOfRandomCells = new List<Tuple<int, int>>();
 
             for (int i = 0; i < this.ColumnCount; i++)
             {
                 Tuple<int, int> tuple = generateIndices(indicesOfRandomCells);
                 this.matrix[tuple.Item1, tuple.Item2].Text = "Hello 321";
+            }
+
+            // Set the text in every cell in column B to "This is cell B#"
+            int columnIndex = 1;
+            for (int row = 0; row < this.RowCount; row++)
+            {
+                this.matrix[row, columnIndex].Text = "This is cell B" + (row + 1);
+            }
+
+            // Set the text in every cell in column A to "=B#"
+            columnIndex = 0;
+            for (int row = 0; row < this.RowCount; row++)
+            {
+                this.matrix[row, columnIndex].Text = "=B" + (row + 1);
             }
         }
 
