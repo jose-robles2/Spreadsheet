@@ -24,7 +24,7 @@ namespace SpreadsheetEngine
         protected readonly int columnIndex;
 
         /// <summary>
-        /// Name of a cell. Ex: "2,3, 4,2" -> "row,column".
+        /// Name of a cell. Ex: "A3", C4".
         /// </summary>
         protected readonly string name;
 
@@ -49,7 +49,15 @@ namespace SpreadsheetEngine
         {
             this.rowIndex = rowIndex;
             this.columnIndex = columnIndex;
-            this.name = rowIndex + "," + columnIndex;
+
+            // Naming Scheme is Ax, Bx, Cx, ... , Zx
+            IEnumerable<int> range = Enumerable.Range('A', 26);
+            List<char> alphabet = range.Select(i => (char)i).ToList();
+
+            // Add one to row so that the name of the cell can corres. with the GUI indexes
+            // Ex: "A1" refers to indexes [0,0]
+            this.name = alphabet[columnIndex] + (rowIndex + 1).ToString();
+
             this.text = text;
             this.value = value;
         }

@@ -138,14 +138,14 @@ namespace SpreadsheetEngine
             int columnIndex = 1;
             for (int row = 0; row < this.RowCount; row++)
             {
-                this.matrix[row, columnIndex].Text = "This is cell B" + (row + 1);
+                this.matrix[row, columnIndex].Text = "This is cell B" + (row + 1); // Add one to corres. w/ the GUI indexes
             }
 
             // Set the text in every cell in column A to "=B#"
             columnIndex = 0;
             for (int row = 0; row < this.RowCount; row++)
             {
-                this.matrix[row, columnIndex].Text = "=B" + (row + 1);
+                this.matrix[row, columnIndex].Text = "=B" + (row + 1); // Add one to corres. w/ the GUI indexes
             }
         }
 
