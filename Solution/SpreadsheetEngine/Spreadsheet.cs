@@ -82,16 +82,38 @@ namespace SpreadsheetEngine
         /// <returns> Return abstract Cell base type. </returns>
         public Cell? GetCell(int row, int column)
         {
-            if (row >= this.RowCount || column >= this.ColumnCount)
+            bool upperBound = row >= this.RowCount || column >= this.ColumnCount;
+            bool lowerBount = row < 0 || column < 0;
+
+            if (upperBound || lowerBount)
             {
-                throw new ArgumentException("Row or column exceed the index size of the matrix.");
+                throw new ArgumentException("Row or column index exceed or fall below size of the matrix.");
             }
             else if (this.matrix[row, column] == null)
             {
                 return null;
             }
 
-            return (Cell)this.matrix[row, column];
+            return this.matrix[row, column];
+        }
+
+        /// <summary>
+        /// Return the cell corresponding to the cellName.
+        /// </summary>
+        /// <param name="cellName"> Cell name to search for. </param>
+        /// <returns> Cell base object. </returns>
+        public Cell GetCell(string cellName)
+        {
+            try
+            {
+                Tuple<int, int> indices = this.cellIndexes[cellName];
+                ConcreteCell cell = this.matrix[indices.Item1, indices.Item2];
+                return (Cell)cell;
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new KeyNotFoundException("Cell with name '" + cellName + "' not found.");
+            }
         }
 
         /// <summary>
@@ -189,35 +211,18 @@ namespace SpreadsheetEngine
                 // Support pulling the value from another cell. if starting with ‘=’ then assume
                 // the remaining part is the name of the cell we need to copy a value from.
                 string cellName = cell.Text.Substring(1);
-                Cell refCell = this.SearchCell(cellName);
+                Cell refCell = this.GetCell(cellName);
                 cell.Value = refCell.Value;
+                this.CellPropertyChanged?.Invoke(cell, new PropertyChangedEventArgs("Value"));
             }
             else
             {
                 cell.Value = cell.Text;
+                this.CellPropertyChanged?.Invoke(cell, e);
             }
 
             // Notify Form1.cs that a cell was changed
-            this.CellPropertyChanged?.Invoke(cell, e);
-        }
-
-        /// <summary>
-        /// Return the cell corresponding to the cellName.
-        /// </summary>
-        /// <param name="cellName"> Cell name to search for. </param>
-        /// <returns> Cell base object. </returns>
-        private Cell SearchCell(string cellName)
-        {
-            try
-            {
-                Tuple<int, int> indices = this.cellIndexes[cellName];
-                ConcreteCell cell = this.matrix[indices.Item1, indices.Item2];
-                return (Cell)cell;
-            }
-            catch (KeyNotFoundException)
-            {
-                throw new KeyNotFoundException("Cell with name '" + cellName + "' not found.");
-            }
+            // this.CellPropertyChanged?.Invoke(cell, e);
         }
     }
 }
