@@ -126,8 +126,23 @@ namespace SpreadsheetEngine
         /// </summary>
         public string Value
         {
-            get { return this.value; }
-            internal set { this.value = value; }
+            get
+            {
+                return this.value;
+            }
+
+            internal set
+            {
+                if (this.value != value)
+                {
+                    this.value = value;
+
+                    if (this.PropertyChanged != null)
+                    {
+                        this.PropertyChanged(this, new PropertyChangedEventArgs("Value"));
+                    }
+                }
+            }
         }
     }
 }
