@@ -87,12 +87,12 @@ namespace HomeworkFour
 
                 if (e.PropertyName == "Text")
                 {
-                    dgvCell.Value = cell.Value;
-
-                    // dgvCell.Value = cell.Text;
+                    dgvCell.Value = cell.Text;
                 }
-
-                // No e.PropertyName == "Value" Yet
+                else
+                {
+                    dgvCell.Value = cell.Value;
+                }
             }
         }
 
