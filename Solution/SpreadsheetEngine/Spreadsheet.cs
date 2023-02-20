@@ -94,7 +94,7 @@ namespace SpreadsheetEngine
                 return null;
             }
 
-            return this.matrix[row, column];
+            return (Cell)this.matrix[row, column];
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace SpreadsheetEngine
         private void HandleCellPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             Cell? cell = (Cell?)sender;
-            if (cell == null || e.PropertyName != "Text")
+            if (cell == null)
             {
                 return;
             }
@@ -220,9 +220,6 @@ namespace SpreadsheetEngine
                 cell.Value = cell.Text;
                 this.CellPropertyChanged?.Invoke(cell, e);
             }
-
-            // Notify Form1.cs that a cell was changed
-            // this.CellPropertyChanged?.Invoke(cell, e);
         }
     }
 }
