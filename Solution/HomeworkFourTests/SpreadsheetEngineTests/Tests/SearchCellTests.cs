@@ -21,7 +21,7 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         /// <summary>
         /// Spreadsheet test object.
         /// </summary>
-        private SpreadsheetTest spreadsheet;
+        private Spreadsheet spreadsheet;
 
         /// <summary>
         /// Setup function used to setup different objects needed for testing.
@@ -31,6 +31,7 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         {
             this.content = CreateContent();
             this.spreadsheet = CreateSpreadsheet();
+            this.InitializeSpreadsheet();
         }
 
         /// <summary>
@@ -50,11 +51,21 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         /// <summary>
         /// Setup function to create a Spreadsheet containing a 2D array of concrete cells.
         /// </summary>
-        /// <param name="content"> 2D array of string content to set the cells with. </param>
-        /// <returns> 2D Concrete cell array. </returns>
-        private static SpreadsheetTest CreateSpreadsheet()
+        /// <returns> Spreadsheet object. </returns>
+        private static Spreadsheet CreateSpreadsheet()
         {
-            return new SpreadsheetTest(2, 2);
+            return new Spreadsheet(2, 2);
+        }
+
+        /// <summary>
+        /// Setup function to initialize the Spreadsheet cells.
+        /// </summary>
+        private void InitializeSpreadsheet()
+        {
+            this.spreadsheet.GetCell(0, 0).Text = this.content[0, 0];
+            this.spreadsheet.GetCell(0, 1).Text = this.content[0, 1];
+            this.spreadsheet.GetCell(1, 0).Text = this.content[1, 0];
+            this.spreadsheet.GetCell(1, 1).Text = this.content[1, 1];
         }
 
         /// <summary>
@@ -63,9 +74,8 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void SearchCellTestNormal()
         {
-            this.spreadsheet.SetCell(0, 0, this.content[0, 0]);
-            CellTest cell = this.spreadsheet.SearchCell("0,0");
-            Assert.That(cell.Text, Is.EqualTo(this.content[0,0]));
+            Cell cell = this.spreadsheet.GetCell("A1");
+            Assert.That(cell?.Text, Is.EqualTo(this.content[0, 0]));
         }
 
         /// <summary>
@@ -74,9 +84,8 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void SearchCellTestEdge()
         {
-            this.spreadsheet.SetCell(1, 1, this.content[1, 1]);
-            CellTest cell = this.spreadsheet.SearchCell("1,1");
-            Assert.That(cell.Text, Is.EqualTo(this.content[1, 1]));
+            Cell cell = this.spreadsheet.GetCell("B2");
+            Assert.That(cell?.Text, Is.EqualTo(this.content[1, 1]));
         }
 
         /// <summary>
@@ -85,7 +94,7 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void SearchCellTestException()
         {
-            Assert.Throws<KeyNotFoundException>(() => this.spreadsheet.SearchCell("nonExistent"));
+            Assert.Throws<KeyNotFoundException>(() => this.spreadsheet.GetCell("nonExistent"));
         }
     }
 }
