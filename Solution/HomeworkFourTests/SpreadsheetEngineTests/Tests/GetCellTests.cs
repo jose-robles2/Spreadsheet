@@ -3,7 +3,7 @@
 // </copyright>
 
 using HomeworkFour;
-using HomeworkFourTests.SpreadsheetEngineTests.TestClasses;
+using HomeworkFourTests.SpreadsheetEngineTests;
 using SpreadsheetEngine;
 using System.Runtime.CompilerServices;
 
@@ -70,7 +70,7 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         }
         
         /// <summary>
-        /// Test for Spreadsheet.GetClass() under   Znormal conditions.
+        /// Test for Spreadsheet.GetCell(int row, int col) under normal conditions.
         /// </summary>
         [Test]
         public void GetCellTestNormal()
@@ -80,7 +80,17 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         }
 
         /// <summary>
-        /// Test for Spreadsheet.GetClass() under edge conditions.
+        /// Test for Spreadsheet.GetCell(string name) under normal conditions.
+        /// </summary>
+        [Test]
+        public void GetCellTestOverloadedNormal()
+        {
+            Cell cell = this.spreadsheet.GetCell("A1");
+            Assert.That(cell?.Text, Is.EqualTo(this.content[0, 0]));
+        }
+
+        /// <summary>
+        /// Test for Spreadsheet.GetCell(int row, int col) under edge conditions.
         /// </summary>
         [Test]
         public void GetCellTestEdge()
@@ -90,12 +100,31 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         }
 
         /// <summary>
-        /// Test for Spreadsheet.GetClass() under exception conditions.
+        /// Test for Spreadsheet.GetCell(string name) under edge conditions.
+        /// </summary>
+        [Test]
+        public void GetCellTestOverloadedEdge()
+        {
+            Cell cell = this.spreadsheet.GetCell("B2");
+            Assert.That(cell?.Text, Is.EqualTo(this.content[1, 1]));
+        }
+
+        /// <summary>
+        /// Test for Spreadsheet.GetCell(int row, int col) under exception conditions.
         /// </summary>
         [Test]
         public void GetCellTestException()
         {
             Assert.Throws<ArgumentException>(() => this.spreadsheet.GetCell(int.MaxValue, int.MaxValue));
+        }
+
+        /// <summary>
+        /// Test for Spreadsheet.GetCell(string name) under exception conditions.
+        /// </summary>
+        [Test]
+        public void GetCellTestOverloadedException()
+        {
+            Assert.Throws<KeyNotFoundException>(() => this.spreadsheet.GetCell("nonExistent"));
         }
     }
 }
