@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
 {
     /// <summary>
-    /// Temp class tests.
+    /// Class for tests for the SpreadsheetEngine.GetCell() method
     /// </summary>
     public class GetCellTests
     {
@@ -63,10 +63,27 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         /// </summary>
         private void InitializeSpreadsheet()
         {
-            this.spreadsheet.GetCell(0, 0).Text = this.content[0, 0];
-            this.spreadsheet.GetCell(0, 1).Text = this.content[0, 1];
-            this.spreadsheet.GetCell(1, 0).Text = this.content[1, 0];
-            this.spreadsheet.GetCell(1, 1).Text = this.content[1, 1];
+            if (this.spreadsheet != null)
+            {
+                this.SetText(0, 0);
+                this.SetText(0, 1);
+                this.SetText(1, 0);
+                this.SetText(1, 1);
+            }
+        }
+
+        /// <summary>
+        /// Helper function to set text of cell's at certain coordinates.
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
+        private void SetText(int row, int col)
+        {
+            Cell? cell = this.spreadsheet.GetCell(row, col);
+            if (cell != null)
+            {
+                cell.Text = this.content[row, col];
+            }
         }
         
         /// <summary>
