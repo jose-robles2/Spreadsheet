@@ -201,24 +201,26 @@ namespace SpreadsheetEngine
         private void HandleCellPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             Cell? cell = (Cell?)sender;
+
             if (cell == null)
             {
                 return;
             }
 
-            if (cell.Text[0] == '=')
+            if (e.PropertyName == "Text")
             {
-                // Support pulling the value from another cell. if starting with ‘=’ then assume
-                // the remaining part is the name of the cell we need to copy a value from.
-                string cellName = cell.Text.Substring(1);
-                Cell refCell = this.GetCell(cellName);
-                cell.Value = refCell.Value;
+                if (cell.Text[0] == '=')
+                {
+                    string cellName = cell.Text.Substring(1);
+                    Cell refCell = this.GetCell(cellName);
+                    cell.Value = refCell.Value;
+                }
+                else
+                {
+                    cell.Value = cell.Text;
+                }
+
                 this.CellPropertyChanged?.Invoke(cell, new PropertyChangedEventArgs("Value"));
-            }
-            else
-            {
-                cell.Value = cell.Text;
-                this.CellPropertyChanged?.Invoke(cell, e);
             }
         }
     }

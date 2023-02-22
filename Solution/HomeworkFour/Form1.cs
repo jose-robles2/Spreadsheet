@@ -85,11 +85,7 @@ namespace HomeworkFour
             {
                 DataGridViewCell dgvCell = this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex];
 
-                if (e.PropertyName == "Text")
-                {
-                    dgvCell.Value = cell.Text;
-                }
-                else
+                if (e.PropertyName == "Value")
                 {
                     dgvCell.Value = cell.Value;
                 }

@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace SpreadsheetEngine
 {
@@ -136,11 +137,6 @@ namespace SpreadsheetEngine
                 if (this.value != value)
                 {
                     this.value = value;
-
-                    if (this.PropertyChanged != null)
-                    {
-                        this.PropertyChanged(this, new PropertyChangedEventArgs("Value"));
-                    }
                 }
             }
         }
