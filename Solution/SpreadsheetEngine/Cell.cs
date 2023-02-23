@@ -3,7 +3,6 @@
 // </copyright>
 
 using System.ComponentModel;
-using System.Diagnostics;
 
 namespace SpreadsheetEngine
 {
@@ -123,7 +122,7 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
-        /// Gets the value field. Set can only be done internally within this namespace.
+        /// Gets or sets the value field.
         /// </summary>
         public string Value
         {
@@ -132,7 +131,7 @@ namespace SpreadsheetEngine
                 return this.value;
             }
 
-            internal set
+            protected internal set
             {
                 if (this.value != value)
                 {
