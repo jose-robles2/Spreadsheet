@@ -3,14 +3,11 @@
 // </copyright>
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SpreadsheetEngine
 {
@@ -19,6 +16,37 @@ namespace SpreadsheetEngine
     /// </summary>
     public class Spreadsheet
     {
+        /// <summary>
+        /// Private class that implements abstract class cell. Only accessible via Spreadsheet.cs.
+        /// </summary>
+        private class ConcreteCell : Cell
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ConcreteCell"/> class.
+            /// </summary>
+            /// <param name="rowIndex"> Index of the row. </param>
+            /// <param name="columnIndex"> Index of the column. </param>
+            /// <param name="text"> Text content. </param>
+            /// <param name="value"> Cell's value content. </param>
+            public ConcreteCell(int rowIndex = 0, int columnIndex = 0, string text = "", string value = "")
+                : base(rowIndex, columnIndex, text, value)
+            {
+            }
+
+            /// <summary>
+            /// Sets the value and invokes a new property changed event.
+            /// </summary>
+            /// <param name="value"> New value. </param>
+            public override void SetValue(string value)
+            {
+                if (this.value != value)
+                {
+                    this.value = value;
+                    this.InvokePropertyChanged("Value");
+                }
+            }
+        }
+
         /// <summary>
         /// Number of rows.
         /// </summary>
@@ -213,14 +241,16 @@ namespace SpreadsheetEngine
                 {
                     string cellName = cell.Text.Substring(1);
                     Cell refCell = this.GetCell(cellName);
-                    cell.Value = refCell.Value;
+                    cell.SetValue(refCell.Value);
                 }
                 else
                 {
-                    cell.Value = cell.Text;
+                    cell.SetValue(cell.Text);
                 }
-
-                this.CellPropertyChanged?.Invoke(cell, new PropertyChangedEventArgs("Value"));
+            }
+            else if (e.PropertyName == "Value")
+            {
+                this.CellPropertyChanged?.Invoke(cell, e);
             }
         }
     }

@@ -1,6 +1,7 @@
 // <copyright file="Form1.cs" company="Jose Robles">
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
+
 using System.ComponentModel;
 using SpreadsheetEngine;
 
@@ -79,7 +80,7 @@ namespace HomeworkFour
         /// <param name="e"> The event. </param>
         private void HandleCellPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            ConcreteCell? cell = (ConcreteCell?)sender;
+            Cell? cell = (Cell?)sender;
 
             if (cell != null)
             {

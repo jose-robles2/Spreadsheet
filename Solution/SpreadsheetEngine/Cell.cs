@@ -3,7 +3,6 @@
 // </copyright>
 
 using System.ComponentModel;
-using System.Diagnostics;
 
 namespace SpreadsheetEngine
 {
@@ -103,42 +102,39 @@ namespace SpreadsheetEngine
         /// </summary>
         public string Text
         {
-            get
-            {
-                return this.text;
-            }
+            get => this.text;
 
             set
             {
                 if (this.text != value)
                 {
                     this.text = value;
-
-                    if (this.PropertyChanged != null)
-                    {
-                        this.PropertyChanged(this, new PropertyChangedEventArgs("Text"));
-                    }
+                    this.InvokePropertyChanged("Text");
                 }
             }
         }
 
         /// <summary>
-        /// Gets the value field. Set can only be done internally within this namespace.
+        /// Gets the value field.
         /// </summary>
         public string Value
         {
-            get
-            {
-                return this.value;
-            }
+            get { return this.value; }
+        }
 
-            internal set
-            {
-                if (this.value != value)
-                {
-                    this.value = value;
-                }
-            }
+        /// <summary>
+        /// Sets the value.
+        /// </summary>
+        /// <param name="value"> New value. </param>
+        public abstract void SetValue(string value);
+
+        /// <summary>
+        /// Wrapper method to invoke a property changed.
+        /// </summary>
+        /// <param name="propertyName"> Property name. </param>
+        protected void InvokePropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
