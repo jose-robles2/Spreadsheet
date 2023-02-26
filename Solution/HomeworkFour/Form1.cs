@@ -80,7 +80,7 @@ namespace HomeworkFour
         /// <param name="e"> The event. </param>
         private void HandleCellPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            ConcreteCell? cell = (ConcreteCell?)sender;
+            Cell? cell = (Cell?)sender;
 
             if (cell != null)
             {
