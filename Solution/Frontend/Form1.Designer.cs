@@ -1,4 +1,4 @@
-﻿namespace HomeworkFour
+﻿namespace FrontEnd
 {
     partial class Form1
     {

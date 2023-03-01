@@ -2,12 +2,9 @@
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
 
-using HomeworkFour;
-using HomeworkFourTests.SpreadsheetEngineTests;
 using SpreadsheetEngine;
-using System.Runtime.CompilerServices;
 
-namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
+namespace SpreadsheetEngineTests
 {
     /// <summary>
     /// Class for tests for the SpreadsheetEngine.GetCell() method
@@ -30,9 +27,9 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [SetUp]
         public void Setup()
         {
-            this.content = CreateContent();
-            this.spreadsheet = CreateSpreadsheet();
-            this.InitializeSpreadsheet();
+            content = CreateContent();
+            spreadsheet = CreateSpreadsheet();
+            InitializeSpreadsheet();
         }
 
         /// <summary>
@@ -63,12 +60,12 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         /// </summary>
         private void InitializeSpreadsheet()
         {
-            if (this.spreadsheet != null)
+            if (spreadsheet != null)
             {
-                this.SetText(0, 0);
-                this.SetText(0, 1);
-                this.SetText(1, 0);
-                this.SetText(1, 1);
+                SetText(0, 0);
+                SetText(0, 1);
+                SetText(1, 0);
+                SetText(1, 1);
             }
         }
 
@@ -79,21 +76,21 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         /// <param name="col"></param>
         private void SetText(int row, int col)
         {
-            Cell? cell = this.spreadsheet.GetCell(row, col);
+            Cell? cell = spreadsheet.GetCell(row, col);
             if (cell != null)
             {
-                cell.Text = this.content[row, col];
+                cell.Text = content[row, col];
             }
         }
-        
+
         /// <summary>
         /// Test for Spreadsheet.GetCell(int row, int col) under normal conditions.
         /// </summary>
         [Test]
         public void GetCellTestNormal()
         {
-            Cell? cell = this.spreadsheet.GetCell(0, 0);
-            Assert.That(cell?.Text, Is.EqualTo(this.content[0,0]));
+            Cell? cell = spreadsheet.GetCell(0, 0);
+            Assert.That(cell?.Text, Is.EqualTo(content[0, 0]));
         }
 
         /// <summary>
@@ -102,8 +99,8 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void GetCellTestOverloadedNormal()
         {
-            Cell cell = this.spreadsheet.GetCell("A1");
-            Assert.That(cell?.Text, Is.EqualTo(this.content[0, 0]));
+            Cell cell = spreadsheet.GetCell("A1");
+            Assert.That(cell?.Text, Is.EqualTo(content[0, 0]));
         }
 
         /// <summary>
@@ -112,8 +109,8 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void GetCellTestEdge()
         {
-            Cell? cell = this.spreadsheet.GetCell(1, 1);
-            Assert.That(cell?.Text, Is.EqualTo(this.content[1,1]));
+            Cell? cell = spreadsheet.GetCell(1, 1);
+            Assert.That(cell?.Text, Is.EqualTo(content[1, 1]));
         }
 
         /// <summary>
@@ -122,8 +119,8 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void GetCellTestOverloadedEdge()
         {
-            Cell cell = this.spreadsheet.GetCell("B2");
-            Assert.That(cell?.Text, Is.EqualTo(this.content[1, 1]));
+            Cell cell = spreadsheet.GetCell("B2");
+            Assert.That(cell?.Text, Is.EqualTo(content[1, 1]));
         }
 
         /// <summary>
@@ -132,7 +129,7 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void GetCellTestException()
         {
-            Assert.Throws<ArgumentException>(() => this.spreadsheet.GetCell(int.MaxValue, int.MaxValue));
+            Assert.Throws<ArgumentException>(() => spreadsheet.GetCell(int.MaxValue, int.MaxValue));
         }
 
         /// <summary>
@@ -141,7 +138,7 @@ namespace HomeworkFourTests.SpreadsheetEngineTests.Tests
         [Test]
         public void GetCellTestOverloadedException()
         {
-            Assert.Throws<KeyNotFoundException>(() => this.spreadsheet.GetCell("nonExistent"));
+            Assert.Throws<KeyNotFoundException>(() => spreadsheet.GetCell("nonExistent"));
         }
     }
 }

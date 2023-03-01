@@ -5,7 +5,7 @@
 using System.ComponentModel;
 using SpreadsheetEngine;
 
-namespace HomeworkFour
+namespace FrontEnd
 {
     /// <summary>
     /// MyForm class that points to the running instance of the form for this program.

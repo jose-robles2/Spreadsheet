@@ -2,7 +2,7 @@
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
 
-namespace HomeworkFour
+namespace FrontEnd
 {
     /// <summary>
     /// Static class containing the program.
