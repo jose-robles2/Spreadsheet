@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +17,11 @@ namespace SpreadsheetEngine.Expressions
     public class ExpressionTree
     {
         /// <summary>
+        /// Default expression if none is assigned at instantiation.
+        /// </summary>
+        private readonly string defaultExpression = "A1+B1+C1";
+
+        /// <summary>
         /// Math expression.
         /// </summary>
         private string expression;
@@ -26,9 +32,17 @@ namespace SpreadsheetEngine.Expressions
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
         /// </summary>
         /// <param name="expression"> Math expression. </param>
-        public ExpressionTree(string expression)
+        public ExpressionTree(string expression = "")
         {
-            this.expression = expression;
+            this.expression = string.IsNullOrEmpty(expression) ? this.defaultExpression : expression;
+        }
+
+        /// <summary>
+        /// Gets the expression member.
+        /// </summary>
+        public string Expression
+        {
+            get { return this.expression; }
         }
 
         /// <summary>

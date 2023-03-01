@@ -1,12 +1,15 @@
 ﻿using System;
 
-namespace ExpressionApp 
+namespace ExpressionApp
 {
+    /// <summary>
+    /// Runs the program.
+    /// </summary>
     internal class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Menu menu = new Menu();
         }
     }
 }
