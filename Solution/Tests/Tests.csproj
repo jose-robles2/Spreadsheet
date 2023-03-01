@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -25,7 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HomeworkFour\HomeworkFour.csproj" />
+    <ProjectReference Include="..\SpreadsheetEngine\SpreadsheetEngine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="SpreadsheetEngineTests\ExpressionTreeTests\" />
   </ItemGroup>
 
 </Project>
