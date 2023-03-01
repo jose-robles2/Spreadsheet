@@ -3,9 +3,9 @@
 // </copyright>
 
 using System.ComponentModel;
-using SpreadsheetEngine;
+using SpreadsheetEngine.Spreadsheet;
 
-namespace FrontEnd
+namespace SpreadsheetFrontEnd
 {
     /// <summary>
     /// MyForm class that points to the running instance of the form for this program.

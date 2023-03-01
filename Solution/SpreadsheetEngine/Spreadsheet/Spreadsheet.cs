@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpreadsheetEngine
+namespace SpreadsheetEngine.Spreadsheet
 {
     /// <summary>
     /// Container and factory object for a 2D array of cell objects.

@@ -1,4 +1,4 @@
-﻿namespace FrontEnd
+﻿namespace SpreadsheetFrontEnd
 {
     partial class Form1
     {

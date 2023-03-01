@@ -2,9 +2,9 @@
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
 
-using SpreadsheetEngine;
+using SpreadsheetEngine.Spreadsheet;
 
-namespace SpreadsheetEngineTests
+namespace Tests.SpreadsheetEngineTests.SpreadsheetTests
 {
     /// <summary>
     /// Class for tests for the SpreadsheetEngine.GetCell() method
