@@ -22,8 +22,6 @@ namespace SpreadsheetEngine.Expressions
 
         private readonly string expression;
 
-        private List<string> tokenizedExpression;
-
         private Node? root = null;
 
         private Dictionary<string, double> variableDictionary;
