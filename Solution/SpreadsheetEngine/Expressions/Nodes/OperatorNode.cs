@@ -58,7 +58,19 @@ namespace SpreadsheetEngine.Expressions.Nodes
         /// <returns> string. </returns>
         public override double Evaluate()
         {
-            throw new NotImplementedException();
+            switch (this.@operator)
+            {
+                case '+':
+                    return this.left.Evaluate() + this.right.Evaluate();
+                case '-':
+                    return this.left.Evaluate() - this.right.Evaluate();
+                case '*':
+                    return this.left.Evaluate() * this.right.Evaluate();
+                case '/':
+                    return this.left.Evaluate() / this.right.Evaluate();
+                default:
+                    throw new ArgumentException($"Unknown operator: " + this.@operator);
+            }
         }
     }
 }
