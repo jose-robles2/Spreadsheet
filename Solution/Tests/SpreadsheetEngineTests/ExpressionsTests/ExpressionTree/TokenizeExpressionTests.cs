@@ -43,7 +43,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTree
         {
             SpreadsheetEngine.Expressions.ExpressionTree classObject = new();
             string input = "A1+B1+C1+D1+E1";
-            List<string> expectedOutput = new List<string> { "A1", "+", "B1", "+", "C1", "D1", "+", "E1"};
+            List<string> expectedOutput = new List<string> { "A1", "+", "B1", "+", "C1", "+", "D1", "+", "E1"};
 
             MethodInfo methodInfo = this.GetMethod(classObject, "TokenizeExpression");
 
@@ -80,9 +80,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTree
 
             MethodInfo methodInfo = this.GetMethod(classObject, "TokenizeExpression");
 
-            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { input });
-
-            Assert.Throws<ArgumentException>(() => methodInfo.Invoke(classObject, new object[] { input }));
+            Assert.Throws<TargetInvocationException>(() => methodInfo.Invoke(classObject, new object[] { input }));
         }
     }
 }
