@@ -9,6 +9,9 @@ using SpreadsheetEngine.Expressions;
 
 namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTree
 {
+    /// <summary>
+    /// Test for private method ExpressionTree.TokenizeExpression().
+    /// </summary>
     internal class TokenizeExpressionTests
     {
         /// <summary>
