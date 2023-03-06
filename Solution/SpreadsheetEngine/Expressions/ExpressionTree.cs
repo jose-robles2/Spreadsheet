@@ -9,6 +9,8 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
+using SpreadsheetEngine.Expressions.Nodes;
+
 namespace SpreadsheetEngine.Expressions
 {
     /// <summary>
@@ -18,7 +20,9 @@ namespace SpreadsheetEngine.Expressions
     {
         private readonly string defaultExpression = "A1+B1+C1";
 
-        private string expression;
+        private readonly string expression;
+
+        private Node? root = null;
 
         private Dictionary<string, double> variableDictionary;
 
