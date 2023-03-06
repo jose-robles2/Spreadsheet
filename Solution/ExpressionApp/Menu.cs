@@ -17,14 +17,8 @@ namespace ExpressionApp
     /// </summary>
     internal class Menu
     {
-        /// <summary>
-        /// Is the app running.
-        /// </summary>
         private bool appRunning;
 
-        /// <summary>
-        /// Tree representing user's input expression.
-        /// </summary>
         private ExpressionTree expressionTree;
 
         /// <summary>
