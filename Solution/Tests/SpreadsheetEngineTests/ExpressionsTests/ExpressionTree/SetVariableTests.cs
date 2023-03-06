@@ -6,7 +6,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests
+namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
 {
     /// <summary>
     /// Tests for ExpressionTree.Evaluate()

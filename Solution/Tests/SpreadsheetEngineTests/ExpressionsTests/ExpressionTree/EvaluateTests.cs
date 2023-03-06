@@ -1,15 +1,17 @@
-﻿using System;
+﻿using SpreadsheetEngine.Spreadsheet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests
+namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
 {
     /// <summary>
-    /// Tests for OperatorNode.Evaluate()
+    /// Tests for ExpressionTree.Evaluate()
     /// </summary>
-    internal class OperatorNodeEvaluateTests
+    internal class ExpressionTreeEvaluateTests
     {
         /// <summary>
         /// Setup function used to setup different objects needed for testing.
@@ -20,15 +22,15 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests
         }
 
         /// <summary>
-        /// Test for OperatorNode.Evaluate() under normal conditions.
+        /// Test for ExpressionTree.Evaluate() under normal conditions.
         /// </summary>
-        [Test]  
+        [Test]
         public void EvaluateTestNormal()
         {
         }
 
         /// <summary>
-        /// Test for OperatorNode.Evaluate() under edge conditions.
+        /// Test for ExpressionTree.Evaluate() under edge conditions.
         /// </summary>
         [Test]
         public void EvaluateTestEdge()
@@ -36,7 +38,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests
         }
 
         /// <summary>
-        /// Test for OperatorNode.Evaluate() under exception conditions.
+        /// Test for ExpressionTree.Evaluate() under exception conditions.
         /// </summary>
         [Test]
         public void EvaluateTestException()
