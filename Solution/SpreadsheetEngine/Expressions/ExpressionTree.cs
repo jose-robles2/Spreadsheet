@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,8 @@ namespace SpreadsheetEngine.Expressions
 
         private Dictionary<string, double> variableDictionary;
 
+        private List<string> expressionTokens;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
         /// </summary>
@@ -35,6 +38,7 @@ namespace SpreadsheetEngine.Expressions
         {
             this.expression = string.IsNullOrEmpty(expression) ? this.defaultExpression : expression;
             this.variableDictionary = new Dictionary<string, double>();
+            this.expressionTokens = this.TokenizeExpression(this.expression);
             this.CreateExpressionTree();
         }
 
@@ -53,14 +57,12 @@ namespace SpreadsheetEngine.Expressions
         /// <param name="varValue"> Value of variable. </param>
         public void SetVariable(string varName, double varValue)
         {
-            try
-            {
-                this.variableDictionary[varName] = varValue;
-            }
-            catch (KeyNotFoundException)
+            if (!this.variableDictionary.ContainsKey(varName))
             {
                 throw new KeyNotFoundException("Variable with name '" + varName + "' not found.");
             }
+
+            this.variableDictionary[varName] = varValue;
         }
 
         /// <summary>
@@ -91,20 +93,12 @@ namespace SpreadsheetEngine.Expressions
         }
 
         /// <summary>
-        /// Create tree for expression.
-        /// </summary>
-        private void CreateExpressionTree()
-        {
-            List<string>? expressionTokens = this.TokenizeExpression(this.expression);
-        }
-
-        /// <summary>
         /// Parse the expression string into tokens. The string is scanned from left to right and checked to see
         /// if we are pointing at a alphabet char or a digit char so that it can be added to the appropriate list.
         /// </summary>
         /// <param name="expression"> Expression. </param>
         /// <returns> List of strings. </returns>
-        private List<string>? TokenizeExpression(string expression)
+        private List<string> TokenizeExpression(string expression)
         {
             List<char> alphabet = Enumerable.Range('A', 26).Select(i => (char)i).ToList();
             List<char> digits = Enumerable.Range('0', 10).Select(i => (char)i).ToList();
@@ -174,7 +168,19 @@ namespace SpreadsheetEngine.Expressions
                 throw new ArgumentException("ERROR: Expression must have at least two operands and one operator.");
             }
 
+            foreach (string var in vars)
+            {
+                this.variableDictionary.Add(var, 0);
+            }
+
             return expressionTokens;
+        }
+
+        /// <summary>
+        /// Create tree for expression.
+        /// </summary>
+        private void CreateExpressionTree()
+        {
         }
     }
 }
