@@ -29,7 +29,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.Nodes
         {
             Node left = new ConstantNode(5);
             Node right = new ConstantNode(5);
-            Node operatorNode = new OperatorNode('+', left, right);
+            Node operatorNode = new OperatorNode('*', left, right);
 
             Assert.That(operatorNode.Evaluate(), Is.EqualTo(25));
         }
@@ -55,9 +55,9 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.Nodes
         {
             Node left = new ConstantNode(int.MaxValue);
             Node right = new ConstantNode(int.MaxValue);
-            Node operatorNode = new OperatorNode('+', left, right);
+            Node operatorNode = new OperatorNode('&', left, right);
 
-            Assert.Throws<OverflowException>(() => operatorNode.Evaluate());
+            Assert.Throws<ArgumentException>(() => operatorNode.Evaluate());
         }
     }
 }
