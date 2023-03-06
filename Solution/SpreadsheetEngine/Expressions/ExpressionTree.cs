@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using SpreadsheetEngine.Expressions.Nodes;
+using SpreadsheetEngine.Spreadsheet;
 
 namespace SpreadsheetEngine.Expressions
 {
@@ -52,6 +53,32 @@ namespace SpreadsheetEngine.Expressions
         /// <param name="varValue"> Value of variable. </param>
         public void SetVariable(string varName, double varValue)
         {
+            try
+            {
+                this.variableDictionary[varName] = varValue;
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new KeyNotFoundException("Variable with name '" + varName + "' not found.");
+            }
+        }
+
+        /// <summary>
+        /// Return the variable value for a variable name.
+        /// </summary>
+        /// <param name="varName"> Name of variable. </param>
+        /// <returns> double. </returns>
+        public double GetVariable(string varName)
+        {
+            try
+            {
+                double value = this.variableDictionary[varName];
+                return value;
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new KeyNotFoundException("Variable with name '" + varName + "' not found.");
+            }
         }
 
         /// <summary>
