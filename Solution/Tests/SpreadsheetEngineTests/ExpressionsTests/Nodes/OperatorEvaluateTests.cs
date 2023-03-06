@@ -14,14 +14,6 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.Nodes
     internal class OperatorEvaluateTests
     {
         /// <summary>
-        /// Setup function used to setup different objects needed for testing.
-        /// </summary>
-        [SetUp]
-        public void Setup()
-        {
-        }
-
-        /// <summary>
         /// Test for OperatorNode.Evaluate() under normal conditions.
         /// </summary>
         [Test]
