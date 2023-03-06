@@ -71,9 +71,83 @@ namespace SpreadsheetEngine.Expressions
             List<string>? expressionTokens = this.TokenizeExpression(this.expression);
         }
 
+        /// <summary>
+        /// Parse the expression string into tokens. The string is scanned from left to right and checked to see
+        /// if we are pointing at a alphabet char or a digit char so that it can be added to the appropriate list.
+        /// </summary>
+        /// <param name="expression"> Expression. </param>
+        /// <returns> List of strings. </returns>
         private List<string>? TokenizeExpression(string expression)
         {
-            return null;
+            List<char> alphabet = Enumerable.Range('A', 26).Select(i => (char)i).ToList();
+            List<char> digits = Enumerable.Range('0', 10).Select(i => (char)i).ToList();
+            List<string> vars = new(), consts = new(), expressionTokens = new();
+
+            bool weSawAChar = false, weSawAConst = false;
+            int currentVarsPos = 0, currentConstPos = 0;
+
+            for (int i = 0; i < expression.Length; i++)
+            {
+                if (alphabet.Contains(expression[i]))
+                {
+                    vars.Add(expression[i].ToString());
+                    weSawAChar = true;
+                }
+                else if (digits.Contains(expression[i]))
+                {
+                    if (weSawAChar)
+                    {
+                        vars[currentVarsPos] += expression[i];
+                    }
+                    else
+                    {
+                        if (weSawAConst)
+                        {
+                            consts[currentConstPos] += expression[i];
+                        }
+                        else
+                        {
+                            consts.Add(expression[i].ToString());
+                            weSawAConst = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (weSawAConst)
+                    {
+                        weSawAConst = false;
+                        expressionTokens.Add(consts[currentConstPos]);
+                        currentConstPos++;
+                    }
+                    else
+                    {
+                        weSawAChar = false;
+                        expressionTokens.Add(vars[currentVarsPos]);
+                        currentVarsPos++;
+                    }
+
+                    char op = expression[i];
+                    expressionTokens.Add(op.ToString());
+                }
+            }
+
+            // We reached the end of an expression and need to add the last variable or constant
+            if (weSawAChar)
+            {
+                expressionTokens.Add(vars[currentVarsPos]);
+            }
+            else if (weSawAConst)
+            {
+                expressionTokens.Add(consts[currentConstPos]);
+            }
+
+            if (expressionTokens.Count < 3)
+            {
+                throw new ArgumentException("ERROR: Expression must have at least two operands and one operator.");
+            }
+
+            return expressionTokens;
         }
     }
 }
