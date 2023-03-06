@@ -28,8 +28,4 @@
     <ProjectReference Include="..\SpreadsheetEngine\SpreadsheetEngine.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="SpreadsheetEngineTests\ExpressionTreeTests\" />
-  </ItemGroup>
-
 </Project>
