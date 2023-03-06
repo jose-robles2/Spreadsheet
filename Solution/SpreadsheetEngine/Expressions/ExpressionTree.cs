@@ -16,17 +16,11 @@ namespace SpreadsheetEngine.Expressions
     /// </summary>
     public class ExpressionTree
     {
-        /// <summary>
-        /// Default expression if none is assigned at instantiation.
-        /// </summary>
         private readonly string defaultExpression = "A1+B1+C1";
 
-        /// <summary>
-        /// Math expression.
-        /// </summary>
         private string expression;
 
-        // private node root = null;
+        private Dictionary<string, double> variableDictionary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
@@ -35,6 +29,8 @@ namespace SpreadsheetEngine.Expressions
         public ExpressionTree(string expression = "")
         {
             this.expression = string.IsNullOrEmpty(expression) ? this.defaultExpression : expression;
+            this.variableDictionary = new Dictionary<string, double>();
+            this.CreateExpressionTree();
         }
 
         /// <summary>
@@ -61,6 +57,13 @@ namespace SpreadsheetEngine.Expressions
         public double Evaluate()
         {
             return 0;
+        }
+
+        /// <summary>
+        /// Create tree for expression.
+        /// </summary>
+        private void CreateExpressionTree()
+        {
         }
     }
 }
