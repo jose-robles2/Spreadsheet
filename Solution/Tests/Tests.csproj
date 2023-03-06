@@ -9,10 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Stylecop\GlobalSuppressions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Stylecop\stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <AdditionalFiles Include="Stylecop\GlobalSuppressions.cs" />
     <AdditionalFiles Include="Stylecop\stylecop.json" />
   </ItemGroup>
 

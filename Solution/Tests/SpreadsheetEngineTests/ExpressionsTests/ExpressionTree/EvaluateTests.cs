@@ -11,7 +11,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
     /// <summary>
     /// Tests for ExpressionTree.Evaluate()
     /// </summary>
-    internal class ExpressionTreeEvaluateTests
+    internal class EvaluateTests
     {
         /// <summary>
         /// Setup function used to setup different objects needed for testing.
