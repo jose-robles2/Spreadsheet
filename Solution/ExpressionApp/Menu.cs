@@ -95,6 +95,14 @@ namespace ExpressionApp
         /// </summary>
         private void CreateExpressionOption()
         {
+            Console.WriteLine("Enter a new expression: ");
+            string? expression = Console.ReadLine();
+
+            if (expression != null)
+            {
+                this.expressionTree = new ExpressionTree(expression);
+                Console.WriteLine("New expression created");
+            }
         }
 
         /// <summary>
@@ -102,6 +110,15 @@ namespace ExpressionApp
         /// </summary>
         private void SetVariableOption()
         {
+            Console.WriteLine("Enter the variable name you want to set: ");
+            string? varName = Console.ReadLine();
+            Console.WriteLine("Enter the value you want to set to this variable: ");
+            string? varValue = Console.ReadLine();
+
+            if (varName != null && varValue != null)
+            {
+                this.expressionTree.SetVariable(varName, double.Parse(varValue));
+            }
         }
 
         /// <summary>
@@ -109,6 +126,7 @@ namespace ExpressionApp
         /// </summary>
         private void EvaluateTreeOption()
         {
+            Console.WriteLine("Evaluating Tree...\nResult: " + this.expressionTree.Evaluate());
         }
     }
 }
