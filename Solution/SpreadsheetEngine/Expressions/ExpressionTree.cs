@@ -22,6 +22,8 @@ namespace SpreadsheetEngine.Expressions
 
         private readonly string expression;
 
+        private List<string> tokenizedExpression;
+
         private Node? root = null;
 
         private Dictionary<string, double> variableDictionary;
@@ -68,6 +70,12 @@ namespace SpreadsheetEngine.Expressions
         /// </summary>
         private void CreateExpressionTree()
         {
+            List<string>? expressionTokens = this.TokenizeExpression(this.expression);
+        }
+
+        private List<string>? TokenizeExpression(string expression)
+        {
+            return null;
         }
     }
 }
