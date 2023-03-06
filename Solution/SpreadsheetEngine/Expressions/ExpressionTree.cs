@@ -109,26 +109,27 @@ namespace SpreadsheetEngine.Expressions
 
             for (int i = 0; i < expression.Length; i++)
             {
-                if (alphabet.Contains(expression[i]))
+                char currentChar = expression[i];
+                if (alphabet.Contains(currentChar))
                 {
                     vars.Add(expression[i].ToString());
                     weSawAChar = true;
                 }
-                else if (digits.Contains(expression[i]))
+                else if (digits.Contains(currentChar))
                 {
                     if (weSawAChar)
                     {
-                        vars[currentVarsPos] += expression[i];
+                        vars[currentVarsPos] += currentChar;
                     }
                     else
                     {
                         if (weSawAConst)
                         {
-                            consts[currentConstPos] += expression[i];
+                            consts[currentConstPos] += currentChar;
                         }
                         else
                         {
-                            consts.Add(expression[i].ToString());
+                            consts.Add(currentChar.ToString());
                             weSawAConst = true;
                         }
                     }
@@ -148,8 +149,7 @@ namespace SpreadsheetEngine.Expressions
                         currentVarsPos++;
                     }
 
-                    char op = expression[i];
-                    expressionTokens.Add(op.ToString());
+                    expressionTokens.Add(currentChar.ToString());
                 }
             }
 
