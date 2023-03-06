@@ -24,10 +24,10 @@ namespace SpreadsheetEngine.Expressions.Nodes
         /// </summary>
         /// <param name="value"> Variable value. </param>
         /// <param name="name"> Variable name. </param>
-        public VariableNode(double value, string name)
+        public VariableNode(string name, double value = 0)
         {
-            this.value = value;
             this.name = name;
+            this.value = value;
         }
 
         /// <summary>
