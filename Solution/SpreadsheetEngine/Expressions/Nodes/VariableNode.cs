@@ -54,7 +54,7 @@ namespace SpreadsheetEngine.Expressions.Nodes
         /// <returns> double. </returns>
         public override double Evaluate()
         {
-            throw new NotImplementedException();
+            return this.value;
         }
     }
 }
