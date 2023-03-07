@@ -120,7 +120,9 @@ namespace ExpressionApp
         /// </summary>
         private void EvaluateTreeOption()
         {
-            Console.WriteLine("Evaluating Tree...\nResult: " + this.expressionTree.Evaluate());
+            throw new NotImplementedException("EvaluateTreeOption() not implemented yet...");
+
+            // Console.WriteLine("Evaluating Tree...\nResult: " + this.expressionTree.Evaluate());
         }
     }
 }
