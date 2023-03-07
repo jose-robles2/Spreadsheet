@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using SpreadsheetEngine.Expressions.Nodes;
+using SpreadsheetEngine.Expressions.Operators;
 
 namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.Nodes
 {
@@ -21,9 +22,9 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.Nodes
         {
             Node left = new ConstantNode(5);
             Node right = new ConstantNode(5);
-            Node operatorNode = new OperatorNode('*', left, right);
+            Node operatorNode = new OperatorNode(new AddOperator(), left, right);
 
-            Assert.That(operatorNode.Evaluate(), Is.EqualTo(25));
+            Assert.That(operatorNode.Evaluate(), Is.EqualTo(10));
         }
 
         /// <summary>
@@ -32,9 +33,9 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.Nodes
         [Test]
         public void EvaluateTestEdge()
         {
-            Node left = new ConstantNode(5);
-            Node right = new ConstantNode(-5);
-            Node operatorNode = new OperatorNode('+', left, right);
+            Node left = new ConstantNode(0);
+            Node right = new ConstantNode(0);
+            Node operatorNode = new OperatorNode(new AddOperator(), left, right);
 
             Assert.That(operatorNode.Evaluate(), Is.EqualTo(0));
         }
@@ -46,10 +47,10 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.Nodes
         public void EvaluateTestException()
         {
             Node left = new ConstantNode(int.MaxValue);
-            Node right = new ConstantNode(int.MaxValue);
-            Node operatorNode = new OperatorNode('&', left, right);
+            Node right = new ConstantNode(0);
+            Node operatorNode = new OperatorNode(new DivOperator(), left, right);
 
-            Assert.Throws<ArgumentException>(() => operatorNode.Evaluate());
+            Assert.Throws<DivideByZeroException>(() => operatorNode.Evaluate());
         }
     }
 }

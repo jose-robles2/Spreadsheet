@@ -23,6 +23,11 @@ namespace SpreadsheetEngine.Expressions.Operators
         /// <returns> double. </returns>
         public override double Evaluate(double left, double right)
         {
+            if (right == 0)
+            {
+                throw new DivideByZeroException();
+            }
+
             return left / right;
         }
     }
