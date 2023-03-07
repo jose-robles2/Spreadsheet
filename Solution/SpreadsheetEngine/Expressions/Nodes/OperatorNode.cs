@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using SpreadsheetEngine.Expressions.Operators;
+
 namespace SpreadsheetEngine.Expressions.Nodes
 {
     /// <summary>
@@ -15,7 +17,7 @@ namespace SpreadsheetEngine.Expressions.Nodes
     /// </summary>
     public class OperatorNode : Node
     {
-        private char @operator;
+        private Operator @operator;
 
         private Node left;
 
@@ -27,7 +29,7 @@ namespace SpreadsheetEngine.Expressions.Nodes
         /// <param name="operator"> Op. </param>
         /// <param name="left"> Left. </param>
         /// <param name="right"> Right. </param>
-        public OperatorNode(char @operator, Node left, Node right)
+        public OperatorNode(Operator @operator, Node left, Node right)
         {
             this.@operator = @operator;
             this.left = left;
@@ -58,19 +60,7 @@ namespace SpreadsheetEngine.Expressions.Nodes
         /// <returns> string. </returns>
         public override double Evaluate()
         {
-            switch (this.@operator)
-            {
-                case '+':
-                    return this.left.Evaluate() + this.right.Evaluate();
-                case '-':
-                    return this.left.Evaluate() - this.right.Evaluate();
-                case '*':
-                    return this.left.Evaluate() * this.right.Evaluate();
-                case '/':
-                    return this.left.Evaluate() / this.right.Evaluate();
-                default:
-                    throw new ArgumentException($"Unknown operator: " + this.@operator);
-            }
+            return this.@operator.Evaluate(this.left.Evaluate(), this.right.Evaluate());
         }
     }
 }
