@@ -81,15 +81,5 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTree
             string input = "4C";
             Assert.Throws<System.ArgumentException>(() => new SpreadsheetEngine.Expressions.ExpressionTree(input));
         }
-
-        /// <summary>
-        /// Test for private method ExpressionTree.TokenizeExpression() under exception conditions.
-        /// </summary>
-        [Test]
-        public void TokenizeExpressionTestException()
-        {
-            string input = "4C";
-            Assert.Throws<System.ArgumentException>(() => new SpreadsheetEngine.Expressions.ExpressionTree(input));
-        }
     }
 }
