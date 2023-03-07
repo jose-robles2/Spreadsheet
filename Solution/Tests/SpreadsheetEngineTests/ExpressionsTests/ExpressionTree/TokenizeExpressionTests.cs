@@ -78,7 +78,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTree
         [Test]
         public void TokenizeExpressionTestException()
         {
-            string input = "A1";
+            string input = "4C";
             Assert.Throws<System.ArgumentException>(() => new SpreadsheetEngine.Expressions.ExpressionTree(input));
         }
     }

@@ -112,6 +112,11 @@ namespace SpreadsheetEngine.Expressions
                 char currentChar = expression[i];
                 if (alphabet.Contains(currentChar))
                 {
+                    if (weSawAConst)
+                    {
+                        throw new ArgumentException("ERROR: Variables must start with a letter, not digit.");
+                    }
+
                     vars.Add(expression[i].ToString());
                     weSawAChar = true;
                 }
