@@ -168,9 +168,13 @@ namespace SpreadsheetEngine.Expressions
                 throw new ArgumentException("ERROR: Expression must have at least two operands and one operator.");
             }
 
-            foreach (string var in vars)
+            // Added check for NUnit testing purposes
+            if (this.variableDictionary.Count == 0)
             {
-                this.variableDictionary.Add(var, 0);
+                foreach (string var in vars)
+                {
+                    this.variableDictionary.Add(var, 0);
+                }
             }
 
             return expressionTokens;
