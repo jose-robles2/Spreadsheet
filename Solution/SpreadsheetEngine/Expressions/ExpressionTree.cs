@@ -99,7 +99,7 @@ namespace SpreadsheetEngine.Expressions
         {
             if (this.root != null)
             {
-                return this.root.Evaluate();
+                return this.root.Evaluate(this.variableDictionary);
             }
 
             return 0;
