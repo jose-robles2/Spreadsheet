@@ -71,7 +71,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
 
             MethodInfo methodInfo = this.GetMethod(classObject, "ConvertInfixToPostFix");
 
-            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { input });
+            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { tokenInput });
 
             Assert.That(actualOutput, Is.EqualTo(expectedOutput));
         }
@@ -89,7 +89,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
 
             MethodInfo methodInfo = this.GetMethod(classObject, "ConvertInfixToPostFix");
 
-            Assert.Throws<ArgumentException>(() => methodInfo.Invoke(classObject, new object[] { input });)
+            Assert.Throws<TargetInvocationException>(() => methodInfo.Invoke(classObject, new object[] { tokenInput }));
         }
     }
 }
