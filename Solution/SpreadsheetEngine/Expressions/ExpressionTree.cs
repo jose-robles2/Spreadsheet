@@ -29,9 +29,14 @@ namespace SpreadsheetEngine.Expressions
 
         private Dictionary<string, double> variableDictionary;
 
-        private List<string> expressionTokens;
+        private List<string> inFixExpressionTokens;
 
-        private List<string> supportedOps = new List<string> { AddOperator.OpString, SubOperator.OpString, MultOperator.OpString, DivOperator.OpString };
+        private Dictionary<string, Operator> supportedOps = new Dictionary<string, Operator> {
+            { AddOperator.OpString, new AddOperator() },
+            { SubOperator.OpString, new SubOperator() },
+            { MultOperator.OpString, new MultOperator() },
+            { DivOperator.OpString, new DivOperator() },
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
@@ -41,7 +46,7 @@ namespace SpreadsheetEngine.Expressions
         {
             this.expression = string.IsNullOrEmpty(expression) ? this.defaultExpression : expression;
             this.variableDictionary = new Dictionary<string, double>();
-            this.expressionTokens = this.TokenizeExpression(this.expression);
+            this.inFixExpressionTokens = this.TokenizeExpression(this.expression);
             this.CreateExpressionTree();
         }
 
@@ -255,7 +260,7 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> bool. </returns>
         private bool IsTokenAnOperator(string token)
         {
-            return this.supportedOps.Contains(token) ? true : false;
+            return this.supportedOps.ContainsKey(token) ? true : false;
         }
 
         /// <summary>
