@@ -37,35 +37,95 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
             return method;
         }
 
-
-        /// <summary>
-        /// Test for private method ExpressionTree.ConvertInfixToPostFix() under normal conditions.
-        /// </summary>
         [Test]
-        public void ConvertInfixToPostFixTestNormal()
+        public void ConvertInfixToPostFixTestTwoTerms()
         {
-            string input = "A1+B1+C1";
-            List<string> tokenInput = new List<string> { "A1", "+", "B1", "+", "C1" };
-            List<string> expectedOutput = new List<string> { "A1", "B1", "+", "C1", "+" };
+            string input = "A1+B1";
+            List<string> tokenInput = new List<string> { "A1", "+", "B1" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "+" };
 
             SpreadsheetEngine.Expressions.ExpressionTree classObject = new(input);
 
             MethodInfo methodInfo = this.GetMethod(classObject, "ConvertInfixToPostFix");
 
-            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { input });
+            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { tokenInput });
 
             Assert.That(actualOutput, Is.EqualTo(expectedOutput));
         }
 
         /// <summary>
-        /// Test for private method ExpressionTree.ConvertInfixToPostFix() under edge conditions.
+        /// Test for private method ExpressionTree.ConvertInfixToPostFix() under normal conditions.
         /// </summary>
         [Test]
-        public void ConvertInfixToPostFixTestEdge()
+        public void ConvertInfixToPostFixThreeTerms()
         {
-            string input = "A1+B1+123+C1+456";
-            List<string> tokenInput = new List<string> { "A1", "+", "B1", "+", "123", "+", "C1", "+", "456" };
-            List<string> expectedOutput  = new List<string> { "A1", "B1", "+", "123", "+", "C1", "+", "456" , "+"};
+            string input = "A1+B1+C1";
+            List<string> tokenInput = new List<string> { "A1", "-", "B1", "-", "C1" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "-", "C1", "-" };
+
+            SpreadsheetEngine.Expressions.ExpressionTree classObject = new(input);
+
+            MethodInfo methodInfo = this.GetMethod(classObject, "ConvertInfixToPostFix");
+
+            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { tokenInput });
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void ConvertInfixToPostFixTestFourTerms()
+        {
+            string input = "A1+B1+C1+D1";
+            List<string> tokenInput = new List<string> { "A1", "*", "B1", "*", "C1", "*", "D1" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "*", "C1", "*", "D1", "*" };
+
+            SpreadsheetEngine.Expressions.ExpressionTree classObject = new(input);
+
+            MethodInfo methodInfo = this.GetMethod(classObject, "ConvertInfixToPostFix");
+
+            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { tokenInput });
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void ConvertInfixToPostFixTestFiveTerms()
+        {
+            string input = "A1+B1+C1+D1+E1";
+            List<string> tokenInput = new List<string> { "A1", "+", "B1", "+", "C1", "+", "D1", "+", "E1" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "+", "C1", "+", "D1", "+", "E1", "+" };
+
+            SpreadsheetEngine.Expressions.ExpressionTree classObject = new(input);
+
+            MethodInfo methodInfo = this.GetMethod(classObject, "ConvertInfixToPostFix");
+
+            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { tokenInput });
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void ConvertInfixToPostFixTestSixTerms()
+        {
+            string input = "A1+B1+C1+D1+E1+F1";
+            List<string> tokenInput = new List<string> { "A1", "+", "B1", "+", "C1", "+", "D1", "+", "E1", "+", "F1" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "+", "C1", "+", "D1", "+", "E1", "+", "F1", "+" };
+
+            SpreadsheetEngine.Expressions.ExpressionTree classObject = new(input);
+
+            MethodInfo methodInfo = this.GetMethod(classObject, "ConvertInfixToPostFix");
+
+            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { tokenInput });
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void ConvertInfixToPostFixTestSevenTerms()
+        {
+            string input = "A1+B1+C1+D1+E1+F1+G1";
+            List<string> tokenInput = new List<string> { "A1", "/", "B1", "/", "C1", "/", "D1", "/", "E1", "/", "F1", "/", "G1" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "/", "C1", "/", "D1", "/", "E1", "/", "F1", "/", "G1", "/", };
 
             SpreadsheetEngine.Expressions.ExpressionTree classObject = new(input);
 
