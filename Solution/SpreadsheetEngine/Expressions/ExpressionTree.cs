@@ -97,6 +97,11 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> Result of expression. </returns>
         public double Evaluate()
         {
+            if (this.root != null)
+            {
+                return this.root.Evaluate();
+            }
+
             return 0;
         }
 
@@ -194,10 +199,34 @@ namespace SpreadsheetEngine.Expressions
         }
 
         /// <summary>
-        /// Create tree for expression.
+        /// Create tree for expression. Using a stack. NOTE: For future HW we can add a node factory so we do not
+        /// need to explicitly state the kinda node we're making.
         /// </summary>
         private void CreateExpressionTree()
         {
+            Stack<Node> nodeStack = new Stack<Node>();
+
+            List<string> postfixExpression = this.ConvertInfixToPostFix(this.inFixExpressionTokens);
+
+            foreach (string token in postfixExpression)
+            {
+                if (this.IsTokenADigit(token))
+                {
+                    nodeStack.Push(new ConstantNode(double.Parse(token)));
+                }
+                else if (this.IsTokenAnOperator(token))
+                {
+                    Node right = nodeStack.Pop();
+                    Node left = nodeStack.Pop();
+                    nodeStack.Push(new OperatorNode(this.supportedOps[token], left, right));
+                }
+                else
+                {
+                    nodeStack.Push(new VariableNode(token, this.variableDictionary[token]));
+                }
+            }
+
+            this.root = nodeStack.Pop();
         }
 
         /// <summary>
