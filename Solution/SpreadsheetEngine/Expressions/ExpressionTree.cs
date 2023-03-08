@@ -31,7 +31,8 @@ namespace SpreadsheetEngine.Expressions
 
         private List<string> inFixExpressionTokens;
 
-        private Dictionary<string, Operator> supportedOps = new Dictionary<string, Operator> {
+        private Dictionary<string, Operator> supportedOps = new Dictionary<string, Operator>
+        {
             { AddOperator.OpString, new AddOperator() },
             { SubOperator.OpString, new SubOperator() },
             { MultOperator.OpString, new MultOperator() },
@@ -123,17 +124,24 @@ namespace SpreadsheetEngine.Expressions
             for (int i = 0; i < expression.Length; i++)
             {
                 char currentChar = expression[i];
-                if (alphabet.Contains(currentChar))
+                if (this.IsTokenAlphabetical(currentChar.ToString()))
                 {
                     if (weSawAConst)
                     {
                         throw new ArgumentException("ERROR: Variables must start with a letter, not digit.");
                     }
 
-                    vars.Add(expression[i].ToString());
-                    weSawAChar = true;
+                    if (weSawAChar)
+                    {
+                        vars[currentVarsPos] += currentChar;
+                    }
+                    else
+                    {
+                        vars.Add(expression[i].ToString());
+                        weSawAChar = true;
+                    }
                 }
-                else if (digits.Contains(currentChar))
+                else if (this.IsTokenADigit(currentChar.ToString()))
                 {
                     if (weSawAChar)
                     {
@@ -302,6 +310,18 @@ namespace SpreadsheetEngine.Expressions
             List<char> digits = Enumerable.Range('0', 10).Select(i => (char)i).ToList();
 
             return digits.Contains(token[0]);
+        }
+
+        /// <summary>
+        /// If a token starts with a letter, then it is a variable token.
+        /// </summary>
+        /// <param name="token"> token string. </param>
+        /// <returns> bool. </returns>
+        private bool IsTokenAlphabetical(string token)
+        {
+            List<char> alphabet = Enumerable.Range('A', 26).Select(i => (char)i).ToList();
+
+            return alphabet.Contains(char.ToUpper(token[0]));
         }
     }
 }
