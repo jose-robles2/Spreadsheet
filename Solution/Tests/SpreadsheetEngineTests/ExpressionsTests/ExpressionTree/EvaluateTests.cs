@@ -14,27 +14,67 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
     internal class EvaluateTests
     {
         /// <summary>
-        /// Setup function used to setup different objects needed for testing.
+        /// Test for ExpressionTree.Evaluate() under normal conditions.
         /// </summary>
-        [SetUp]
-        public void Setup()
+        [Test]
+        public void EvaluateTestAdd()
         {
+            SpreadsheetEngine.Expressions.ExpressionTree tree = new("A+B+C");
+            tree.SetVariable("A", 1);
+            tree.SetVariable("B", 1);
+            tree.SetVariable("C", 1);
+
+            double expectedResult = 3;
+
+            Assert.That(tree.Evaluate(), Is.EqualTo(expectedResult));
         }
 
         /// <summary>
         /// Test for ExpressionTree.Evaluate() under normal conditions.
         /// </summary>
         [Test]
-        public void EvaluateTestNormal()
+        public void EvaluateTestSub()
         {
+            SpreadsheetEngine.Expressions.ExpressionTree tree = new("A-B-C");
+            tree.SetVariable("A", 10);
+            tree.SetVariable("B", 10);
+            tree.SetVariable("C", 10);
+
+            double expectedResult = -10;
+
+            Assert.That(tree.Evaluate(), Is.EqualTo(expectedResult));
         }
 
         /// <summary>
-        /// Test for ExpressionTree.Evaluate() under edge conditions.
+        /// Test for ExpressionTree.Evaluate() under normal conditions.
         /// </summary>
         [Test]
-        public void EvaluateTestEdge()
+        public void EvaluateTestMult()
         {
+            SpreadsheetEngine.Expressions.ExpressionTree tree = new("A*B*C");
+            tree.SetVariable("A", 10);
+            tree.SetVariable("B", 10);
+            tree.SetVariable("C", 10);
+
+            int expectedResult = 1000;
+
+            Assert.That(tree.Evaluate(), Is.EqualTo(expectedResult));
+        }
+
+        /// <summary>
+        /// Test for ExpressionTree.Evaluate() under normal conditions.
+        /// </summary>
+        [Test]
+        public void EvaluateTestDiv()
+        {
+            SpreadsheetEngine.Expressions.ExpressionTree tree = new("A/B/C");
+            tree.SetVariable("A", 1000);
+            tree.SetVariable("B", 10);
+            tree.SetVariable("C", 10);
+
+            int expectedResult = 10;
+
+            Assert.That(tree.Evaluate(), Is.EqualTo(expectedResult));
         }
 
         /// <summary>
@@ -43,6 +83,11 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
         [Test]
         public void EvaluateTestException()
         {
+            SpreadsheetEngine.Expressions.ExpressionTree tree = new("A*B");
+            tree.SetVariable("A", int.MaxValue);
+            tree.SetVariable("B", int.MaxValue);
+
+            Assert.Throws<OverflowException>(() => tree.Evaluate());
         }
     }
 }
