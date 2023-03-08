@@ -61,9 +61,51 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTree
         [Test]
         public void TokenizeExpressionTestEdge()
         {
-            string input = "A1+B1+C1";
+            string input = "A1-b1-cD2-10-eF3";
             SpreadsheetEngine.Expressions.ExpressionTree classObject = new(input);
-            List<string> expectedOutput = new List<string> { "A1", "+", "B1", "+", "C1" };
+            List<string> expectedOutput = new List<string> { "A1", "-", "b1", "-", "cD2", "-", "10", "-", "eF3" };
+
+            MethodInfo methodInfo = this.GetMethod(classObject, "TokenizeExpression");
+
+            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { input });
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void TokenizeExpressionTestEdgeUpperCase()
+        {
+            string input = "A1-B1-CD2-10-EF3";
+            SpreadsheetEngine.Expressions.ExpressionTree classObject = new(input);
+            List<string> expectedOutput = new List<string> { "A1", "-", "B1", "-", "CD2", "-", "10", "-", "EF3" };
+
+            MethodInfo methodInfo = this.GetMethod(classObject, "TokenizeExpression");
+
+            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { input });
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void TokenizeExpressionTestEdgeLowerCase()
+        {
+            string input = "a1*b1*cd2*10*ef3";
+            SpreadsheetEngine.Expressions.ExpressionTree classObject = new(input);
+            List<string> expectedOutput = new List<string> { "a1", "*", "b1", "*", "cd2", "*", "10", "*", "ef3" };
+
+            MethodInfo methodInfo = this.GetMethod(classObject, "TokenizeExpression");
+
+            List<string>? actualOutput = (List<string>?)methodInfo.Invoke(classObject, new object[] { input });
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void TokenizeExpressionTestEdgeMixedCase()
+        {
+            string input = "A1-b1-Cd2-10-eF3";
+            SpreadsheetEngine.Expressions.ExpressionTree classObject = new(input);
+            List<string> expectedOutput = new List<string> { "A1", "-", "b1", "-", "Cd2", "-", "10", "-", "eF3" };
 
             MethodInfo methodInfo = this.GetMethod(classObject, "TokenizeExpression");
 
