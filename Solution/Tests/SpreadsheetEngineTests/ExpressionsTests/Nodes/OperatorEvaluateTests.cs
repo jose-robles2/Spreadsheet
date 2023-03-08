@@ -24,7 +24,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.Nodes
             Node right = new ConstantNode(5);
             Node operatorNode = new OperatorNode(new AddOperator(), left, right);
 
-            Assert.That(operatorNode.Evaluate(), Is.EqualTo(10));
+            Assert.That(operatorNode.Evaluate(new Dictionary<string, double>()), Is.EqualTo(10));
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.Nodes
             Node right = new ConstantNode(0);
             Node operatorNode = new OperatorNode(new AddOperator(), left, right);
 
-            Assert.That(operatorNode.Evaluate(), Is.EqualTo(0));
+            Assert.That(operatorNode.Evaluate(new Dictionary<string, double>()), Is.EqualTo(0));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.Nodes
             Node right = new ConstantNode(0);
             Node operatorNode = new OperatorNode(new DivOperator(), left, right);
 
-            Assert.Throws<DivideByZeroException>(() => operatorNode.Evaluate());
+            Assert.Throws<DivideByZeroException>(() => operatorNode.Evaluate(new Dictionary<string, double>()));
         }
     }
 }
