@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using SpreadsheetEngine.Expressions.Nodes;
+using SpreadsheetEngine.Expressions.Operators;
 using SpreadsheetEngine.Spreadsheet;
 
 namespace SpreadsheetEngine.Expressions
@@ -29,6 +30,8 @@ namespace SpreadsheetEngine.Expressions
         private Dictionary<string, double> variableDictionary;
 
         private List<string> expressionTokens;
+
+        private List<string> supportedOps = new List<string> { AddOperator.OpString, SubOperator.OpString, MultOperator.OpString, DivOperator.OpString };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
@@ -190,6 +193,68 @@ namespace SpreadsheetEngine.Expressions
         /// </summary>
         private void CreateExpressionTree()
         {
+        }
+
+        /// <summary>
+        /// Convert an infix expression to postfix. For HW5 assume that operators are the same
+        /// and no parentheses are included, so precedence and associativity aren't dealt with now.
+        /// </summary>
+        /// <param name="expression"> Infix expression. </param>
+        /// <returns> List of strings. </returns>
+        private List<string> ConvertInfixToPostFix(List<string> expression)
+        {
+            if (expression.Count < 3)
+            {
+                throw new ArgumentException("ERROR: Expression of tokens must have at least three tokens");
+            }
+
+            Stack<string> opStack = new Stack<string>();
+            List<string> output = new List<string>();
+
+            foreach (string token in expression)
+            {
+                if (this.IsTokenAnOperator(token))
+                {
+                    opStack.Push(token);
+                }
+                else if (this.IsTokenADigit(token))
+                {
+                    output.Add(token);
+                }
+                else
+                {
+                    output.Add(token);
+                }
+            }
+
+            while (opStack.Count > 0)
+            {
+                output.Add(opStack.Pop());
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// Checks to see if token is a supported operator.
+        /// </summary>
+        /// <param name="token"> token string. </param>
+        /// <returns> bool. </returns>
+        private bool IsTokenAnOperator(string token)
+        {
+            return this.supportedOps.Contains(token) ? true : false;
+        }
+
+        /// <summary>
+        /// If a token starts with a digit, then it is a digit token.
+        /// </summary>
+        /// <param name="token"> token string. </param>
+        /// <returns> bool. </returns>
+        private bool IsTokenADigit(string token)
+        {
+            List<char> digits = Enumerable.Range('0', 10).Select(i => (char)i).ToList();
+
+            return digits.Contains(token[0]);
         }
     }
 }
