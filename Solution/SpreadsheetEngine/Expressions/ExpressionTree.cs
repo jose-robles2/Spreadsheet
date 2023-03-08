@@ -268,13 +268,9 @@ namespace SpreadsheetEngine.Expressions
                         {
                             output.Add(opStack.Pop());
                         }
+                    }
 
-                        opStack.Push(token);
-                    }
-                    else
-                    {
-                        opStack.Push(token);
-                    }
+                    opStack.Push(token);
                 }
                 else
                 {
