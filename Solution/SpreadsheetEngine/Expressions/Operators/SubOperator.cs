@@ -16,6 +16,33 @@ namespace SpreadsheetEngine.Expressions.Operators
     public class SubOperator : Operator
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="SubOperator"/> class.
+        /// </summary>
+        public SubOperator()
+        {
+        }
+
+        /// <summary>
+        /// Gets the operator symbol.
+        /// </summary>
+        public static char OpChar => '-';
+
+        /// <summary>
+        /// Gets the operator symbol.
+        /// </summary>
+        public static string OpString => "-";
+
+        /// <summary>
+        /// Gets the precedance level.
+        /// </summary>
+        public static int Precedence => 0;
+
+        /// <summary>
+        /// Gets the associativity.
+        /// </summary>
+        public static Associative Associativity => Associative.Left;
+
+        /// <summary>
         /// Method to be implemented in derived classes.
         /// </summary>
         /// <param name="left"> Value of left child. </param>

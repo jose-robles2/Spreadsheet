@@ -18,6 +18,22 @@ namespace SpreadsheetEngine.Expressions.Operators
     public abstract class Operator
     {
         /// <summary>
+        /// Associativity of the operators.
+        /// </summary>
+        public enum Associative
+        {
+            /// <summary>
+            /// Right associativity.
+            /// </summary>
+            Right,
+
+            /// <summary>
+            /// Left associativity.
+            /// </summary>
+            Left,
+        }
+
+        /// <summary>
         /// Method to be implemented in derived classes.
         /// </summary>
         /// <param name="left"> Value of left child. </param>
