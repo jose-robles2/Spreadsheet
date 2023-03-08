@@ -198,6 +198,7 @@ namespace SpreadsheetEngine.Expressions
         /// <summary>
         /// Convert an infix expression to postfix. For HW5 assume that operators are the same
         /// and no parentheses are included, so precedence and associativity aren't dealt with now.
+        /// Because of this, this is a simplified version of the shunting yard algorithm.
         /// </summary>
         /// <param name="expression"> Infix expression. </param>
         /// <returns> List of strings. </returns>
@@ -213,13 +214,25 @@ namespace SpreadsheetEngine.Expressions
 
             foreach (string token in expression)
             {
-                if (this.IsTokenAnOperator(token))
-                {
-                    opStack.Push(token);
-                }
-                else if (this.IsTokenADigit(token))
+                if (this.IsTokenADigit(token))
                 {
                     output.Add(token);
+                }
+                else if (this.IsTokenAnOperator(token))
+                {
+                    if (output.Count >= 2)
+                    {
+                        if (opStack.Count > 0)
+                        {
+                            output.Add(opStack.Pop());
+                        }
+
+                        opStack.Push(token);
+                    }
+                    else
+                    {
+                        opStack.Push(token);
+                    }
                 }
                 else
                 {
