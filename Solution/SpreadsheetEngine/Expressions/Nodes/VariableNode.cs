@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SpreadsheetEngine.Expressions.Nodes
 {
@@ -49,12 +50,21 @@ namespace SpreadsheetEngine.Expressions.Nodes
         }
 
         /// <summary>
-        /// Overridden Evaluate.
+        /// Abstract evaluate.
         /// </summary>
+        /// <param name="variables"> Dict of vars. </param>
         /// <returns> double. </returns>
-        public override double Evaluate()
+        public override double Evaluate(Dictionary<string, double> variables)
         {
-            return this.value;
+            if (variables.ContainsKey(this.name))
+            {
+                return variables[this.name];
+            }
+            else
+            {
+                variables[this.name] = 0.0; // Default value for undefined variables
+                return 0.0;
+            }
         }
     }
 }

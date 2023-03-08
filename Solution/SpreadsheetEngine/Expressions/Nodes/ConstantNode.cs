@@ -36,10 +36,11 @@ namespace SpreadsheetEngine.Expressions.Nodes
         }
 
         /// <summary>
-        /// Overridden Evaluate.
+        /// Abstract evaluate.
         /// </summary>
-        /// <returns> double. </returns>
-        public override double Evaluate()
+        /// <param name="variables"> Dict of vars. </param>
+        /// <returns> double </returns>
+        public override double Evaluate(Dictionary<string, double> variables)
         {
             return this.value;
         }

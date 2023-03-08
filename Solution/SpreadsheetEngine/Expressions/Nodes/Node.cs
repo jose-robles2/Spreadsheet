@@ -19,7 +19,8 @@ namespace SpreadsheetEngine.Expressions.Nodes
         /// <summary>
         /// Abstract evaluate.
         /// </summary>
-        /// <returns> double. </returns>
-        public abstract double Evaluate();
+        /// <param name="variables"> Dict of vars. </param>
+        /// <returns> double </returns>
+        public abstract double Evaluate(Dictionary<string, double> variables);
     }
 }
