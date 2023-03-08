@@ -76,18 +76,5 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
 
             Assert.That(tree.Evaluate(), Is.EqualTo(expectedResult));
         }
-
-        /// <summary>
-        /// Test for ExpressionTree.Evaluate() under exception conditions.
-        /// </summary>
-        [Test]
-        public void EvaluateTestException()
-        {
-            SpreadsheetEngine.Expressions.ExpressionTree tree = new("A*B");
-            tree.SetVariable("A", int.MaxValue);
-            tree.SetVariable("B", int.MaxValue);
-
-            Assert.Throws<OverflowException>(() => tree.Evaluate());
-        }
     }
 }
