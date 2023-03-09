@@ -61,7 +61,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTree
         [Test]
         public void TokenizeExpressionTestEdge()
         {
-            string input = "A1-b1-cD2-10-eF3";
+            string input = "A1 - b1-cD2 -10-       eF3";
             SpreadsheetEngine.Expressions.ExpressionTree classObject = new(input);
             List<string> expectedOutput = new List<string> { "A1", "-", "b1", "-", "cD2", "-", "10", "-", "eF3" };
 
