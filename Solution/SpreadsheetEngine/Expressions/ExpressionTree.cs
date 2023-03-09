@@ -31,14 +31,6 @@ namespace SpreadsheetEngine.Expressions
 
         private List<string> inFixExpressionTokens;
 
-        private Dictionary<string, Operator> supportedOps = new Dictionary<string, Operator>
-        {
-            { AddOperator.OpString, new AddOperator() },
-            { SubOperator.OpString, new SubOperator() },
-            { MultOperator.OpString, new MultOperator() },
-            { DivOperator.OpString, new DivOperator() },
-        };
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
         /// </summary>
@@ -226,7 +218,8 @@ namespace SpreadsheetEngine.Expressions
                 {
                     Node right = nodeStack.Pop();
                     Node left = nodeStack.Pop();
-                    nodeStack.Push(new OperatorNode(this.supportedOps[token], left, right));
+
+                    nodeStack.Push(OperatorNodeFactory.Builder(token, left, right));
                 }
                 else
                 {
@@ -293,7 +286,7 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> bool. </returns>
         private bool IsTokenAnOperator(string token)
         {
-            return this.supportedOps.ContainsKey(token) ? true : false;
+            return OperatorNodeFactory.SupportedOps.ContainsKey(token) ? true : false;
         }
 
         /// <summary>
