@@ -114,8 +114,8 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> List of strings. </returns>
         private List<string> TokenizeExpression(string expression)
         {
-            List<char> alphabet = Enumerable.Range('A', 26).Select(i => (char)i).ToList();
-            List<char> digits = Enumerable.Range('0', 10).Select(i => (char)i).ToList();
+            expression = expression.Replace(" ", string.Empty);
+
             List<string> vars = new(), consts = new(), expressionTokens = new();
 
             bool weSawAChar = false, weSawAConst = false;
@@ -137,7 +137,7 @@ namespace SpreadsheetEngine.Expressions
                     }
                     else
                     {
-                        vars.Add(expression[i].ToString());
+                        vars.Add(currentChar.ToString());
                         weSawAChar = true;
                     }
                 }
