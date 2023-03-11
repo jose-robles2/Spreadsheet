@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -9,10 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Stylecop\GlobalSuppressions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Stylecop\stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <AdditionalFiles Include="Stylecop\GlobalSuppressions.cs" />
     <AdditionalFiles Include="Stylecop\stylecop.json" />
   </ItemGroup>
 
@@ -25,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HomeworkFour\HomeworkFour.csproj" />
+    <ProjectReference Include="..\SpreadsheetEngine\SpreadsheetEngine.csproj" />
   </ItemGroup>
 
 </Project>

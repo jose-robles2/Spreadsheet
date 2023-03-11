@@ -4,7 +4,7 @@
 
 using System.ComponentModel;
 
-namespace SpreadsheetEngine
+namespace SpreadsheetEngine.Spreadsheet
 {
     /// <summary>
     /// Abstract base class that represents a Cell object in the spreadsheet.

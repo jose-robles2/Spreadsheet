@@ -1,4 +1,4 @@
-﻿// <copyright file="GlobalSuppressions.cs" company="Jose Robles">
+// <copyright file="GlobalSuppressions.cs" company="Jose Robles">
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
 
