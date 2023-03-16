@@ -16,24 +16,19 @@ namespace SpreadsheetEngine.Expressions.Operators
     public class DivOperator : Operator
     {
         /// <summary>
-        /// Gets the operator symbol.
+        /// Initializes a new instance of the <see cref="DivOperator"/> class.
         /// </summary>
-        public static char OpChar => '/';
+        public DivOperator()
+        {
+            this.precedence = 1;
+            this.associative = Associative.Left;
+            this.op = OpStatic;
+        }
 
         /// <summary>
         /// Gets the operator symbol.
         /// </summary>
-        public static string OpString => "/";
-
-        /// <summary>
-        /// Gets the precedance level.
-        /// </summary>
-        public static int Precedence => 1;
-
-        /// <summary>
-        /// Gets the associativity.
-        /// </summary>
-        public static Associative Associativity => Associative.Left;
+        public static string OpStatic => "/";
 
         /// <summary>
         /// Method to be implemented in derived classes.
