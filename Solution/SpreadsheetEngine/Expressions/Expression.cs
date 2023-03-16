@@ -18,6 +18,7 @@ namespace SpreadsheetEngine.Expressions
         /// <summary>
         /// Parse the expression string into tokens. The string is scanned from left to right and checked to see
         /// if we are pointing at a alphabet char or a digit char so that it can be added to the appropriate list.
+        /// If we saw an alphabetical letter first, we will build a variable token, else a const token will be built.
         /// </summary>
         /// <param name="expression"> Expression. </param>
         /// <returns> List of strings. </returns>
@@ -25,77 +26,58 @@ namespace SpreadsheetEngine.Expressions
         {
             expression = expression.Replace(" ", string.Empty);
 
-            List<string> vars = new(), consts = new(), expressionTokens = new();
-
-            bool weSawAChar = false, weSawAConst = false;
-            int currentVarsPos = 0, currentConstPos = 0;
+            var vars = new StringBuilder();
+            var consts = new StringBuilder();
+            var expressionTokens = new List<string>();
 
             for (int i = 0; i < expression.Length; i++)
             {
                 char currentChar = expression[i];
+
                 if (Expression.IsTokenAlphabetical(currentChar.ToString()))
                 {
-                    if (weSawAConst)
+                    if (consts.Length > 0)
                     {
                         throw new ArgumentException("ERROR: Variables must start with a letter, not digit.");
                     }
 
-                    if (weSawAChar)
-                    {
-                        vars[currentVarsPos] += currentChar;
-                    }
-                    else
-                    {
-                        vars.Add(currentChar.ToString());
-                        weSawAChar = true;
-                    }
+                    vars.Append(currentChar);
                 }
                 else if (Expression.IsTokenADigit(currentChar.ToString()))
                 {
-                    if (weSawAChar)
+                    if (vars.Length > 0)
                     {
-                        vars[currentVarsPos] += currentChar;
+                        vars.Append(currentChar);
                     }
                     else
                     {
-                        if (weSawAConst)
-                        {
-                            consts[currentConstPos] += currentChar;
-                        }
-                        else
-                        {
-                            consts.Add(currentChar.ToString());
-                            weSawAConst = true;
-                        }
+                        consts.Append(currentChar);
                     }
                 }
                 else
                 {
-                    if (weSawAConst)
+                    if (vars.Length > 0)
                     {
-                        weSawAConst = false;
-                        expressionTokens.Add(consts[currentConstPos]);
-                        currentConstPos++;
+                        expressionTokens.Add(vars.ToString());
+                        vars.Clear();
                     }
-                    else
+                    else if (consts.Length > 0)
                     {
-                        weSawAChar = false;
-                        expressionTokens.Add(vars[currentVarsPos]);
-                        currentVarsPos++;
+                        expressionTokens.Add(consts.ToString());
+                        consts.Clear();
                     }
 
                     expressionTokens.Add(currentChar.ToString());
                 }
             }
 
-            // We reached the end of an expression and need to add the last variable or constant
-            if (weSawAChar)
+            if (vars.Length > 0)
             {
-                expressionTokens.Add(vars[currentVarsPos]);
+                expressionTokens.Add(vars.ToString());
             }
-            else if (weSawAConst)
+            else if (consts.Length > 0)
             {
-                expressionTokens.Add(consts[currentConstPos]);
+                expressionTokens.Add(consts.ToString());
             }
 
             if (expressionTokens.Count < 3)
