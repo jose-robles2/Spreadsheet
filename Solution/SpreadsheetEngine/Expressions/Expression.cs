@@ -19,6 +19,7 @@ namespace SpreadsheetEngine.Expressions
         /// Parse the expression string into tokens. The string is scanned from left to right and checked to see
         /// if we are pointing at a alphabet char or a digit char so that it can be added to the appropriate list.
         /// If we saw an alphabetical letter first, we will build a variable token, else a const token will be built.
+        /// When an operator is seen, the current token, either a var or const, is added to the output, as is the operator.
         /// </summary>
         /// <param name="expression"> Expression. </param>
         /// <returns> List of strings. </returns>
