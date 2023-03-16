@@ -78,6 +78,66 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTests
         }
 
         [Test]
+        public void ConvertInfixToPostFixTestParentheses()
+        {
+            List<string> tokenInput = new List<string> { "(", "A1", "+", "B1", ")", "*", "C1" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "+", "C1", "*" };
+            List<string>? actualOutput = Expression.ConvertInfixToPostFix(tokenInput);
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void ConvertInfixToPostFixTestParentheses2()
+        {
+            List<string> tokenInput = new List<string> { "(", "A1", "+", "B1", ")", "*", "C1", "/", "(", "D1", "-", "E1", ")" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "+", "C1", "*", "D1", "E1", "-", "/", "*" };
+            List<string>? actualOutput = Expression.ConvertInfixToPostFix(tokenInput);
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void ConvertInfixToPostFixTestNestedParentheses()
+        {
+            List<string> tokenInput = new List<string> { "(", "A1", "+", "(", "B1", "-", "C1", ")", ")", "*", "D1" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "C1", "-", "+", "D1", "*" };
+            List<string>? actualOutput = Expression.ConvertInfixToPostFix(tokenInput);
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void ConvertInfixToPostFixTestNestedParentheses2()
+        {
+            List<string> tokenInput = new List<string> { "(", "A1", "+", "(", "B1", "*", "C1", ")", ")", "/", "(", "D1", "+", "E1", ")", "-", "F1" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "C1", "*", "+", "D1", "E1", "+", "/", "F1", "-" };
+            List<string>? actualOutput = Expression.ConvertInfixToPostFix(tokenInput);
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void ConvertInfixToPostFixTestNestedParentheses3()
+        {
+            List<string> tokenInput = new List<string> { "(", "A1", "+", "(", "B1", "-", "C1", ")", ")", "*", "(", "D1", "/", "(", "E1", "-", "F1", ")", ")" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "C1", "-", "+", "D1", "E1", "F1", "-", "/", "*", };
+            List<string>? actualOutput = Expression.ConvertInfixToPostFix(tokenInput);
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void ConvertInfixToPostFixTestWithConsecutiveParentheses()
+        {
+            List<string> tokenInput = new List<string> { "(", "(", "A1", "+", "B1", ")", "*", "C1", ")", "/", "(", "D1", "-", "E1", ")", "/", "(", "F1", "+", "G1", ")", "*", "H1" };
+            List<string> expectedOutput = new List<string> { "A1", "B1", "+", "C1", "*", "D1", "E1", "-", "/", "F1", "G1", "+", "/", "H1", "*", };
+            List<string>? actualOutput = Expression.ConvertInfixToPostFix(tokenInput);
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
         public void ConvertInfixToPostFixTestException()
         {
             List<string> tokenInput = new List<string>();
