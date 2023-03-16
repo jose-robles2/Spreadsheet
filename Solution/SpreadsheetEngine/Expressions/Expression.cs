@@ -1,4 +1,4 @@
-﻿// <copyright file="Expresssion.cs" company="Jose Robles">
+﻿// <copyright file="Expression.cs" company="Jose Robles">
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
 
@@ -162,7 +162,7 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> bool. </returns>
         public static bool IsTokenAnOperator(string token)
         {
-            return OperatorNodeFactory.SupportedOps.ContainsKey(token) ? true : false;
+            return OperatorNodeFactory.SupportedOps.ContainsKey(token);
         }
 
         /// <summary>
@@ -172,9 +172,7 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> bool. </returns>
         public static bool IsTokenADigit(string token)
         {
-            List<char> digits = Enumerable.Range('0', 10).Select(i => (char)i).ToList();
-
-            return digits.Contains(token[0]);
+            return char.IsDigit(token[0]);
         }
 
         /// <summary>
@@ -184,9 +182,7 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> bool. </returns>
         public static bool IsTokenAlphabetical(string token)
         {
-            List<char> alphabet = Enumerable.Range('A', 26).Select(i => (char)i).ToList();
-
-            return alphabet.Contains(char.ToUpper(token[0]));
+            return char.IsLetter(token[0]);
         }
     }
 }
