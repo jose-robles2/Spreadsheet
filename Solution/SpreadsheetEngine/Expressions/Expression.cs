@@ -34,7 +34,7 @@ namespace SpreadsheetEngine.Expressions
             {
                 char currentChar = expression[i];
 
-                if (Expression.IsTokenAlphabetical(currentChar.ToString()))
+                if (IsTokenAlphabetical(currentChar.ToString()))
                 {
                     if (consts.Length > 0)
                     {
@@ -43,7 +43,7 @@ namespace SpreadsheetEngine.Expressions
 
                     vars.Append(currentChar);
                 }
-                else if (Expression.IsTokenADigit(currentChar.ToString()))
+                else if (IsTokenADigit(currentChar.ToString()))
                 {
                     if (vars.Length > 0)
                     {
