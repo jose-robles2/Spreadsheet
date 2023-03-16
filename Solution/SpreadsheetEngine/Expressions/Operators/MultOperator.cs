@@ -16,13 +16,6 @@ namespace SpreadsheetEngine.Expressions.Operators
     public class MultOperator : Operator
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MultOperator"/> class.
-        /// </summary>
-        public MultOperator()
-        {
-        }
-
-        /// <summary>
         /// Gets the operator symbol.
         /// </summary>
         public static char OpChar => '*';

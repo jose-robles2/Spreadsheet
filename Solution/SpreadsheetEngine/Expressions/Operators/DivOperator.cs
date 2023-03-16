@@ -16,13 +16,6 @@ namespace SpreadsheetEngine.Expressions.Operators
     public class DivOperator : Operator
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DivOperator"/> class.
-        /// </summary>
-        public DivOperator()
-        {
-        }
-
-        /// <summary>
         /// Gets the operator symbol.
         /// </summary>
         public static char OpChar => '/';

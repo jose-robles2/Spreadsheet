@@ -16,13 +16,6 @@ namespace SpreadsheetEngine.Expressions.Operators
     public class SubOperator : Operator
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SubOperator"/> class.
-        /// </summary>
-        public SubOperator()
-        {
-        }
-
-        /// <summary>
         /// Gets the operator symbol.
         /// </summary>
         public static char OpChar => '-';
