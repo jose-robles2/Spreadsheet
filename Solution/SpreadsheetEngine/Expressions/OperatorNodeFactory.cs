@@ -18,10 +18,10 @@ namespace SpreadsheetEngine.Expressions
     {
         public static readonly Dictionary<string, Func<Operator>> SupportedOps = new Dictionary<string, Func<Operator>>
         {
-            { AddOperator.OpString, () => new AddOperator() },
-            { SubOperator.OpString, () => new SubOperator() },
-            { MultOperator.OpString, () => new MultOperator() },
-            { DivOperator.OpString, () => new DivOperator() },
+            { AddOperator.OpStatic, () => new AddOperator() },
+            { SubOperator.OpStatic, () => new SubOperator() },
+            { MultOperator.OpStatic, () => new MultOperator() },
+            { DivOperator.OpStatic, () => new DivOperator() },
         };
 
         /// <summary>
