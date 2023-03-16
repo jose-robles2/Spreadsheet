@@ -27,9 +27,8 @@ namespace SpreadsheetEngine.Expressions
         {
             expression = expression.Replace(" ", string.Empty);
 
-            var vars = new StringBuilder();
-            var consts = new StringBuilder();
-            var expressionTokens = new List<string>();
+            StringBuilder vars = new(), consts = new();
+            List<string> expressionTokens = new List<string>();
 
             for (int i = 0; i < expression.Length; i++)
             {
@@ -54,6 +53,21 @@ namespace SpreadsheetEngine.Expressions
                     {
                         consts.Append(currentChar);
                     }
+                }
+                else if (IsTokenAParenthesis(currentChar.ToString()))
+                {
+                    if (vars.Length > 0)
+                    {
+                        expressionTokens.Add(vars.ToString());
+                        vars.Clear();
+                    }
+                    else if (consts.Length > 0)
+                    {
+                        expressionTokens.Add(consts.ToString());
+                        consts.Clear();
+                    }
+
+                    expressionTokens.Add(currentChar.ToString());
                 }
                 else
                 {
@@ -166,6 +180,16 @@ namespace SpreadsheetEngine.Expressions
         public static bool IsTokenAlphabetical(string token)
         {
             return char.IsLetter(token[0]);
+        }
+
+        /// <summary>
+        /// Checks to see if a token is a parenthesis.
+        /// </summary>
+        /// <param name="token"> token string. </param>
+        /// <returns> bool. </returns>
+        public static bool IsTokenAParenthesis(string token)
+        {
+            return token == "(" || token == ")";
         }
     }
 }
