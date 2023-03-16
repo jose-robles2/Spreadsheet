@@ -66,6 +66,16 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTests
         }
 
         [Test]
+        public void TokenizeExpressionTestEdgeMixedCharsAndDigits()
+        {
+            string input = "a11kl13klb12*b1*cd2aB12c*10*ef3";
+            List<string> expectedOutput = new List<string> { "a11kl13klb12", "*", "b1", "*", "cd2aB12c", "*", "10", "*", "ef3" };
+            List<string>? actualOutput = Expression.TokenizeExpression(input);
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
         public void TokenizeExpressionTestException()
         {
             string input = "4C";
