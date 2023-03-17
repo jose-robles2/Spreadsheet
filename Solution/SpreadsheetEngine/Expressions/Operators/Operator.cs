@@ -51,12 +51,18 @@ namespace SpreadsheetEngine.Expressions.Operators
         /// <summary>
         /// Gets the associativity.
         /// </summary>
-        public Associative Associativity { get; }
+        public Associative Associativity
+        {
+            get { return this.associative; }
+        }
 
         /// <summary>
         /// Gets the precedence.
         /// </summary>
-        public int Precedence { get; }
+        public int Precedence
+        {
+            get { return this.precedence; }
+        }
 
         /// <summary>
         /// Gets the operator string.
