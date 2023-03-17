@@ -108,6 +108,38 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTests
         }
 
         [Test]
+        public void ConvertInfixToPostFixTestParentheses4()
+        {
+            List<string> tokenInput = new List<string> { "(", "A", "*", "(", "B", "+", "C", ")", "-", "D", ")", "/", "E" };
+            List<string> expectedOutput = new List<string> { "A", "B", "C", "+", "*", "D", "-", "E", "/" };
+            List<string>? actualOutput = Expression.ConvertInfixToPostFix(tokenInput);
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+
+        [Test]
+        public void ConvertInfixToPostFixTestParentheses5()
+        {
+            List<string> tokenInput = new List<string> { "(", "A", "-", "B", ")", "*", "(", "C", "+", "D", ")", "-", "E", "/", "F" };
+            List<string> expectedOutput = new List<string> { "A", "B", "-", "C", "D", "+", "*", "E", "F", "/", "-", };
+            List<string>? actualOutput = Expression.ConvertInfixToPostFix(tokenInput);
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+
+        [Test]
+        public void ConvertInfixToPostFixTestParentheses6()
+        {
+            List<string> tokenInput = new List<string> { "(", "A", "+", "B", ")", "*", "C", "-", "(", "D", "/", "E", ")" };
+            List<string> expectedOutput = new List<string> { "A", "B", "+", "C", "*", "D", "E", "/", "-", };
+            List<string> actualOutput = Expression.ConvertInfixToPostFix(tokenInput);
+
+            Assert.That(actualOutput, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
         public void ConvertInfixToPostFixTestNestedParentheses()
         {
             List<string> tokenInput = new List<string> { "(", "A1", "+", "(", "B1", "-", "C1", ")", ")", "*", "D1" };
