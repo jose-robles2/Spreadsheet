@@ -129,16 +129,22 @@ namespace SpreadsheetEngine.Expressions
                 {
                     Operator currentOp = GetOperator(token);
 
-                    // pop ops off the opStack and push them onto the output UNTIL an operator with (lower OR equal precedence [on opStack compared to our current Op]) AND (left associativity) is encountered
-                    while (opStack.Count > 0 &&
-                           opStack.Peek().Precedence <= currentOp.Precedence &&
-                           opStack.Peek() is not ParenthLeftOperator &&
-                           opStack.Peek().Associativity == Associative.Left)
+                    if (currentOp.Associativity == Associative.Left)
                     {
-                        output.Add(opStack.Pop().OperatorToken);
-                    }
+                        while (opStack.Count > 0 &&
+                            opStack.Peek() is not ParenthLeftOperator &&
+                            currentOp.Precedence <= opStack.Peek().Precedence &&
+                            currentOp.Associativity == Associative.Left)
+                        {
+                            output.Add(opStack.Pop().OperatorToken);
+                        }
 
-                    opStack.Push(currentOp);
+                        opStack.Push(currentOp);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException("ERROR: Operators with right associativity not supported yet.");
+                    }
                 }
                 else if (IsTokenLeftParenths(token))
                 {
@@ -152,22 +158,8 @@ namespace SpreadsheetEngine.Expressions
                         output.Add(opStack.Pop().OperatorToken);
                     }
 
-                    // discard the left parens
                     opStack.Pop();
                     leftParenthesesCount--;
-
-                    // account for precedence & associativity if an operator follows a right parens e.g "..) * B1"
-                    if (opStack.Count > 0 && IsTokenAnOperator(opStack.Peek().OperatorToken))
-                    {
-                        Operator currentOp = GetOperator(opStack.Peek().OperatorToken);
-                        while (opStack.Count > 0 &&
-                           opStack.Peek().Precedence <= currentOp.Precedence &&
-                           opStack.Peek() is not ParenthLeftOperator &&
-                           opStack.Peek().Associativity == Associative.Left)
-                        {
-                            output.Add(opStack.Pop().OperatorToken);
-                        }
-                    }
                 }
                 else
                 {
@@ -186,6 +178,17 @@ namespace SpreadsheetEngine.Expressions
             }
 
             return output;
+        }
+
+        /// <summary>
+        /// Return an operator object.
+        /// </summary>
+        /// <param name="token"> string token. </param>
+        /// <returns> Operator. </returns>
+        public static Operator GetOperator(string token)
+        {
+            var op = OperatorNodeFactory.SupportedOps[token];
+            return (Operator)op();
         }
 
         /// <summary>
@@ -246,17 +249,6 @@ namespace SpreadsheetEngine.Expressions
         public static bool IsTokenRightParenths(string token)
         {
             return token == ")";
-        }
-
-        /// <summary>
-        /// Return an operator object.
-        /// </summary>
-        /// <param name="token"> string token. </param>
-        /// <returns> Operator. </returns>
-        public static Operator GetOperator(string token)
-        {
-            var op = OperatorNodeFactory.SupportedOps[token];
-            return (Operator)op();
         }
     }
 }
