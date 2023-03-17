@@ -2,11 +2,10 @@
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Xml.Schema;
+using SpreadsheetEngine.Expressions.Operators;
+using static SpreadsheetEngine.Expressions.Operators.Operator;
 
 namespace SpreadsheetEngine.Expressions
 {
@@ -104,9 +103,7 @@ namespace SpreadsheetEngine.Expressions
         }
 
         /// <summary>
-        /// Convert an infix expression to postfix. For HW5 assume that operators are the same
-        /// and no parentheses are included, so precedence and associativity aren't dealt with now.
-        /// Because of this, this is a simplified version of the shunting yard algorithm.
+        /// Convert an infix expression to postfix. Uses the shunting yard algorithm.
         /// </summary>
         /// <param name="expression"> Infix expression. </param>
         /// <returns> List of strings. </returns>
@@ -117,36 +114,75 @@ namespace SpreadsheetEngine.Expressions
                 throw new ArgumentException("ERROR: Expression of tokens must have at least three tokens");
             }
 
-            Stack<string> opStack = new Stack<string>();
+            Stack<Operator> opStack = new Stack<Operator>();
             List<string> output = new List<string>();
+
+            int leftParenthesesCount = 0;
 
             foreach (string token in expression)
             {
-                if (IsTokenADigit(token))
+                if (IsTokenADigit(token) || IsTokenAlphabetical(token))
                 {
                     output.Add(token);
                 }
                 else if (IsTokenAnOperator(token))
                 {
-                    if (output.Count >= 2)
+                    Operator currentOp = GetOperator(token);
+
+                    // pop ops off the opStack and push them onto the output UNTIL an operator with (lower OR equal precedence [on opStack compared to our current Op]) AND (left associativity) is encountered
+                    while (opStack.Count > 0 &&
+                           opStack.Peek().Precedence <= currentOp.Precedence &&
+                           opStack.Peek() is not ParenthLeftOperator &&
+                           opStack.Peek().Associativity == Associative.Left)
                     {
-                        if (opStack.Count > 0)
-                        {
-                            output.Add(opStack.Pop());
-                        }
+                        output.Add(opStack.Pop().OperatorToken);
                     }
 
-                    opStack.Push(token);
+                    opStack.Push(currentOp);
+                }
+                else if (IsTokenLeftParenths(token))
+                {
+                    opStack.Push(new ParenthLeftOperator());
+                    leftParenthesesCount++;
+                }
+                else if (IsTokenRightParenths(token))
+                {
+                    while (opStack.Count > 0 && opStack.Peek() is not ParenthLeftOperator)
+                    {
+                        output.Add(opStack.Pop().OperatorToken);
+                    }
+
+                    // discard the left parens
+                    opStack.Pop();
+                    leftParenthesesCount--;
+
+                    // account for precedence & associativity if an operator follows a right parens e.g "..) * B1"
+                    if (opStack.Count > 0 && IsTokenAnOperator(opStack.Peek().OperatorToken))
+                    {
+                        Operator currentOp = GetOperator(opStack.Peek().OperatorToken);
+                        while (opStack.Count > 0 &&
+                           opStack.Peek().Precedence <= currentOp.Precedence &&
+                           opStack.Peek() is not ParenthLeftOperator &&
+                           opStack.Peek().Associativity == Associative.Left)
+                        {
+                            output.Add(opStack.Pop().OperatorToken);
+                        }
+                    }
                 }
                 else
                 {
-                    output.Add(token);
+                    throw new ArgumentException($"ERROR: Unkown token: {token} encountered");
                 }
+            }
+
+            if (leftParenthesesCount != 0)
+            {
+                throw new ArgumentException("ERROR: Mismatched parentheses");
             }
 
             while (opStack.Count > 0)
             {
-                output.Add(opStack.Pop());
+                output.Add(opStack.Pop().OperatorToken);
             }
 
             return output;
@@ -190,6 +226,37 @@ namespace SpreadsheetEngine.Expressions
         public static bool IsTokenAParenthesis(string token)
         {
             return token == "(" || token == ")";
+        }
+
+        /// <summary>
+        /// Checks to see if a token is a left parenthesis.
+        /// </summary>
+        /// <param name="token"> token string. </param>
+        /// <returns> bool. </returns>
+        public static bool IsTokenLeftParenths(string token)
+        {
+            return token == "(";
+        }
+
+        /// <summary>
+        /// Checks to see if a token is a right parenthesis.
+        /// </summary>
+        /// <param name="token"> token string. </param>
+        /// <returns> bool. </returns>
+        public static bool IsTokenRightParenths(string token)
+        {
+            return token == ")";
+        }
+
+        /// <summary>
+        /// Return an operator object.
+        /// </summary>
+        /// <param name="token"> string token. </param>
+        /// <returns> Operator. </returns>
+        public static Operator GetOperator(string token)
+        {
+            var op = OperatorNodeFactory.SupportedOps[token];
+            return (Operator)op();
         }
     }
 }
