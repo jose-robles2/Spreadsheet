@@ -1,4 +1,4 @@
-﻿// <copyright file="SubOperator.cs" company="Jose Robles">
+﻿// <copyright file="ParenthRightOperator.cs" company="Jose Robles">
 // Copyright (c) Jose Robles. All Rights Reserved.
 // </copyright>
 
@@ -10,15 +10,12 @@ using System.Threading.Tasks;
 
 namespace SpreadsheetEngine.Expressions.Operators
 {
-    /// <summary>
-    /// Implementation for AddOperator.
-    /// </summary>
-    public class SubOperator : Operator
+    internal class ParenthRightOperator : Operator
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SubOperator"/> class.
+        /// Initializes a new instance of the <see cref="ParenthRightOperator"/> class.
         /// </summary>
-        public SubOperator()
+        public ParenthRightOperator()
         {
             this.precedence = 0;
             this.associative = Associative.Left;
@@ -28,7 +25,7 @@ namespace SpreadsheetEngine.Expressions.Operators
         /// <summary>
         /// Gets the operator symbol.
         /// </summary>
-        public static string OpStatic => "-";
+        public static string OpStatic => ")";
 
         /// <summary>
         /// Method to be implemented in derived classes.
@@ -38,7 +35,7 @@ namespace SpreadsheetEngine.Expressions.Operators
         /// <returns> double. </returns>
         public override double Evaluate(double left, double right)
         {
-            return left - right;
+            return left + right;
         }
     }
 }

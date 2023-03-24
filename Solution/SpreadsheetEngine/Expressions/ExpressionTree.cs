@@ -107,7 +107,7 @@ namespace SpreadsheetEngine.Expressions
 
             foreach (string token in this.inFixExpressionTokens)
             {
-                if (Expressions.Expression.IsTokenAlphabetical(token))
+                if (Expressions.Expression.IsTokenAlphabetical(token) && !this.variableDictionary.ContainsKey(token))
                 {
                     this.variableDictionary.Add(token, 0);
                 }
