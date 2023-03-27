@@ -58,7 +58,8 @@ namespace SpreadsheetEngine.Expressions.Nodes
         {
             if (variables.ContainsKey(this.name))
             {
-                return variables[this.name];
+                this.value = variables[this.name];
+                return this.value;
             }
             else
             {

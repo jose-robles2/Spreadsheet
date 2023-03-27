@@ -20,27 +20,15 @@ namespace SpreadsheetEngine.Expressions.Operators
         /// </summary>
         public AddOperator()
         {
+            this.precedence = 0;
+            this.associative = Associative.Left;
+            this.op = OpStatic;
         }
 
         /// <summary>
         /// Gets the operator symbol.
         /// </summary>
-        public static char OpChar => '+';
-
-        /// <summary>
-        /// Gets the operator symbol.
-        /// </summary>
-        public static string OpString => "+";
-
-        /// <summary>
-        /// Gets the precedance level.
-        /// </summary>
-        public static int Precedence => 0;
-
-        /// <summary>
-        /// Gets the associativity.
-        /// </summary>
-        public static Associative Associativity => Associative.Left;
+        public static string OpStatic => "+";
 
         /// <summary>
         /// Method to be implemented in derived classes.

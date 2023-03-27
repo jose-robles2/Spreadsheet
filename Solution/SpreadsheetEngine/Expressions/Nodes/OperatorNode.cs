@@ -19,9 +19,9 @@ namespace SpreadsheetEngine.Expressions.Nodes
     {
         private Operator @operator;
 
-        private Node left;
+        private Node? left;
 
-        private Node right;
+        private Node? right;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OperatorNode"/> class.
@@ -34,6 +34,17 @@ namespace SpreadsheetEngine.Expressions.Nodes
             this.@operator = @operator;
             this.left = left;
             this.right = right;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperatorNode"/> class.
+        /// </summary>
+        /// <param name="operator"> Op. </param>
+        public OperatorNode(Operator @operator)
+        {
+            this.@operator = @operator;
+            this.left = null;
+            this.right = null;
         }
 
         /// <summary>
@@ -58,10 +69,15 @@ namespace SpreadsheetEngine.Expressions.Nodes
         /// Abstract evaluate.
         /// </summary>
         /// <param name="variables"> Dict of vars. </param>
-        /// <returns> double </returns>
+        /// <returns> double. </returns>
         public override double Evaluate(Dictionary<string, double> variables)
         {
-            return this.@operator.Evaluate(this.left.Evaluate(variables), this.right.Evaluate(variables));
+            if (this.left != null && this.right != null)
+            {
+                return this.@operator.Evaluate(this.left.Evaluate(variables), this.right.Evaluate(variables));
+            }
+
+            return 0;
         }
     }
 }

@@ -18,6 +18,21 @@ namespace SpreadsheetEngine.Expressions.Operators
     public abstract class Operator
     {
         /// <summary>
+        /// Precedence.
+        /// </summary>
+        protected int precedence;
+
+        /// <summary>
+        /// Associativity.
+        /// </summary>
+        protected Associative associative;
+
+        /// <summary>
+        /// String rep. of operator.
+        /// </summary>
+        protected string op;
+
+        /// <summary>
         /// Associativity of the operators.
         /// </summary>
         public enum Associative
@@ -31,6 +46,30 @@ namespace SpreadsheetEngine.Expressions.Operators
             /// Left associativity.
             /// </summary>
             Left,
+        }
+
+        /// <summary>
+        /// Gets the associativity.
+        /// </summary>
+        public Associative Associativity
+        {
+            get { return this.associative; }
+        }
+
+        /// <summary>
+        /// Gets the precedence.
+        /// </summary>
+        public int Precedence
+        {
+            get { return this.precedence; }
+        }
+
+        /// <summary>
+        /// Gets the operator string.
+        /// </summary>
+        public string OperatorToken
+        {
+            get { return this.op; }
         }
 
         /// <summary>
