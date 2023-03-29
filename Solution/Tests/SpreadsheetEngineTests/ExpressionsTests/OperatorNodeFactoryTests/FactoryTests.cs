@@ -32,14 +32,22 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.OperatorNodeFactoryTests
         [OneTimeSetUp]
         public void Setup()
         {
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SpreadsheetEngine.dll");
-            Assembly.LoadFrom(path);
-
-
             this.add = OperatorNodeFactory.Builder("+");
             this.sub = OperatorNodeFactory.Builder("-");
             this.div = OperatorNodeFactory.Builder("/");
             this.mult = OperatorNodeFactory.Builder("*");
+        }
+
+        /// <summary>
+        /// Test for ExpressionTree.OperatorNodeFactory 
+        /// </summary>
+        [Test]
+        public void OperatorTokenTests()
+        {
+            Assert.That(this.add.Operator.OperatorToken, Is.EqualTo("+"));
+            Assert.That(this.sub.Operator.OperatorToken, Is.EqualTo("-"));
+            Assert.That(this.div.Operator.OperatorToken, Is.EqualTo("/"));
+            Assert.That(this.mult.Operator.OperatorToken, Is.EqualTo("*"));
         }
 
         /// <summary>
