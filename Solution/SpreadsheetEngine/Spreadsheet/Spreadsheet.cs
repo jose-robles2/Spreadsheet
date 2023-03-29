@@ -60,7 +60,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// <summary>
         /// 2D array that contains the cells that correspond to the UI's cells.
         /// </summary>
-        private ConcreteCell[,] matrix;
+        private Cell[,] matrix;
 
         /// <summary>
         /// Dictionary that serves to allow for quick access of Cells when only given a cell name.
@@ -122,7 +122,7 @@ namespace SpreadsheetEngine.Spreadsheet
                 return null;
             }
 
-            return (Cell)this.matrix[row, column];
+            return this.matrix[row, column];
         }
 
         /// <summary>
@@ -135,8 +135,7 @@ namespace SpreadsheetEngine.Spreadsheet
             try
             {
                 Tuple<int, int> indices = this.cellIndexes[cellName];
-                ConcreteCell cell = this.matrix[indices.Item1, indices.Item2];
-                return (Cell)cell;
+                return this.matrix[indices.Item1, indices.Item2];
             }
             catch (KeyNotFoundException)
             {
