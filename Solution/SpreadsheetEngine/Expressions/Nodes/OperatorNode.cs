@@ -66,6 +66,14 @@ namespace SpreadsheetEngine.Expressions.Nodes
         }
 
         /// <summary>
+        /// Gets the operator object.
+        /// </summary>
+        public Operator Operator
+        {
+            get { return this.@operator; }
+        }
+
+        /// <summary>
         /// Abstract evaluate.
         /// </summary>
         /// <param name="variables"> Dict of vars. </param>

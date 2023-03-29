@@ -188,7 +188,8 @@ namespace SpreadsheetEngine.Expressions
         public static Operator GetOperator(string token)
         {
             var op = OperatorNodeFactory.SupportedOps[token];
-            return (Operator)op();
+            return (Operator)System.Activator.CreateInstance(op);
+            //return (Operator)op();
         }
 
         /// <summary>

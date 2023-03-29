@@ -32,7 +32,9 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.OperatorNodeFactoryTests
         [OneTimeSetUp]
         public void Setup()
         {
-            Assembly.Load("SpreadsheetEngine");
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SpreadsheetEngine.dll");
+            Assembly.LoadFrom(path);
+
 
             this.add = OperatorNodeFactory.Builder("+");
             this.sub = OperatorNodeFactory.Builder("-");
