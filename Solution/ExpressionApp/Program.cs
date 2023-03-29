@@ -7,7 +7,11 @@ namespace ExpressionApp
     /// </summary>
     internal class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Main.
+        /// </summary>
+        /// <param name="args"> args. </param>
+        internal static void Main(string[] args)
         {
             Menu menu = new Menu();
         }
