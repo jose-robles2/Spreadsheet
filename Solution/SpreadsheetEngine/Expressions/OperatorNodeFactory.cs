@@ -24,7 +24,7 @@ namespace SpreadsheetEngine.Expressions
         /// <summary>
         /// Static dictionary of supported types.
         /// </summary>
-        public static readonly Dictionary<string, Type> SupportedOps = new Dictionary<string, Type>();
+        private static readonly Dictionary<string, Type> SupportedOps = new Dictionary<string, Type>();
 
         /// <summary>
         /// Delegate utilized for assemble reflection. Takes in a operator and a type.
@@ -69,15 +69,32 @@ namespace SpreadsheetEngine.Expressions
             InitFactory();
             if (SupportedOps.ContainsKey(op))
             {
-                object? operatorNodeObject = System.Activator.CreateInstance(SupportedOps[op]);
+                object? operatorObject = System.Activator.CreateInstance(SupportedOps[op]);
 
-                if (operatorNodeObject != null && operatorNodeObject is OperatorNode)
+                if (operatorObject != null && operatorObject is Operator)
                 {
-                    return (OperatorNode)operatorNodeObject;
+                    return new OperatorNode((Operator)operatorObject);
                 }
             }
 
             throw new Exception("Unhandled operator");
+        }
+
+        /// <summary>
+        /// Checks to see if the input token is a supported operator.
+        /// </summary>
+        /// <param name="op"> string token op. </param>
+        /// <returns> bool. </returns>
+        public static bool IsOperatorSupported(string op)
+        {
+            InitFactory();
+
+            if (SupportedOps.ContainsKey(op))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -101,20 +118,24 @@ namespace SpreadsheetEngine.Expressions
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 operatorTypes = assembly.GetTypes().Where(type => type.IsSubclassOf(operatorType));
-            }
 
-            foreach (var type in operatorTypes)
-            {
-                // For each subclass, retrieve the 'OpStatic' property
-                PropertyInfo? operatorField = type.GetProperty("OpStatic");
-                if (operatorField != null)
+                foreach (var type in operatorTypes)
                 {
-                    // Get the character of the Operator
-                    object? value = operatorField.GetValue(type);
-                    if (value is string)
+                    // For each subclass, retrieve the 'OpStatic' property
+                    PropertyInfo? operatorField = type.GetProperty("OpStatic");
+                    if (operatorField != null)
                     {
-                        string operatorSymbol = (string)value;
-                        onOperator(operatorSymbol, type); // Invoke the delegate
+                        // Get the character of the Operator
+                        object? value = operatorField.GetValue(type);
+                        if (value is string)
+                        {
+                            string operatorSymbol = (string)value;
+
+                            if (!SupportedOps.ContainsKey(operatorSymbol) && !Expression.IsTokenAParenthesis(operatorSymbol))
+                            {
+                                onOperator(operatorSymbol, type); // Invoke the delegate
+                            }
+                        }
                     }
                 }
             }
