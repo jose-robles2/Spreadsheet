@@ -187,9 +187,7 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> Operator. </returns>
         public static Operator GetOperator(string token)
         {
-            var op = OperatorNodeFactory.SupportedOps[token];
-            return (Operator)System.Activator.CreateInstance(op);
-            //return (Operator)op();
+            return OperatorNodeFactory.Builder(token).Operator;
         }
 
         /// <summary>
@@ -199,7 +197,7 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> bool. </returns>
         public static bool IsTokenAnOperator(string token)
         {
-            return OperatorNodeFactory.SupportedOps.ContainsKey(token);
+            return OperatorNodeFactory.IsOperatorSupported(token);
         }
 
         /// <summary>
