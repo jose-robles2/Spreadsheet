@@ -25,7 +25,7 @@ namespace SpreadsheetFrontEnd
         /// <summary>
         /// Spreadsheet object that runs in the backend of the UI.
         /// </summary>
-        private Spreadsheet? spreadsheet;
+        private Spreadsheet spreadsheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
@@ -60,6 +60,10 @@ namespace SpreadsheetFrontEnd
 
             // Increase header width so that the full number can be shown without the user manually expanding it.
             this.dataGridView1.RowHeadersWidth += 10;
+
+            // Connect the dgv cell edits to the form1.cs delegates.
+            this.dataGridView1.CellBeginEdit += this.HandleCellBeginEdit;
+            this.dataGridView1.CellEndEdit += this.HandleCellEndEdit;
         }
 
         /// <summary>
@@ -94,6 +98,52 @@ namespace SpreadsheetFrontEnd
         }
 
         /// <summary>
+        /// When a cell starts being edited, show the text property instead of value.
+        /// </summary>
+        /// <param name="sender"> object. </param>
+        /// <param name="e"> event. </param>
+        private void HandleCellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            int row = e.RowIndex;
+            int col = e.ColumnIndex;
+
+            Cell? cell = this.spreadsheet.GetCell(row, col);
+
+            if (cell != null)
+            {
+                DataGridViewCell dgvCell = this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex];
+
+                dgvCell.Value = cell.Text;
+            }
+        }
+
+        /// <summary>
+        /// When a cell is being edited, text property is shown, once edit ends, show value property.
+        /// </summary>
+        /// <param name="sender"> object. </param>
+        /// <param name="e"> event. </param>
+        private void HandleCellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            int row = e.RowIndex;
+            int col = e.ColumnIndex;
+
+            Cell? cell = this.spreadsheet.GetCell(row, col);
+
+            if (cell != null)
+            {
+                DataGridViewCell dgvCell = this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex];
+
+                bool cellTextIsUnique = cell.Text != dgvCell.Value.ToString();
+                bool dgvCellIsNotNullAndStartsWithEqual = dgvCell != null && dgvCell.Value != null && dgvCell.Value.ToString().StartsWith("=");
+
+                if (cellTextIsUnique || dgvCellIsNotNullAndStartsWithEqual)
+                {
+                    dgvCell.Value = cell.Value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Button that initiates a demo of the spreadsheet by filling random cells with text values in order
         /// to show that the broadcaster/observer pattern is working. When a cell object is modified, the cell
         /// signals to the spreadsheet object, which signals to the UI (Form.cs).
@@ -102,7 +152,51 @@ namespace SpreadsheetFrontEnd
         /// <param name="e"> The event. </param>
         private void DemoButton_Click(object sender, EventArgs e)
         {
-            this.spreadsheet?.HomeworkFourDemo();
+            // Lambda expression to generate unique random indices to assign "Hello 321" to cells randomly.
+            // Stylcop treated this lambda as a variable so camelcase was used.
+            Func<List<Tuple<int, int>>, Tuple<int, int>> generateIndices = (indicesOfRandomCells) =>
+            {
+                Random random = new Random();
+                Tuple<int, int> tuple = new Tuple<int, int>(random.Next(0, NUMROWS), random.Next(0, NUMCOLS));
+
+                while (true)
+                {
+                    if (indicesOfRandomCells.Contains(tuple))
+                    {
+                        Tuple<int, int> newTuple = new Tuple<int, int>(random.Next(0, NUMROWS), random.Next(0, NUMCOLS));
+                        tuple = newTuple;
+                        continue;
+                    }
+
+                    indicesOfRandomCells.Add(tuple);
+                    break;
+                }
+
+                return tuple;
+            };
+
+            // Set the text in 50 random Cells
+            List<Tuple<int, int>> indicesOfRandomCells = new List<Tuple<int, int>>();
+
+            for (int i = 0; i < NUMCOLS; i++)
+            {
+                Tuple<int, int> tuple = generateIndices(indicesOfRandomCells);
+                this.spreadsheet.GetCell(tuple.Item1, tuple.Item2).Text = "Hello 321";
+            }
+
+            // Set the text in every cell in column B to "This is cell B#"
+            int columnIndex = 1;
+            for (int row = 0; row < NUMROWS; row++)
+            {
+                this.spreadsheet.GetCell(row, columnIndex).Text = "This is cell B" + (row + 1); // Add one to corres. w/ the GUI indexes
+            }
+
+            // Set the text in every cell in column A to "=B#"
+            columnIndex = 0;
+            for (int row = 0; row < NUMROWS; row++)
+            {
+                this.spreadsheet.GetCell(row, columnIndex).Text = "=B" + (row + 1); // Add one to corres. w/ the GUI indexes
+            }
         }
     }
 }
