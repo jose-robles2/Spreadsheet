@@ -110,9 +110,9 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> List of strings. </returns>
         public static List<string> ConvertInfixToPostFix(List<string> expression)
         {
-            if (expression.Count < 3)
+            if (expression.Count == 0 || expression.Count == 2)
             {
-                throw new ArgumentException("ERROR: Expression of tokens must have at least three tokens");
+                throw new ArgumentException("ERROR: Expression of tokens must have at least three tokens OR one token");
             }
 
             Stack<Operator> opStack = new Stack<Operator>();
