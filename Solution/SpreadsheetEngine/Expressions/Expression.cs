@@ -94,9 +94,10 @@ namespace SpreadsheetEngine.Expressions
                 expressionTokens.Add(consts.ToString());
             }
 
-            if (expressionTokens.Count < 3)
+            // don't allow = "A1 * " but = "A1" is allowed
+            if (expressionTokens.Count == 2) 
             {
-                throw new ArgumentException("ERROR: Expression must have at least two operands and one operator.");
+                throw new ArgumentException("ERROR: Expression must have at least two operands and one operator OR only one operand.");
             }
 
             return expressionTokens;
