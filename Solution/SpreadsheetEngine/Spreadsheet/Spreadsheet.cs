@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SpreadsheetEngine.Expressions;
 
 namespace SpreadsheetEngine.Spreadsheet
 {
@@ -68,6 +69,11 @@ namespace SpreadsheetEngine.Spreadsheet
         private Dictionary<string, Tuple<int, int>> cellIndexes;
 
         /// <summary>
+        /// Dictionary that maps a string cellname to a hashset of cell name dependencies.
+        /// </summary>
+        private Dictionary<string, HashSet<string>> cellDependencies;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Spreadsheet"/> class.
         /// </summary>
         /// <param name="rows"> Number of rows. </param>
@@ -76,6 +82,7 @@ namespace SpreadsheetEngine.Spreadsheet
         {
             this.matrix = new ConcreteCell[rows, cols];
             this.cellIndexes = new Dictionary<string, Tuple<int, int>>();
+            this.cellDependencies = new Dictionary<string, HashSet<string>>();
             this.rowCount = rows;
             this.columnCount = cols;
             this.FillMatrix();
@@ -144,61 +151,6 @@ namespace SpreadsheetEngine.Spreadsheet
         }
 
         /// <summary>
-        /// Set the text in 50 random cells to "Hello 321".
-        /// Then set the text in every cell in column B to "This is cell B#" where # is the row number.
-        /// Then set the text in every cell in column A to "=B#" where # is the row number. This will make
-        /// every cell in column A equal the value contained within column B's cells.
-        /// </summary>
-        public void HomeworkFourDemo()
-        {
-            // Lambda expression to generate unique random indices to assign "Hello 321" to cells randomly.
-            // Stylcop treated this lambda as a variable so camelcase was used.
-            Func<List<Tuple<int, int>>, Tuple<int, int>> generateIndices = (indicesOfRandomCells) =>
-            {
-                Random random = new Random();
-                Tuple<int, int> tuple = new Tuple<int, int>(random.Next(0, this.rowCount), random.Next(0, this.columnCount));
-
-                while (true)
-                {
-                    if (indicesOfRandomCells.Contains(tuple))
-                    {
-                        Tuple<int, int> newTuple = new Tuple<int, int>(random.Next(0, this.rowCount), random.Next(0, this.columnCount));
-                        tuple = newTuple;
-                        continue;
-                    }
-
-                    indicesOfRandomCells.Add(tuple);
-                    break;
-                }
-
-                return tuple;
-            };
-
-            // Set the text in 50 random Cells
-            List<Tuple<int, int>> indicesOfRandomCells = new List<Tuple<int, int>>();
-
-            for (int i = 0; i < this.ColumnCount; i++)
-            {
-                Tuple<int, int> tuple = generateIndices(indicesOfRandomCells);
-                this.matrix[tuple.Item1, tuple.Item2].Text = "Hello 321";
-            }
-
-            // Set the text in every cell in column B to "This is cell B#"
-            int columnIndex = 1;
-            for (int row = 0; row < this.RowCount; row++)
-            {
-                this.matrix[row, columnIndex].Text = "This is cell B" + (row + 1); // Add one to corres. w/ the GUI indexes
-            }
-
-            // Set the text in every cell in column A to "=B#"
-            columnIndex = 0;
-            for (int row = 0; row < this.RowCount; row++)
-            {
-                this.matrix[row, columnIndex].Text = "=B" + (row + 1); // Add one to corres. w/ the GUI indexes
-            }
-        }
-
-        /// <summary>
         /// Instantiates each cell of the matrix with a new concrete cell object.
         /// </summary>
         private void FillMatrix()
@@ -238,19 +190,122 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 if (cell.Text[0] == '=')
                 {
-                    string cellName = cell.Text.Substring(1);
-                    Cell refCell = this.GetCell(cellName);
-                    cell.SetValue(refCell.Value);
+                    string formula = cell.Text.Substring(1);
+
+                    ExpressionTree tree = new ExpressionTree(formula);
+
+                    this.AddCellDependency(cell.Name, tree.GetVariables());
                 }
                 else
                 {
                     cell.SetValue(cell.Text);
                 }
+
+                this.Evaluate(cell);
             }
             else if (e.PropertyName == "Value")
             {
                 this.CellPropertyChanged?.Invoke(cell, e);
             }
+        }
+
+        /// <summary>
+        /// If a cell contains a formula, iterate over the set of variables in the formula to add
+        /// the current cell name as a dependency to that variable. If the variable changes, it will
+        /// alert its dependencies to update their values.
+        /// </summary>
+        /// <param name="cellName"> Current cell containing some formula. </param>
+        /// <param name="variables"> Tokenized variables within the current cell formula. </param>
+        private void AddCellDependency(string cellName, HashSet<string> variables)
+        {
+            foreach (string variable in variables)
+            {
+                if (!this.cellDependencies.ContainsKey(variable))
+                {
+                    this.cellDependencies.Add(variable, new HashSet<string>());
+                }
+
+                this.cellDependencies[variable].Add(cellName);
+            }
+        }
+
+        /// <summary>
+        /// Evaluate the cell's text (can be formula) that is currently being edited.
+        /// </summary>
+        /// <param name="cell"> cell being edited. </param>
+        private void Evaluate(Cell cell)
+        {
+            if (string.IsNullOrEmpty(cell.Text))
+            {
+                cell.SetValue(string.Empty);
+            }
+            else if (cell.Text[0] == '=')
+            {
+                if (!this.IsFormulaInputValid(cell))
+                {
+                    return;
+                }
+
+                this.EvaluateFormula(cell);
+            }
+            else
+            {
+                cell.SetValue(cell.Text);
+            }
+
+            // Check if current cell has dependencies that need to be updated
+            if (this.cellDependencies.ContainsKey(cell.Name))
+            {
+                // Iterate over each dependent for the current cell and evaluate to make sure theyre up to date.
+                foreach (string dependentCellName in this.cellDependencies[cell.Name])
+                {
+                    Cell dependentCell = this.GetCell(dependentCellName);
+
+                    if (dependentCell != null)
+                    {
+                        this.Evaluate(dependentCell);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validate user input's formula. No circular references and no self cell references.
+        /// </summary>
+        /// <param name="cell"> Current cell. </param>
+        /// <returns> bool. </returns>
+        private bool IsFormulaInputValid(Cell cell)
+        {
+            // TODO: Implement checks for circular references and a cell referencing itself
+            // Not required for HW7
+            return true;
+        }
+
+        /// <summary>
+        /// Evaluate the cell's formula.
+        /// </summary>
+        /// <param name="cell"> Current cell. </param>
+        private void EvaluateFormula(Cell cell)
+        {
+            ExpressionTree exprTree = new ExpressionTree(cell.Text.Substring(1));
+            HashSet<string> variables = exprTree.GetVariables();
+
+            foreach (string variable in variables)
+            {
+                Cell varCell = this.GetCell(variable);
+                double value;
+
+                if (string.IsNullOrEmpty(varCell.Value) || !double.TryParse(varCell.Value, out value))
+                {
+                    exprTree.SetVariable(varCell.Name, 0);
+                }
+                else
+                {
+                    exprTree.SetVariable(varCell.Name, value);
+                }
+            }
+
+            cell.SetValue(exprTree.Evaluate().ToString());
         }
     }
 }
