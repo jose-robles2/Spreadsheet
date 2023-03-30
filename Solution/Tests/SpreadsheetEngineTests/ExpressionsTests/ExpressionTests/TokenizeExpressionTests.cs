@@ -119,7 +119,14 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTests
         public void TokenizeExpressionTestException()
         {
             string input = "4C";
-            Assert.Throws<ArgumentException>(() => new ExpressionTree(input));
+            Assert.Throws<ArgumentException>(() => Expression.TokenizeExpression(input));
+        }
+
+        [Test]
+        public void TokenizeExpressionTestException2()
+        {
+            string input = "A1+";
+            Assert.Throws<ArgumentException>(() => Expression.TokenizeExpression(input));
         }
     }
 }
