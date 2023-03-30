@@ -85,6 +85,15 @@ namespace SpreadsheetEngine.Expressions
         }
 
         /// <summary>
+        /// Return all variables.
+        /// </summary>
+        /// <returns> Set of unique vars. </returns>
+        public HashSet<string> GetVariables()
+        {
+            return new HashSet<string>(this.variableDictionary.Keys);
+        }
+
+        /// <summary>
         /// Evaluate the expression.
         /// </summary>
         /// <returns> Result of expression. </returns>
