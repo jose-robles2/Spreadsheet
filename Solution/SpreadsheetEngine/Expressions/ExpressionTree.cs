@@ -31,6 +31,8 @@ namespace SpreadsheetEngine.Expressions
 
         private List<string> inFixExpressionTokens;
 
+        private int size = 0;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
         /// </summary>
@@ -49,6 +51,14 @@ namespace SpreadsheetEngine.Expressions
         public string Expression
         {
             get { return this.expression; }
+        }
+
+        /// <summary>
+        /// Gets the node count of tree.
+        /// </summary>
+        public int Size
+        {
+            get => this.size;
         }
 
         /// <summary>
@@ -114,6 +124,12 @@ namespace SpreadsheetEngine.Expressions
         {
             this.inFixExpressionTokens = Expressions.Expression.TokenizeExpression(this.expression);
 
+            if (this.inFixExpressionTokens == null)
+            {
+                // Originally was throwing an exception, catch and return null
+                return;
+            }
+
             foreach (string token in this.inFixExpressionTokens)
             {
                 if (Expressions.Expression.IsTokenAlphabetical(token) && !this.variableDictionary.ContainsKey(token))
@@ -133,6 +149,12 @@ namespace SpreadsheetEngine.Expressions
 
             List<string> postfixExpression = Expressions.Expression.ConvertInfixToPostFix(this.inFixExpressionTokens);
 
+            if (postfixExpression == null)
+            {
+                // Originally was throwing an exception, catch and return null
+                return;
+            }
+
             foreach (string token in postfixExpression)
             {
                 if (Expressions.Expression.IsTokenADigit(token))
@@ -150,6 +172,8 @@ namespace SpreadsheetEngine.Expressions
                 {
                     nodeStack.Push(new VariableNode(token, this.variableDictionary[token]));
                 }
+
+                this.size += 1;
             }
 
             this.root = nodeStack.Pop();

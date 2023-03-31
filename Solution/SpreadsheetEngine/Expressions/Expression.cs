@@ -22,7 +22,7 @@ namespace SpreadsheetEngine.Expressions
         /// </summary>
         /// <param name="expression"> Expression. </param>
         /// <returns> List of strings. </returns>
-        public static List<string> TokenizeExpression(string expression)
+        public static List<string>? TokenizeExpression(string expression)
         {
             expression = expression.Replace(" ", string.Empty);
 
@@ -37,7 +37,9 @@ namespace SpreadsheetEngine.Expressions
                 {
                     if (consts.Length > 0)
                     {
-                        throw new ArgumentException("ERROR: Variables must start with a letter, not digit.");
+                        // Originally was throwing an exception, catch and return null
+                        Console.WriteLine("ERROR: Variables must start with a letter, not digit.");
+                        return null;
                     }
 
                     vars.Append(currentChar);
@@ -97,7 +99,9 @@ namespace SpreadsheetEngine.Expressions
             // don't allow = "A1 * " but = "A1" is allowed
             if (expressionTokens.Count == 2) 
             {
-                throw new ArgumentException("ERROR: Expression must have at least two operands and one operator OR only one operand.");
+                // Originally was throwing an exception, catch and return null
+                Console.WriteLine("ERROR: Expression must have at least two operands and one operator OR only one operand.");
+                return null;
             }
 
             return expressionTokens;
@@ -108,11 +112,12 @@ namespace SpreadsheetEngine.Expressions
         /// </summary>
         /// <param name="expression"> Infix expression. </param>
         /// <returns> List of strings. </returns>
-        public static List<string> ConvertInfixToPostFix(List<string> expression)
+        public static List<string>? ConvertInfixToPostFix(List<string> expression)
         {
-            if (expression.Count == 0 || expression.Count == 2)
+            if (expression == null || expression.Count == 0 || expression.Count == 2)
             {
-                throw new ArgumentException("ERROR: Expression of tokens must have at least three tokens OR one token");
+                Console.WriteLine("ERROR: Expression of tokens must have at least three tokens OR one token");
+                return null;
             }
 
             Stack<Operator> opStack = new Stack<Operator>();
@@ -164,13 +169,17 @@ namespace SpreadsheetEngine.Expressions
                 }
                 else
                 {
-                    throw new ArgumentException($"ERROR: Unkown token: {token} encountered");
+                    // Originally was throwing an exception, catch and return null
+                    Console.WriteLine($"ERROR: Unkown token: {token} encountered");
+                    return null;
                 }
             }
 
             if (leftParenthesesCount != 0)
             {
-                throw new ArgumentException("ERROR: Mismatched parentheses");
+                // Originally was throwing an exception, catch and return null
+                Console.WriteLine("ERROR: Mismatched parentheses");
+                return null;
             }
 
             while (opStack.Count > 0)
