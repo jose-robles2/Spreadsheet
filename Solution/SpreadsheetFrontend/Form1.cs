@@ -61,9 +61,9 @@ namespace SpreadsheetFrontEnd
             // Increase header width so that the full number can be shown without the user manually expanding it.
             this.dataGridView1.RowHeadersWidth += 10;
 
-            // Connect the dgv cell edits to the form1.cs delegates.
-            this.dataGridView1.CellBeginEdit += this.HandleCellBeginEdit;
-            this.dataGridView1.CellEndEdit += this.HandleCellEndEdit;
+            // Connect the dgv cell events to the form1.cs delegates.
+            this.dataGridView1.CellBeginEdit += this.HandleDgvCellBeginEdit;
+            this.dataGridView1.CellEndEdit += this.HandleDgvCellEndEdit;
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace SpreadsheetFrontEnd
         /// </summary>
         /// <param name="sender"> object. </param>
         /// <param name="e"> event. </param>
-        private void HandleCellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        private void HandleDgvCellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             int row = e.RowIndex;
             int col = e.ColumnIndex;
@@ -122,7 +122,7 @@ namespace SpreadsheetFrontEnd
         /// </summary>
         /// <param name="sender"> object. </param>
         /// <param name="e"> event. </param>
-        private void HandleCellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void HandleDgvCellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             int row = e.RowIndex;
             int col = e.ColumnIndex;
@@ -133,11 +133,14 @@ namespace SpreadsheetFrontEnd
             {
                 DataGridViewCell dgvCell = this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex];
 
-                bool cellTextIsUnique = cell.Text != dgvCell.Value.ToString();
                 bool dgvCellIsNotNullAndStartsWithEqual = dgvCell != null && dgvCell.Value != null && dgvCell.Value.ToString().StartsWith("=");
+                bool cellTextIsUnique = cell.Text != dgvCell.Value.ToString();
 
                 if (cellTextIsUnique || dgvCellIsNotNullAndStartsWithEqual)
                 {
+                    // Assign the dgv value being edited to/back to the cell text field and assign
+                    // The current cell value back to the dgv value since editing has stopped
+                    cell.Text = dgvCell.Value.ToString() ?? string.Empty;
                     dgvCell.Value = cell.Value;
                 }
             }
