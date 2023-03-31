@@ -133,8 +133,9 @@ namespace SpreadsheetFrontEnd
             {
                 DataGridViewCell dgvCell = this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex];
 
-                bool dgvCellIsNotNullAndStartsWithEqual = dgvCell != null && dgvCell.Value != null && dgvCell.Value.ToString().StartsWith("=");
-                bool cellTextIsUnique = cell.Text != dgvCell.Value.ToString();
+                bool dgvCellIsNotNullAndStartsWithEqual = dgvCell.Value != null && dgvCell.Value.ToString().StartsWith("=");
+                bool cellTextIsUnique = dgvCell.Value != null && cell.Text != dgvCell.Value.ToString();
+
 
                 if (cellTextIsUnique || dgvCellIsNotNullAndStartsWithEqual)
                 {
