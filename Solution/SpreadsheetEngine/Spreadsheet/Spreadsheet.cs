@@ -146,7 +146,7 @@ namespace SpreadsheetEngine.Spreadsheet
             }
             catch (KeyNotFoundException)
             {
-                // Originally was throwing an exception, catch and return null 
+                // Originally was throwing an exception, catch and return null
                 return null;
             }
         }
@@ -196,6 +196,12 @@ namespace SpreadsheetEngine.Spreadsheet
                     if (formula != string.Empty)
                     {
                         ExpressionTree tree = new ExpressionTree(formula);
+
+                        if (tree.Size == 0)
+                        {
+                            return;
+                        }
+
                         this.AddCellDependency(cell.Name, tree.GetVariables());
                     }
                     else
@@ -311,9 +317,18 @@ namespace SpreadsheetEngine.Spreadsheet
 
                 double value;
 
-                if (string.IsNullOrEmpty(varCell.Value) || !double.TryParse(varCell.Value, out value))
+                if (!double.TryParse(varCell.Value, out value))
                 {
-                    exprTree.SetVariable(varCell.Name, 0);
+                    // Parse failed, is varCell empty or does it contain string?
+                    if (string.IsNullOrEmpty(varCell.Value))
+                    {
+                        exprTree.SetVariable(varCell.Name, 0);
+                    }
+                    else
+                    {
+                        cell.SetValue(varCell.Value);
+                        return;
+                    }
                 }
                 else
                 {
