@@ -94,9 +94,10 @@ namespace SpreadsheetEngine.Expressions
                 expressionTokens.Add(consts.ToString());
             }
 
-            if (expressionTokens.Count < 3)
+            // don't allow = "A1 * " but = "A1" is allowed
+            if (expressionTokens.Count == 2) 
             {
-                throw new ArgumentException("ERROR: Expression must have at least two operands and one operator.");
+                throw new ArgumentException("ERROR: Expression must have at least two operands and one operator OR only one operand.");
             }
 
             return expressionTokens;
@@ -109,9 +110,9 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> List of strings. </returns>
         public static List<string> ConvertInfixToPostFix(List<string> expression)
         {
-            if (expression.Count < 3)
+            if (expression.Count == 0 || expression.Count == 2)
             {
-                throw new ArgumentException("ERROR: Expression of tokens must have at least three tokens");
+                throw new ArgumentException("ERROR: Expression of tokens must have at least three tokens OR one token");
             }
 
             Stack<Operator> opStack = new Stack<Operator>();
@@ -132,7 +133,7 @@ namespace SpreadsheetEngine.Expressions
                     if (currentOp.Associativity == Associative.Left)
                     {
                         while (opStack.Count > 0 &&
-                            opStack.Peek() is not ParenthLeftOperator &&
+                            opStack.Peek() is not ParenthLeft &&
                             currentOp.Precedence <= opStack.Peek().Precedence &&
                             currentOp.Associativity == Associative.Left)
                         {
@@ -148,12 +149,12 @@ namespace SpreadsheetEngine.Expressions
                 }
                 else if (IsTokenLeftParenths(token))
                 {
-                    opStack.Push(new ParenthLeftOperator());
+                    opStack.Push(new ParenthLeft());
                     leftParenthesesCount++;
                 }
                 else if (IsTokenRightParenths(token))
                 {
-                    while (opStack.Count > 0 && opStack.Peek() is not ParenthLeftOperator)
+                    while (opStack.Count > 0 && opStack.Peek() is not ParenthLeft)
                     {
                         output.Add(opStack.Pop().OperatorToken);
                     }
@@ -187,8 +188,7 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> Operator. </returns>
         public static Operator GetOperator(string token)
         {
-            var op = OperatorNodeFactory.SupportedOps[token];
-            return (Operator)op();
+            return OperatorNodeFactory.Builder(token).Operator;
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> bool. </returns>
         public static bool IsTokenAnOperator(string token)
         {
-            return OperatorNodeFactory.SupportedOps.ContainsKey(token);
+            return OperatorNodeFactory.IsOperatorSupported(token);
         }
 
         /// <summary>

@@ -10,12 +10,17 @@ using System.Threading.Tasks;
 
 namespace SpreadsheetEngine.Expressions.Operators
 {
-    internal class ParenthLeftOperator : Operator
+    /// <summary>
+    /// Class representing a left parenths. Not a binary operator, but it inherits from Operator
+    /// for convenience within SpreadsheetEngine.Expressions.Expression. Cannot be evaluated AND is not
+    /// included in SpreadsheetEngine.Expressions.OperatorNodeFactory's supported Ops dictionary.
+    /// </summary>
+    internal class ParenthLeft : Operator
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParenthLeftOperator"/> class.
+        /// Initializes a new instance of the <see cref="ParenthLeft"/> class.
         /// </summary>
-        public ParenthLeftOperator()
+        public ParenthLeft()
         {
             this.precedence = 0;
             this.associative = Associative.Left;
@@ -33,9 +38,12 @@ namespace SpreadsheetEngine.Expressions.Operators
         /// <param name="left"> Value of left child. </param>
         /// <param name="right"> Value of right child. </param>
         /// <returns> double. </returns>
+        /// <exception cref="System.NotImplementedException"> Parenths cannot be evaluated. </exception>
         public override double Evaluate(double left, double right)
         {
-            return left + right;
+            throw new System.NotImplementedException("ERROR: Parentheses cannot be evaluated" +
+                "something went wrong as these should not be included in the expr tree." +
+                "These objects are made for convenience within SpreadsheetEngine.Expressions.Expression");
         }
     }
 }

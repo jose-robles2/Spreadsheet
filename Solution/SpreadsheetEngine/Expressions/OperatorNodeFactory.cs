@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,15 +16,22 @@ using SpreadsheetEngine.Expressions.Operators;
 
 namespace SpreadsheetEngine.Expressions
 {
-    internal class OperatorNodeFactory
+    /// <summary>
+    /// Class responsible for creating operator nodes.
+    /// </summary>
+    public class OperatorNodeFactory
     {
-        public static readonly Dictionary<string, Func<Operator>> SupportedOps = new Dictionary<string, Func<Operator>>
-        {
-            { AddOperator.OpStatic, () => new AddOperator() },
-            { SubOperator.OpStatic, () => new SubOperator() },
-            { MultOperator.OpStatic, () => new MultOperator() },
-            { DivOperator.OpStatic, () => new DivOperator() },
-        };
+        /// <summary>
+        /// Static dictionary of supported types.
+        /// </summary>
+        private static readonly Dictionary<string, Type> SupportedOps = new Dictionary<string, Type>();
+
+        /// <summary>
+        /// Delegate utilized for assemble reflection. Takes in a operator and a type.
+        /// </summary>
+        /// <param name="op"> Operator token. </param>
+        /// <param name="type"> Type of operator. </param>
+        private delegate void OnOperator(string op, Type type);
 
         /// <summary>
         /// Static Builder method. Factory returns an Operator node that contains a
@@ -34,14 +43,19 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> new OperatorNode. </returns>
         public static OperatorNode Builder(string op, Node left, Node right)
         {
+            InitFactory();
             if (SupportedOps.ContainsKey(op))
             {
-                return new OperatorNode(SupportedOps[op](), left, right);
+                object?[] constructorParams = new object?[] { left, right };
+                object? operatorNodeObject = Activator.CreateInstance(SupportedOps[op], constructorParams);
+
+                if (operatorNodeObject != null && operatorNodeObject is OperatorNode)
+                {
+                    return (OperatorNode)operatorNodeObject;
+                }
             }
-            else
-            {
-                throw new KeyNotFoundException($"Token {op} is not a supported operator");
-            }
+
+            throw new Exception("Unhandled operator");
         }
 
         /// <summary>
@@ -52,13 +66,78 @@ namespace SpreadsheetEngine.Expressions
         /// <returns> new OperatorNode. </returns>
         public static OperatorNode Builder(string op)
         {
+            InitFactory();
             if (SupportedOps.ContainsKey(op))
             {
-                return new OperatorNode(SupportedOps[op]());
+                object? operatorObject = System.Activator.CreateInstance(SupportedOps[op]);
+
+                if (operatorObject != null && operatorObject is Operator)
+                {
+                    return new OperatorNode((Operator)operatorObject);
+                }
             }
-            else
+
+            throw new Exception("Unhandled operator");
+        }
+
+        /// <summary>
+        /// Checks to see if the input token is a supported operator.
+        /// </summary>
+        /// <param name="op"> string token op. </param>
+        /// <returns> bool. </returns>
+        public static bool IsOperatorSupported(string op)
+        {
+            InitFactory();
+
+            if (SupportedOps.ContainsKey(op))
             {
-                throw new KeyNotFoundException($"Token {op} is not a supported operator");
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Initialize the factory by checking for supported operators to be added to the dictionary.
+        /// </summary>
+        private static void InitFactory()
+        {
+            OnOperator onOperator = (op, type) => SupportedOps.Add(op, type);
+            TraverseAvailableOperators(onOperator);
+        }
+
+        /// <summary>
+        /// Utilize assembly reflection to search for supported ops by grabbing all subclasses of the Operator class.
+        /// </summary>
+        /// <param name="onOperator"> delegate. </param>
+        private static void TraverseAvailableOperators(OnOperator onOperator)
+        {
+            Type operatorType = typeof(Operator);
+            IEnumerable<Type>? operatorTypes = null;
+
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                operatorTypes = assembly.GetTypes().Where(type => type.IsSubclassOf(operatorType));
+
+                foreach (var type in operatorTypes)
+                {
+                    // For each subclass, retrieve the 'OpStatic' property
+                    PropertyInfo? operatorField = type.GetProperty("OpStatic");
+                    if (operatorField != null)
+                    {
+                        // Get the character of the Operator
+                        object? value = operatorField.GetValue(type);
+                        if (value is string)
+                        {
+                            string operatorSymbol = (string)value;
+
+                            if (!SupportedOps.ContainsKey(operatorSymbol) && !Expression.IsTokenAParenthesis(operatorSymbol))
+                            {
+                                onOperator(operatorSymbol, type); // Invoke the delegate
+                            }
+                        }
+                    }
+                }
             }
         }
     }
