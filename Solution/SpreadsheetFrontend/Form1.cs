@@ -179,6 +179,10 @@ namespace SpreadsheetFrontEnd
                 return tuple;
             };
 
+            // Reset the spreadsheet object for this demo
+            this.spreadsheet = new Spreadsheet(NUMROWS, NUMCOLS);
+            this.spreadsheet.CellPropertyChanged += this.HandleCellPropertyChanged;
+
             // Set the text in 50 random Cells
             List<Tuple<int, int>> indicesOfRandomCells = new List<Tuple<int, int>>();
 
