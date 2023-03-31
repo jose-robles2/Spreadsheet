@@ -133,7 +133,7 @@ namespace SpreadsheetEngine.Expressions
                     if (currentOp.Associativity == Associative.Left)
                     {
                         while (opStack.Count > 0 &&
-                            opStack.Peek() is not ParenthLeftOperator &&
+                            opStack.Peek() is not ParenthLeft &&
                             currentOp.Precedence <= opStack.Peek().Precedence &&
                             currentOp.Associativity == Associative.Left)
                         {
@@ -149,12 +149,12 @@ namespace SpreadsheetEngine.Expressions
                 }
                 else if (IsTokenLeftParenths(token))
                 {
-                    opStack.Push(new ParenthLeftOperator());
+                    opStack.Push(new ParenthLeft());
                     leftParenthesesCount++;
                 }
                 else if (IsTokenRightParenths(token))
                 {
-                    while (opStack.Count > 0 && opStack.Peek() is not ParenthLeftOperator)
+                    while (opStack.Count > 0 && opStack.Peek() is not ParenthLeft)
                     {
                         output.Add(opStack.Pop().OperatorToken);
                     }
