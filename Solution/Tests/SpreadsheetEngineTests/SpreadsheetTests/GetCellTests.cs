@@ -136,9 +136,9 @@ namespace Tests.SpreadsheetEngineTests.SpreadsheetTests
         /// Test for Spreadsheet.GetCell(string name) under exception conditions.
         /// </summary>
         [Test]
-        public void GetCellTestOverloadedException()
+        public void GetCellOverloadedNullTest()
         {
-            Assert.Throws<KeyNotFoundException>(() => spreadsheet.GetCell("nonExistent"));
+            Assert.That(spreadsheet.GetCell("nonExistent"), Is.EqualTo(null));
         }
     }
 }
