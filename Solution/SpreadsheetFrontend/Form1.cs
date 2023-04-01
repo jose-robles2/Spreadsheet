@@ -102,7 +102,7 @@ namespace SpreadsheetFrontEnd
         /// </summary>
         /// <param name="sender"> object. </param>
         /// <param name="e"> event. </param>
-        private void HandleDgvCellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        private void HandleDgvCellBeginEdit(object? sender, DataGridViewCellCancelEventArgs e)
         {
             int row = e.RowIndex;
             int col = e.ColumnIndex;
@@ -122,7 +122,7 @@ namespace SpreadsheetFrontEnd
         /// </summary>
         /// <param name="sender"> object. </param>
         /// <param name="e"> event. </param>
-        private void HandleDgvCellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void HandleDgvCellEndEdit(object? sender, DataGridViewCellEventArgs e)
         {
             int row = e.RowIndex;
             int col = e.ColumnIndex;
@@ -135,7 +135,6 @@ namespace SpreadsheetFrontEnd
 
                 bool dgvCellIsNotNullAndStartsWithEqual = dgvCell.Value != null && dgvCell.Value.ToString().StartsWith("=");
                 bool cellTextIsUnique = dgvCell.Value != null && cell.Text != dgvCell.Value.ToString();
-
 
                 if (cellTextIsUnique || dgvCellIsNotNullAndStartsWithEqual)
                 {

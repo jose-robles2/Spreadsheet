@@ -38,7 +38,7 @@ namespace SpreadsheetEngine.Spreadsheet
             /// Sets the value and invokes a new property changed event.
             /// </summary>
             /// <param name="value"> New value. </param>
-            public override void SetValue(string value)
+            public void SetValue(string value)
             {
                 if (this.value != value)
                 {
@@ -180,7 +180,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// <param name="e"> Event. </param>
         private void HandleCellPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            Cell? cell = (Cell?)sender;
+            ConcreteCell? cell = (ConcreteCell?)sender;
 
             if (cell == null)
             {
@@ -246,7 +246,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// Evaluate the cell's text (can be formula) that is currently being edited.
         /// </summary>
         /// <param name="cell"> cell being edited. </param>
-        private void Evaluate(Cell cell)
+        private void Evaluate(ConcreteCell cell)
         {
             if (string.IsNullOrEmpty(cell.Text))
             {
@@ -272,7 +272,7 @@ namespace SpreadsheetEngine.Spreadsheet
                 // Iterate over each dependent for the current cell and evaluate to make sure theyre up to date.
                 foreach (string dependentCellName in this.cellDependencies[cell.Name])
                 {
-                    Cell dependentCell = this.GetCell(dependentCellName);
+                    ConcreteCell dependentCell = (ConcreteCell)this.GetCell(dependentCellName);
 
                     if (dependentCell != null)
                     {
@@ -287,7 +287,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// </summary>
         /// <param name="cell"> Current cell. </param>
         /// <returns> bool. </returns>
-        private bool IsFormulaInputValid(Cell cell)
+        private bool IsFormulaInputValid(ConcreteCell cell)
         {
             // TODO: Implement checks for circular references and a cell referencing itself
             // Not required for HW7
@@ -298,14 +298,14 @@ namespace SpreadsheetEngine.Spreadsheet
         /// Evaluate the cell's formula.
         /// </summary>
         /// <param name="cell"> Current cell. </param>
-        private void EvaluateFormula(Cell cell)
+        private void EvaluateFormula(ConcreteCell cell)
         {
             ExpressionTree exprTree = new ExpressionTree(cell.Text.Substring(1));
             HashSet<string> variables = exprTree.GetVariables();
 
             foreach (string variable in variables)
             {
-                Cell? varCell = this.GetCell(variable);
+                ConcreteCell? varCell = (ConcreteCell)this.GetCell(variable);
 
                 if (varCell == null)
                 {

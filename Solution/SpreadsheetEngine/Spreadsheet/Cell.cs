@@ -123,12 +123,6 @@ namespace SpreadsheetEngine.Spreadsheet
         }
 
         /// <summary>
-        /// Sets the value.
-        /// </summary>
-        /// <param name="value"> New value. </param>
-        public abstract void SetValue(string value);
-
-        /// <summary>
         /// Wrapper method to invoke a property changed.
         /// </summary>
         /// <param name="propertyName"> Property name. </param>
