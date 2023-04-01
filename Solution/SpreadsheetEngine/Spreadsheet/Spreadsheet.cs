@@ -35,6 +35,35 @@ namespace SpreadsheetEngine.Spreadsheet
             }
 
             /// <summary>
+            /// Determine if a our cell is equal to another cell.
+            /// </summary>
+            /// <param name="otherCell"> cell we are comparing. </param>
+            /// <returns> bool. </returns>
+            public bool Equals(ConcreteCell otherCell)
+            {
+                if (otherCell == null)
+                {
+                    return false;
+                }
+
+                if (this == otherCell)
+                {
+                    return true;
+                }
+
+                if (this.Text == otherCell.Text &&
+                    this.Value == otherCell.Value &&
+                    this.Name == otherCell.Name &&
+                    this.RowIndex == otherCell.RowIndex &&
+                    this.ColumnIndex == otherCell.ColumnIndex)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            /// <summary>
             /// Sets the value and invokes a new property changed event.
             /// </summary>
             /// <param name="value"> New value. </param>
@@ -256,6 +285,7 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 if (!this.IsFormulaInputValid(cell))
                 {
+                    // Show popup for bad ref.
                     return;
                 }
 
@@ -272,7 +302,7 @@ namespace SpreadsheetEngine.Spreadsheet
                 // Iterate over each dependent for the current cell and evaluate to make sure theyre up to date.
                 foreach (string dependentCellName in this.cellDependencies[cell.Name])
                 {
-                    ConcreteCell dependentCell = (ConcreteCell)this.GetCell(dependentCellName);
+                    ConcreteCell? dependentCell = (ConcreteCell?)this.GetCell(dependentCellName);
 
                     if (dependentCell != null)
                     {
@@ -289,8 +319,31 @@ namespace SpreadsheetEngine.Spreadsheet
         /// <returns> bool. </returns>
         private bool IsFormulaInputValid(ConcreteCell cell)
         {
-            // TODO: Implement checks for circular references and a cell referencing itself
-            // Not required for HW7
+            ExpressionTree expr = new ExpressionTree(cell.Text.Substring(1));
+
+            // Check for self reference
+            if (expr.GetVariables().Contains(cell.Name))
+            {
+                return false;
+            }
+
+            // Check for circular references
+            // Our current cell, "A1" formula should not contain any references to cells that also reference "A1"
+            foreach (string precedentCellName in this.cellDependencies.Keys)
+            {
+                ConcreteCell? precedentCell = (ConcreteCell?)this.GetCell(precedentCellName);
+
+                if (precedentCell != null && !precedentCell.Equals(cell))
+                {
+                    ExpressionTree precedentCellExpr = new ExpressionTree(precedentCell.Text.Substring(1));
+
+                    if (precedentCellExpr.GetVariables().Contains(cell.Name))
+                    {
+                        return false;
+                    }
+                }
+            }
+
             return true;
         }
 
@@ -305,7 +358,7 @@ namespace SpreadsheetEngine.Spreadsheet
 
             foreach (string variable in variables)
             {
-                ConcreteCell? varCell = (ConcreteCell)this.GetCell(variable);
+                ConcreteCell? varCell = (ConcreteCell?)this.GetCell(variable);
 
                 if (varCell == null)
                 {
