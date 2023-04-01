@@ -183,8 +183,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionsTests.ExpressionTests
         public void ConvertInfixToPostFixTestException()
         {
             List<string> tokenInput = new List<string>();
-
-            Assert.Throws<ArgumentException>(() => Expression.ConvertInfixToPostFix(tokenInput));
+            Assert.That(Expression.ConvertInfixToPostFix(tokenInput), Is.EqualTo(null));
         }
     }
 }
