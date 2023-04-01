@@ -133,8 +133,9 @@ namespace SpreadsheetFrontEnd
             {
                 DataGridViewCell dgvCell = this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex];
 
-                bool dgvCellIsNotNullAndStartsWithEqual = dgvCell != null && dgvCell.Value != null && dgvCell.Value.ToString().StartsWith("=");
-                bool cellTextIsUnique = cell.Text != dgvCell.Value.ToString();
+                bool dgvCellIsNotNullAndStartsWithEqual = dgvCell.Value != null && dgvCell.Value.ToString().StartsWith("=");
+                bool cellTextIsUnique = dgvCell.Value != null && cell.Text != dgvCell.Value.ToString();
+
 
                 if (cellTextIsUnique || dgvCellIsNotNullAndStartsWithEqual)
                 {
@@ -177,6 +178,10 @@ namespace SpreadsheetFrontEnd
 
                 return tuple;
             };
+
+            // Reset the spreadsheet object for this demo
+            this.spreadsheet = new Spreadsheet(NUMROWS, NUMCOLS);
+            this.spreadsheet.CellPropertyChanged += this.HandleCellPropertyChanged;
 
             // Set the text in 50 random Cells
             List<Tuple<int, int>> indicesOfRandomCells = new List<Tuple<int, int>>();

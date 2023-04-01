@@ -137,7 +137,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// </summary>
         /// <param name="cellName"> Cell name to search for. </param>
         /// <returns> Cell base object. </returns>
-        public Cell GetCell(string cellName)
+        public Cell? GetCell(string cellName)
         {
             try
             {
@@ -146,7 +146,8 @@ namespace SpreadsheetEngine.Spreadsheet
             }
             catch (KeyNotFoundException)
             {
-                throw new KeyNotFoundException("Cell with name '" + cellName + "' not found.");
+                // Originally was throwing an exception, catch and return null
+                return null;
             }
         }
 
@@ -188,13 +189,25 @@ namespace SpreadsheetEngine.Spreadsheet
 
             if (e.PropertyName == "Text")
             {
-                if (cell.Text[0] == '=')
+                if (cell.Text.StartsWith("="))
                 {
                     string formula = cell.Text.Substring(1);
 
-                    ExpressionTree tree = new ExpressionTree(formula);
+                    if (formula != string.Empty)
+                    {
+                        ExpressionTree tree = new ExpressionTree(formula);
 
-                    this.AddCellDependency(cell.Name, tree.GetVariables());
+                        if (tree.Size == 0)
+                        {
+                            return;
+                        }
+
+                        this.AddCellDependency(cell.Name, tree.GetVariables());
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
                 else
                 {
@@ -239,7 +252,7 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 cell.SetValue(string.Empty);
             }
-            else if (cell.Text[0] == '=')
+            else if (cell.Text.StartsWith("="))
             {
                 if (!this.IsFormulaInputValid(cell))
                 {
@@ -292,12 +305,30 @@ namespace SpreadsheetEngine.Spreadsheet
 
             foreach (string variable in variables)
             {
-                Cell varCell = this.GetCell(variable);
+                Cell? varCell = this.GetCell(variable);
+
+                if (varCell == null)
+                {
+                    // varCell doesnt point to a real cell, reset the cell to be empty
+                    // Because an invalid cellName has been entered into it's text property
+                    cell.Text = string.Empty;
+                    return;
+                }
+
                 double value;
 
-                if (string.IsNullOrEmpty(varCell.Value) || !double.TryParse(varCell.Value, out value))
+                if (!double.TryParse(varCell.Value, out value))
                 {
-                    exprTree.SetVariable(varCell.Name, 0);
+                    // Parse failed, is varCell empty or does it contain string?
+                    if (string.IsNullOrEmpty(varCell.Value))
+                    {
+                        exprTree.SetVariable(varCell.Name, 0);
+                    }
+                    else
+                    {
+                        cell.SetValue(varCell.Value);
+                        return;
+                    }
                 }
                 else
                 {
