@@ -272,7 +272,7 @@ namespace SpreadsheetEngine.Spreadsheet
                 // Iterate over each dependent for the current cell and evaluate to make sure theyre up to date.
                 foreach (string dependentCellName in this.cellDependencies[cell.Name])
                 {
-                    ConcreteCell dependentCell = (ConcreteCell)this.GetCell(dependentCellName);
+                    ConcreteCell? dependentCell = (ConcreteCell?)this.GetCell(dependentCellName);
 
                     if (dependentCell != null)
                     {
@@ -305,7 +305,7 @@ namespace SpreadsheetEngine.Spreadsheet
 
             foreach (string variable in variables)
             {
-                ConcreteCell? varCell = (ConcreteCell)this.GetCell(variable);
+                ConcreteCell? varCell = (ConcreteCell?)this.GetCell(variable);
 
                 if (varCell == null)
                 {

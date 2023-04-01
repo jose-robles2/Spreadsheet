@@ -29,7 +29,7 @@ namespace SpreadsheetEngine.Expressions
 
         private Dictionary<string, double> variableDictionary;
 
-        private List<string> inFixExpressionTokens;
+        private List<string>? inFixExpressionTokens;
 
         private int size = 0;
 
@@ -147,7 +147,7 @@ namespace SpreadsheetEngine.Expressions
         {
             Stack<Node> nodeStack = new Stack<Node>();
 
-            List<string> postfixExpression = Expressions.Expression.ConvertInfixToPostFix(this.inFixExpressionTokens);
+            List<string>? postfixExpression = Expressions.Expression.ConvertInfixToPostFix(this.inFixExpressionTokens);
 
             if (postfixExpression == null)
             {
