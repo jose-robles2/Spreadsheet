@@ -366,9 +366,16 @@ namespace SpreadsheetEngine.Spreadsheet
 
             foreach (string variable in exprTree.GetVariables())
             {
-                if (this.cellDependencies[variable].Contains(cell.Name))
+                try
                 {
-                    this.cellDependencies[variable].Remove(cell.Name);
+                    if (this.cellDependencies[variable].Contains(cell.Name))
+                    {
+                        this.cellDependencies[variable].Remove(cell.Name);
+                    }
+                }
+                catch
+                {
+                    return; // When a bad reference is caught, the formula is stored in text but doesnt contain any vars in cellDeps dict.
                 }
             }
         }
