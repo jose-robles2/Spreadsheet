@@ -266,6 +266,16 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 this.CellPropertyChanged?.Invoke(cell, e);
             }
+            else if (e.PropertyName == "OverWriteFormula")
+            {
+                if (e is CellChangedEventArgs newE)
+                {
+                    this.ModifyCellDependency(cell, newE.OldFormula);
+
+                    // Now that we removed the old dependencies, call the method again to handle the new formula
+                    this.HandleCellPropertyChanged(cell, new PropertyChangedEventArgs("Text"));
+                }
+            }
         }
 
         /// <summary>
@@ -342,6 +352,24 @@ namespace SpreadsheetEngine.Spreadsheet
                 }
 
                 this.cellDependencies[variable].Add(cell.Name);
+            }
+        }
+
+        /// <summary>
+        /// A cell with an existing formula has been overwritten with a new formula, remove old dependencies.
+        /// </summary>
+        /// <param name="cell"> cell. </param>
+        /// <param name="oldFormula"> old formula. </param>
+        private void ModifyCellDependency(ConcreteCell cell, string oldFormula)
+        {
+            ExpressionTree exprTree = new ExpressionTree(oldFormula.Substring(1));
+
+            foreach (string variable in exprTree.GetVariables())
+            {
+                if (this.cellDependencies[variable].Contains(cell.Name))
+                {
+                    this.cellDependencies[variable].Remove(cell.Name);
+                }
             }
         }
 
@@ -444,7 +472,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// </summary>
         /// <param name="cell"> cell. </param>
         /// <param name="exprTree"> tree. </param>
-        /// <returns></returns>
+        /// <returns> bool. </returns>
         private bool IsCircularReference(ConcreteCell cell, ExpressionTree exprTree)
         {
             return false;
