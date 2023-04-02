@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using SpreadsheetEngine.Expressions;
@@ -216,31 +217,47 @@ namespace SpreadsheetEngine.Spreadsheet
                 return;
             }
 
+            Action<ConcreteCell> setTextHelper = dependentCell =>
+            {
+                dependentCell.SetValue("#VALUE!");
+            };
+
             if (e.PropertyName == "Text")
             {
                 if (cell.Text.StartsWith("="))
                 {
                     string formula = cell.Text.Substring(1);
 
-                    if (formula != string.Empty)
+                    if (!this.ValidateFormula(cell, formula))
                     {
-                        ExpressionTree tree = new ExpressionTree(formula);
-
-                        if (tree.Size == 0)
-                        {
-                            return;
-                        }
-
-                        this.AddCellDependency(cell.Name, tree.GetVariables());
-                    }
-                    else
-                    {
+                        this.HandleBadCellReference(cell);
                         return;
                     }
                 }
+                else if (string.IsNullOrEmpty(cell.Text))
+                {
+                    // If cell has deps. and empty text was entered, update dependents to refer to this precedent cell as "zero"
+                    cell.SetValue("0");
+                    this.UpdateCellDependencies(cell, this.Evaluate);
+                }
                 else
                 {
+                    // If cell has deps. update to default #VALUE! because cell was not set to a double value
+                    setTextHelper = dependentCell =>
+                    {
+                        dependentCell.SetValue("#VALUE!");
+                        this.UpdateCellDependencies(dependentCell, setTextHelper);
+                    };
+
                     cell.SetValue(cell.Text);
+                    this.UpdateCellDependencies(cell, setTextHelper);
+
+                    // We don't want Evaluate() to be called when default "#VALUE!" are assigned - hardcoded solution
+                    double value;
+                    if (!double.TryParse(cell.Text, out value))
+                    {
+                        return;
+                    }
                 }
 
                 this.Evaluate(cell);
@@ -252,13 +269,70 @@ namespace SpreadsheetEngine.Spreadsheet
         }
 
         /// <summary>
+        /// Validate all aspects of the inputted formula.
+        /// </summary>
+        /// <param name="cell"> cell. </param>
+        /// <param name="expression"> expression. </param>
+        /// <returns> bool. </returns>
+        private bool ValidateFormula(ConcreteCell cell, string expression)
+        {
+            ExpressionTree exprTree = new ExpressionTree(expression);
+
+            // ONLY handles formulas that don't follow variable naming
+            // scheme. Unrecognized ops, mismatched parenths, bad syntax.
+            if (exprTree.Size == 0)
+            {
+                return false;
+            }
+
+            // Handles self and circular references and bad var names
+            if (!this.IsFormulaInputValid(cell, exprTree))
+            {
+                return false;
+            }
+
+            // Formula is valid, add dependencies
+            this.AddCellDependency(cell, exprTree.GetVariables());
+            return true;
+        }
+
+        /// <summary>
+        /// Validate user input's formula. No circular references and no self cell references.
+        /// </summary>
+        /// <param name="currentCell"> Current cell. </param>
+        /// <param name="currentCellExpr"> Tree for cell. </param>
+        /// <returns> bool. </returns>
+        private bool IsFormulaInputValid(ConcreteCell currentCell, ExpressionTree currentCellExpr)
+        {
+            if (this.IsSelfReference(currentCell))
+            {
+                return false;
+            }
+
+            foreach (string variable in currentCellExpr.GetVariables())
+            {
+                if (!this.IsCellNameValid(variable))
+                {
+                    return false;
+                }
+            }
+
+            if (this.IsCircularReference(currentCell, currentCellExpr))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// If a cell contains a formula, iterate over the set of variables in the formula to add
         /// the current cell name as a dependency to that variable. If the variable changes, it will
         /// alert its dependencies to update their values.
         /// </summary>
-        /// <param name="cellName"> Current cell containing some formula. </param>
+        /// <param name="cell"> Current cell containing some formula. </param>
         /// <param name="variables"> Tokenized variables within the current cell formula. </param>
-        private void AddCellDependency(string cellName, HashSet<string> variables)
+        private void AddCellDependency(ConcreteCell cell, HashSet<string> variables)
         {
             foreach (string variable in variables)
             {
@@ -267,7 +341,7 @@ namespace SpreadsheetEngine.Spreadsheet
                     this.cellDependencies.Add(variable, new HashSet<string>());
                 }
 
-                this.cellDependencies[variable].Add(cellName);
+                this.cellDependencies[variable].Add(cell.Name);
             }
         }
 
@@ -281,14 +355,12 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 cell.SetValue(string.Empty);
             }
+            else if (string.IsNullOrEmpty(cell.Text.Substring(1)))
+            {
+                cell.SetValue(cell.Text);
+            }
             else if (cell.Text.StartsWith("="))
             {
-                if (!this.IsFormulaInputValid(cell))
-                {
-                    // Show popup for bad ref.
-                    return;
-                }
-
                 this.EvaluateFormula(cell);
             }
             else
@@ -296,55 +368,7 @@ namespace SpreadsheetEngine.Spreadsheet
                 cell.SetValue(cell.Text);
             }
 
-            // Check if current cell has dependencies that need to be updated
-            if (this.cellDependencies.ContainsKey(cell.Name))
-            {
-                // Iterate over each dependent for the current cell and evaluate to make sure theyre up to date.
-                foreach (string dependentCellName in this.cellDependencies[cell.Name])
-                {
-                    ConcreteCell? dependentCell = (ConcreteCell?)this.GetCell(dependentCellName);
-
-                    if (dependentCell != null)
-                    {
-                        this.Evaluate(dependentCell);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Validate user input's formula. No circular references and no self cell references.
-        /// </summary>
-        /// <param name="cell"> Current cell. </param>
-        /// <returns> bool. </returns>
-        private bool IsFormulaInputValid(ConcreteCell cell)
-        {
-            ExpressionTree expr = new ExpressionTree(cell.Text.Substring(1));
-
-            // Check for self reference
-            if (expr.GetVariables().Contains(cell.Name))
-            {
-                return false;
-            }
-
-            // Check for circular references
-            // Our current cell, "A1" formula should not contain any references to cells that also reference "A1"
-            foreach (string precedentCellName in this.cellDependencies.Keys)
-            {
-                ConcreteCell? precedentCell = (ConcreteCell?)this.GetCell(precedentCellName);
-
-                if (precedentCell != null && !precedentCell.Equals(cell))
-                {
-                    ExpressionTree precedentCellExpr = new ExpressionTree(precedentCell.Text.Substring(1));
-
-                    if (precedentCellExpr.GetVariables().Contains(cell.Name))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
+            this.UpdateCellDependencies(cell, this.Evaluate);
         }
 
         /// <summary>
@@ -359,14 +383,6 @@ namespace SpreadsheetEngine.Spreadsheet
             foreach (string variable in variables)
             {
                 ConcreteCell? varCell = (ConcreteCell?)this.GetCell(variable);
-
-                if (varCell == null)
-                {
-                    // varCell doesnt point to a real cell, reset the cell to be empty
-                    // Because an invalid cellName has been entered into it's text property
-                    cell.Text = string.Empty;
-                    return;
-                }
 
                 double value;
 
@@ -390,6 +406,69 @@ namespace SpreadsheetEngine.Spreadsheet
             }
 
             cell.SetValue(exprTree.Evaluate().ToString());
+        }
+
+        /// <summary>
+        /// Update cell dependencies. This method is used multiple times for different reasons, so take
+        /// in a lambda dependentAction that takes a dependent cell as a parameter.
+        /// </summary>
+        /// <param name="cell"> current cell. </param>
+        /// <param name="dependentAction"> lambda. </param>
+        private void UpdateCellDependencies(ConcreteCell cell, Action<ConcreteCell> dependentAction)
+        {
+            if (this.cellDependencies.ContainsKey(cell.Name))
+            {
+                foreach (string dependentCellName in this.cellDependencies[cell.Name])
+                {
+                    ConcreteCell? dependentCell = (ConcreteCell?)this.GetCell(dependentCellName);
+
+                    if (dependentCell != null)
+                    {
+                        dependentAction(dependentCell);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Notify the UI about a bad cell reference.
+        /// </summary>
+        /// <param name="cell"> Current cell. </param>
+        private void HandleBadCellReference(ConcreteCell cell)
+        {
+            this.CellPropertyChanged?.Invoke(cell, new PropertyChangedEventArgs("Bad Reference"));
+        }
+
+        /// <summary>
+        /// Check if a cell has a circular reference.
+        /// </summary>
+        /// <param name="cell"> cell. </param>
+        /// <param name="exprTree"> tree. </param>
+        /// <returns></returns>
+        private bool IsCircularReference(ConcreteCell cell, ExpressionTree exprTree)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Checks to see if a cell contains a reference to itself.
+        /// </summary>
+        /// <param name="cell"> cell we are checking. </param>
+        /// <returns> bool. </returns>
+        private bool IsSelfReference(ConcreteCell cell)
+        {
+            ExpressionTree expr = new ExpressionTree(cell.Text.Substring(1));
+            return expr.GetVariables().Contains(cell.Name) ? true : false;
+        }
+
+        /// <summary>
+        /// Check if the cell name is valid.
+        /// </summary>
+        /// <param name="cellName"> name of cell. </param>
+        /// <returns> bool. </returns>
+        private bool IsCellNameValid(string cellName)
+        {
+            return this.GetCell(cellName) != null ? true : false;
         }
     }
 }
