@@ -211,16 +211,15 @@ namespace SpreadsheetEngine.Spreadsheet
         private void HandleCellPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             ConcreteCell? cell = (ConcreteCell?)sender;
+            Action<ConcreteCell> setTextHelper = dependentCell =>
+            {
+                dependentCell.SetValue("#VALUE!");
+            };
 
             if (cell == null)
             {
                 return;
             }
-
-            Action<ConcreteCell> setTextHelper = dependentCell =>
-            {
-                dependentCell.SetValue("#VALUE!");
-            };
 
             if (e.PropertyName == "Text")
             {
@@ -252,7 +251,7 @@ namespace SpreadsheetEngine.Spreadsheet
                     cell.SetValue(cell.Text);
                     this.UpdateCellDependencies(cell, setTextHelper);
 
-                    // We don't want Evaluate() to be called when default "#VALUE!" are assigned - hardcoded solution
+                    // We don't want Evaluate() to be called when default "#VALUE!" are assigned - hardcoded solution :(
                     double value;
                     if (!double.TryParse(cell.Text, out value))
                     {
