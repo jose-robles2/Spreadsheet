@@ -21,7 +21,7 @@ namespace SpreadsheetEngine.Expressions
     /// </summary>
     public class ExpressionTree
     {
-        private readonly string defaultExpression = "A1+B1+C1";
+        //private readonly string defaultExpression = "A1+B1+C1";
 
         private readonly string expression;
 
@@ -39,10 +39,14 @@ namespace SpreadsheetEngine.Expressions
         /// <param name="expression"> Math expression. </param>
         public ExpressionTree(string expression = "")
         {
-            this.expression = string.IsNullOrEmpty(expression) ? this.defaultExpression : expression;
+            this.expression = expression; //  string.IsNullOrEmpty(expression) ? this.defaultExpression : expression;
             this.variableDictionary = new Dictionary<string, double>();
-            this.ParseExpressionAndInitVarsDict();
-            this.CreateExpressionTree();
+
+            if (expression != string.Empty)
+            {
+                this.ParseExpressionAndInitVarsDict();
+                this.CreateExpressionTree();
+            }
         }
 
         /// <summary>
