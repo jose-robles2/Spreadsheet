@@ -94,6 +94,10 @@ namespace SpreadsheetFrontEnd
                 {
                     dgvCell.Value = cell.Value;
                 }
+                else if (e.PropertyName == "Bad Reference")
+                {
+                    MessageBox.Show("There are one or more bad references in the inputted formula (Self or circular reference, non existing cell name, unrecognized operator, etc.).");
+                }
             }
         }
 
@@ -117,11 +121,11 @@ namespace SpreadsheetFrontEnd
             }
         }
 
-        /// <summary>
-        /// When a cell is being edited, text property is shown, once edit ends, show value property.
-        /// </summary>
-        /// <param name="sender"> object. </param>
-        /// <param name="e"> event. </param>
+        ///// <summary>
+        ///// When a cell is being edited, text property is shown, once edit ends, show value property.
+        ///// </summary>
+        ///// <param name="sender"> object. </param>
+        ///// <param name="e"> event. </param>
         private void HandleDgvCellEndEdit(object? sender, DataGridViewCellEventArgs e)
         {
             int row = e.RowIndex;
@@ -140,8 +144,16 @@ namespace SpreadsheetFrontEnd
                 {
                     // Assign the dgv value being edited to/back to the cell text field and assign
                     // The current cell value back to the dgv value since editing has stopped
-                    cell.Text = dgvCell.Value.ToString() ?? string.Empty;
+                    cell.Text = dgvCell.Value.ToString();
                     dgvCell.Value = cell.Value;
+                }
+                else
+                {
+                    // If the dgv value is null, then user entered/cleared the existing cell text
+                    if (dgvCell.Value == null)
+                    {
+                        cell.Text = string.Empty;
+                    }
                 }
             }
         }
