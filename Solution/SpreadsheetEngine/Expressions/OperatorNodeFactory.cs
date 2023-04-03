@@ -46,12 +46,11 @@ namespace SpreadsheetEngine.Expressions
             InitFactory();
             if (SupportedOps.ContainsKey(op))
             {
-                object?[] constructorParams = new object?[] { left, right };
-                object? operatorNodeObject = Activator.CreateInstance(SupportedOps[op], constructorParams);
+                object? operatorObject = System.Activator.CreateInstance(SupportedOps[op]);
 
-                if (operatorNodeObject != null && operatorNodeObject is OperatorNode)
+                if (operatorObject != null && operatorObject is Operator)
                 {
-                    return (OperatorNode)operatorNodeObject;
+                    return new OperatorNode((Operator)operatorObject, left, right);
                 }
             }
 
