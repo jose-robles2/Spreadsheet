@@ -211,10 +211,6 @@ namespace SpreadsheetEngine.Spreadsheet
         private void HandleCellPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             ConcreteCell? cell = (ConcreteCell?)sender;
-            Action<ConcreteCell> setTextHelper = dependentCell =>
-            {
-                dependentCell.SetValue("#VALUE!");
-            };
 
             if (cell == null)
             {
@@ -230,31 +226,6 @@ namespace SpreadsheetEngine.Spreadsheet
                     if (!this.ValidateFormula(cell, formula))
                     {
                         this.HandleBadCellReference(cell);
-                        return;
-                    }
-                }
-                else if (string.IsNullOrEmpty(cell.Text))
-                {
-                    // If cell has deps. and empty text was entered, update dependents to refer to this precedent cell as "zero"
-                    cell.SetValue("0");
-                    this.UpdateCellDependencies(cell, this.Evaluate);
-                }
-                else
-                {
-                    // If cell has deps. update to default #VALUE! because cell was not set to a double value
-                    setTextHelper = dependentCell =>
-                    {
-                        dependentCell.SetValue("#VALUE!");
-                        this.UpdateCellDependencies(dependentCell, setTextHelper);
-                    };
-
-                    cell.SetValue(cell.Text);
-                    this.UpdateCellDependencies(cell, setTextHelper);
-
-                    // We don't want Evaluate() to be called when default "#VALUE!" are assigned - hardcoded solution :(
-                    double value;
-                    if (!double.TryParse(cell.Text, out value))
-                    {
                         return;
                     }
                 }
@@ -388,21 +359,38 @@ namespace SpreadsheetEngine.Spreadsheet
             if (string.IsNullOrEmpty(cell.Text))
             {
                 cell.SetValue(string.Empty);
+                this.UpdateCellDependencies(cell, this.Evaluate);
             }
-            else if (string.IsNullOrEmpty(cell.Text.Substring(1)))
-            {
-                cell.SetValue(cell.Text);
-            }
-            else if (cell.Text.StartsWith("="))
+            else if (cell.Text.StartsWith("=") && !string.IsNullOrEmpty(cell.Text.Substring(1)))
             {
                 this.EvaluateFormula(cell);
+                this.UpdateCellDependencies(cell, this.Evaluate);
             }
             else
             {
-                cell.SetValue(cell.Text);
-            }
+                double value;
+                Action<ConcreteCell> setTextHelper = dependentCell =>
+                {
+                    dependentCell.SetValue("#VALUE!");
+                };
+                setTextHelper = dependentCell =>
+                {
+                    dependentCell.SetValue("#VALUE!");
+                    this.UpdateCellDependencies(dependentCell, setTextHelper);
+                };
 
-            this.UpdateCellDependencies(cell, this.Evaluate);
+                cell.SetValue(cell.Text);
+
+                // Are we setting a double or string to the cell's value
+                if (!double.TryParse(cell.Text, out value))
+                {
+                    this.UpdateCellDependencies(cell, setTextHelper);
+                }
+                else
+                {
+                    this.UpdateCellDependencies(cell, this.Evaluate);
+                }
+            }
         }
 
         /// <summary>
