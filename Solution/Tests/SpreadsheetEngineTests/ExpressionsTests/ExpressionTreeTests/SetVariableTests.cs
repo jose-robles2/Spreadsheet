@@ -24,7 +24,7 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
         [SetUp]
         public void Setup()
         {
-            tree = new SpreadsheetEngine.Expressions.ExpressionTree();
+            tree = new SpreadsheetEngine.Expressions.ExpressionTree("A1+C1");
         }
 
         /// <summary>
@@ -51,8 +51,9 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
         /// Test for ExpressionTree.SetVariable(string varName, double varValue) under exception conditions.
         /// </summary>
         [Test]
-        public void SetVariableTestException()
+        public void SetVariableTestNullTest()
         {
+            // maybe still throw expression tree exceptions, just catch them in the spreadsheet
             Assert.Throws<KeyNotFoundException>(() => tree.SetVariable("nonExistant", 100));
         }
     }
