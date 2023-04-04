@@ -369,14 +369,24 @@ namespace SpreadsheetEngine.Spreadsheet
             else
             {
                 double value;
-                Action<ConcreteCell> setTextHelper = dependentCell =>
-                {
-                    dependentCell.SetValue("#VALUE!");
-                };
+                Action<ConcreteCell> setTextHelper = dependentCell => { };
                 setTextHelper = dependentCell =>
                 {
-                    dependentCell.SetValue("#VALUE!");
-                    this.UpdateCellDependencies(dependentCell, setTextHelper);
+                    if (dependentCell.Text.StartsWith("="))
+                    {
+                        string formula = dependentCell.Text.Substring(1);
+                        if (Expression.TokenizeExpression(formula).Count > 1)
+                        {
+                            dependentCell.SetValue("#VALUE!");
+                            this.UpdateCellDependencies(dependentCell, setTextHelper);
+                        }
+                        else
+                        {
+                            this.EvaluateFormula(dependentCell);
+                            this.UpdateCellDependencies(dependentCell, setTextHelper);
+                        }
+                    }
+
                 };
 
                 cell.SetValue(cell.Text);
