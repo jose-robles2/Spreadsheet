@@ -71,6 +71,10 @@ namespace SpreadsheetFrontEnd
             // Connect the dgv cell events to the form1.cs delegates.
             this.dataGridView1.CellBeginEdit += this.HandleDgvCellBeginEdit;
             this.dataGridView1.CellEndEdit += this.HandleDgvCellEndEdit;
+
+            // Disable undo/redo until actions are done
+            this.UndoToolStripMenuItem.Enabled = false;
+            this.RedoToolStripMenuItem.Enabled = false;
         }
 
         /// <summary>
@@ -160,8 +164,8 @@ namespace SpreadsheetFrontEnd
                     this.commandManager.ExecuteCommand(new TextCommand(textChange));
                     // text changes work for the most part. For some reason, string.Empty commands are being saved
                         // so when we do undo/redo, empty text is shown -> DEBUG
-                    // every time a command is executed, UN GRAY the undo and redo
-                    // cell.Text = dgvCell.Value.ToString();
+
+                    this.UpdateUndoRedoMenuItems();
                     dgvCell.Value = cell.Value;
                 }
                 else
@@ -183,6 +187,7 @@ namespace SpreadsheetFrontEnd
         private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.commandManager.Undo();
+            this.UpdateUndoRedoMenuItems();
         }
 
         /// <summary>
@@ -193,6 +198,7 @@ namespace SpreadsheetFrontEnd
         private void RedoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.commandManager.Redo();
+            this.UpdateUndoRedoMenuItems();
         }
 
         /// <summary>
@@ -228,8 +234,32 @@ namespace SpreadsheetFrontEnd
                 if (selectedCells.Count > 0)
                 {
                     this.commandManager.ExecuteCommand(colorCommand);
-                    // every time a command is executed, UN GRAY the undo and redo
+                    this.UpdateUndoRedoMenuItems();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Allow for undo/redo if a command has been executed.
+        /// </summary>
+        private void UpdateUndoRedoMenuItems()
+        {
+            if (this.commandManager.GetUndoStackCount() > 0)
+            {
+                this.UndoToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                this.UndoToolStripMenuItem.Enabled = false;
+            }
+
+            if (this.commandManager.GetRedoStackCount() > 0)
+            {
+                this.RedoToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                this.RedoToolStripMenuItem.Enabled = false;
             }
         }
 
