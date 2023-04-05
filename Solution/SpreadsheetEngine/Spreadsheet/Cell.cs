@@ -39,6 +39,16 @@ namespace SpreadsheetEngine.Spreadsheet
         protected string value;
 
         /// <summary>
+        /// Cell's background color.
+        /// </summary>
+        protected uint bgColor;
+
+        /// <summary>
+        /// White.
+        /// </summary>
+        private const uint DEFAULTCOLOR = 0xFFFFFFFF;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
         /// </summary>
         /// <param name="rowIndex"> Index of the row. </param>
@@ -60,6 +70,7 @@ namespace SpreadsheetEngine.Spreadsheet
 
             this.text = text;
             this.value = value;
+            this.bgColor = DEFAULTCOLOR;
         }
 
         /// <summary>
@@ -128,6 +139,23 @@ namespace SpreadsheetEngine.Spreadsheet
         public string Value
         {
             get { return this.value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the color property.
+        /// </summary>
+        public uint BGColor
+        {
+            get => this.bgColor;
+
+            set
+            {
+                if (this.bgColor != value)
+                {
+                    this.bgColor = value;
+                    this.InvokePropertyChanged("Color");
+                }
+            }
         }
 
         /// <summary>
