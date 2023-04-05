@@ -247,6 +247,10 @@ namespace SpreadsheetEngine.Spreadsheet
                     this.HandleCellPropertyChanged(cell, new PropertyChangedEventArgs("Text"));
                 }
             }
+            else if (e.PropertyName == "Color")
+            {
+                this.CellPropertyChanged?.Invoke(sender, e);
+            }
         }
 
         /// <summary>
