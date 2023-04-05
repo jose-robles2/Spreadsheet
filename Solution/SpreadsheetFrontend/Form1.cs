@@ -3,6 +3,8 @@
 // </copyright>
 
 using System.ComponentModel;
+using SpreadsheetEngine.Command;
+using SpreadsheetEngine.Command.Commands;
 using SpreadsheetEngine.Spreadsheet;
 
 namespace SpreadsheetFrontEnd
@@ -26,6 +28,11 @@ namespace SpreadsheetFrontEnd
         /// Spreadsheet object that runs in the backend of the UI.
         /// </summary>
         private Spreadsheet spreadsheet;
+
+        /// <summary>
+        /// Invoker object that is called from the client (form1.cs).
+        /// </summary>
+        private CommandManager commandManager = new CommandManager();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
@@ -125,11 +132,11 @@ namespace SpreadsheetFrontEnd
             }
         }
 
-        ///// <summary>
-        ///// When a cell is being edited, text property is shown, once edit ends, show value property.
-        ///// </summary>
-        ///// <param name="sender"> object. </param>
-        ///// <param name="e"> event. </param>
+        /// <summary>
+        /// When a cell is being edited, text property is shown, once edit ends, show value property.
+        /// </summary>
+        /// <param name="sender"> object. </param>
+        /// <param name="e"> event. </param>
         private void HandleDgvCellEndEdit(object? sender, DataGridViewCellEventArgs e)
         {
             int row = e.RowIndex;
@@ -163,6 +170,26 @@ namespace SpreadsheetFrontEnd
         }
 
         /// <summary>
+        /// Undo a command.
+        /// </summary>
+        /// <param name="sender"> object. </param>
+        /// <param name="e"> event. </param>
+        private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.commandManager.Undo();
+        }
+
+        /// <summary>
+        /// Redo a command.
+        /// </summary>
+        /// <param name="sender"> object. </param>
+        /// <param name="e"> event. </param>
+        private void RedoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.commandManager.Redo();
+        }
+
+        /// <summary>
         /// Event handler for change background color menu strip item. Prompt user to select a color.
         /// </summary>
         /// <param name="sender"> object. </param>
@@ -173,6 +200,7 @@ namespace SpreadsheetFrontEnd
 
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
+                ColorCommand colorCommand = new ColorCommand();
                 List<Cell> selectedCells = new List<Cell>();
                 uint color = (uint)colorDialog.Color.ToArgb();
 
@@ -184,24 +212,18 @@ namespace SpreadsheetFrontEnd
 
                         if (cell != null && cell.BGColor != color)
                         {
+                            ColorChange colorChange = new ColorChange(cell, color, cell.BGColor);
+                            colorCommand.AddColorChange(colorChange);
                             selectedCells.Add(cell);
                         }
                     }
                 }
 
-                foreach (Cell cell in selectedCells)
+                if (selectedCells.Count > 0)
                 {
-                    cell.BGColor = color;
+                    this.commandManager.ExecuteCommand(colorCommand);
+                    // every time a command is executed, UN GRAY the undo and redo
                 }
-
-                // if numbers of cell selected greater than 0, means some cell we have to color update.
-                // then, create command and push it to undo stack.
-                //if (selectedCells.Count > 0)
-                //{
-                //    ColorCommand colorCommand = new ColorCommand(selectedCells, newColor);
-                //    this.spreadsheet.NewCommandAdd(colorCommand);
-                //    this.SetUndoRedoMeanuVisibilityAndInfo();
-                //}
             }
         }
 
@@ -264,5 +286,7 @@ namespace SpreadsheetFrontEnd
                 this.spreadsheet.GetCell(row, columnIndex).Text = "=B" + (row + 1); // Add one to corres. w/ the GUI indexes
             }
         }
+
+
     }
 }
