@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -240,7 +241,7 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 if (e is CellChangedEventArgs newE)
                 {
-                    this.ModifyCellDependency(cell, newE.OldFormula);
+                    this.RemoveCellDependency(cell, newE.OldFormula);
 
                     // Now that we removed the old dependencies, call the method again to handle the new formula
                     this.HandleCellPropertyChanged(cell, new PropertyChangedEventArgs("Text"));
@@ -271,8 +272,6 @@ namespace SpreadsheetEngine.Spreadsheet
                 return false;
             }
 
-            // Formula is valid, add dependencies
-            this.AddCellDependency(cell, exprTree.GetVariables());
             return true;
         }
 
@@ -284,7 +283,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// <returns> bool. </returns>
         private bool IsFormulaInputValid(ConcreteCell currentCell, ExpressionTree currentCellExpr)
         {
-            if (this.IsSelfReference(currentCell))
+            if (this.IsSelfReference(currentCell, currentCellExpr))
             {
                 return false;
             }
@@ -297,8 +296,13 @@ namespace SpreadsheetEngine.Spreadsheet
                 }
             }
 
+            // No self reference or bad reference, add cell dependency now to check if there's a circular reference
+            this.AddCellDependency(currentCell, currentCellExpr.GetVariables());
+
             if (this.IsCircularReference(currentCell, currentCellExpr))
             {
+                // Circular reference found, remove the dependency we just added
+                this.RemoveCellDependency(currentCell, "=" + currentCellExpr.Expression);
                 return false;
             }
 
@@ -330,7 +334,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// </summary>
         /// <param name="cell"> cell. </param>
         /// <param name="oldFormula"> old formula. </param>
-        private void ModifyCellDependency(ConcreteCell cell, string oldFormula)
+        private void RemoveCellDependency(ConcreteCell cell, string oldFormula)
         {
             ExpressionTree exprTree = new ExpressionTree(oldFormula.Substring(1));
 
@@ -479,7 +483,52 @@ namespace SpreadsheetEngine.Spreadsheet
         /// <returns> bool. </returns>
         private bool IsCircularReference(ConcreteCell cell, ExpressionTree exprTree)
         {
+            HashSet<string> variables = exprTree.GetVariables();
+
+            foreach (string varName in variables)
+            {
+                if (this.IsCircularHelper(cell, varName))
+                {
+                    this.HandleBadCellReference(cell);
+                    return true;
+                }
+            }
+
             return false;
+        }
+
+        private bool IsCircularHelper(ConcreteCell cell, string varName)
+        {
+            Func<string, string, bool> isCircularDFS = (curName, varName) => { return false; };
+            isCircularDFS = (curName, varName) =>
+            {
+                if (curName == varName)
+                {
+                    return true;
+                }
+
+                foreach (string depName in this.cellDependencies[curName])
+                {
+                    if (this.cellDependencies.ContainsKey(depName))
+                    {
+                        return isCircularDFS(depName, varName);
+                    }
+                }
+
+                return false;
+            };
+
+            if (cell.Name == varName)
+            {
+                return true;
+            }
+
+            if (!this.cellDependencies.ContainsKey(cell.Name))
+            {
+                return false;
+            }
+
+            return isCircularDFS(cell.Name, varName);
         }
 
         /// <summary>
@@ -487,10 +536,9 @@ namespace SpreadsheetEngine.Spreadsheet
         /// </summary>
         /// <param name="cell"> cell we are checking. </param>
         /// <returns> bool. </returns>
-        private bool IsSelfReference(ConcreteCell cell)
+        private bool IsSelfReference(ConcreteCell cell, ExpressionTree exprTree)
         {
-            ExpressionTree expr = new ExpressionTree(cell.Text.Substring(1));
-            return expr.GetVariables().Contains(cell.Name) ? true : false;
+            return exprTree.GetVariables().Contains(cell.Name) ? true : false;
         }
 
         /// <summary>
