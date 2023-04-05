@@ -98,6 +98,10 @@ namespace SpreadsheetFrontEnd
                 {
                     MessageBox.Show("There are one or more bad references in the inputted formula (Self or circular reference, non existing cell name, unrecognized operator, etc.).");
                 }
+                else if (e.PropertyName == "Color")
+                {
+                    dgvCell.Style.BackColor = Color.FromArgb((int)cell.BGColor);
+                }
             }
         }
 
