@@ -379,7 +379,7 @@ namespace SpreadsheetEngine.Spreadsheet
                     if (dependentCell.Text.StartsWith("="))
                     {
                         string formula = dependentCell.Text.Substring(1);
-                        if (Expression.TokenizeExpression(formula).Count > 1)
+                        if (Expression.TokenizeExpression(formula)?.Count > 1)
                         {
                             dependentCell.SetValue("#VALUE!");
                             this.UpdateCellDependencies(dependentCell, setTextHelper);
@@ -390,7 +390,6 @@ namespace SpreadsheetEngine.Spreadsheet
                             this.UpdateCellDependencies(dependentCell, setTextHelper);
                         }
                     }
-
                 };
 
                 cell.SetValue(cell.Text);
@@ -476,7 +475,7 @@ namespace SpreadsheetEngine.Spreadsheet
         }
 
         /// <summary>
-        /// Check if a cell has a circular reference.
+        /// Check if a cell has a circular reference contained within its formula.
         /// </summary>
         /// <param name="cell"> cell. </param>
         /// <param name="exprTree"> tree. </param>
@@ -497,6 +496,12 @@ namespace SpreadsheetEngine.Spreadsheet
             return false;
         }
 
+        /// <summary>
+        /// For each cell, check its dependencies for circular references by utilizing a dfs lambda.
+        /// </summary>
+        /// <param name="cell"> cell. </param>
+        /// <param name="varName"> varName within cell's formula. </param>
+        /// <returns> bool. </returns>
         private bool IsCircularHelper(ConcreteCell cell, string varName)
         {
             Func<string, string, bool> isCircularDFS = (curName, varName) => { return false; };
@@ -535,6 +540,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// Checks to see if a cell contains a reference to itself.
         /// </summary>
         /// <param name="cell"> cell we are checking. </param>
+        /// <param name="exprTree"> tree for cell we are checking. </param>
         /// <returns> bool. </returns>
         private bool IsSelfReference(ConcreteCell cell, ExpressionTree exprTree)
         {
