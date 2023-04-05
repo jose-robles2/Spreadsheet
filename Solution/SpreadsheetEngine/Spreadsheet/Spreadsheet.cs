@@ -249,7 +249,7 @@ namespace SpreadsheetEngine.Spreadsheet
             }
             else if (e.PropertyName == "Color")
             {
-                this.CellPropertyChanged?.Invoke(sender, e);
+                this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Color"));
             }
         }
 
