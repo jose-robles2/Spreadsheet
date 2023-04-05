@@ -98,13 +98,13 @@
             // undoToolStripMenuItem
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(206, 24);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(120, 24);
             this.undoToolStripMenuItem.Text = "Undo";
             // 
             // redoToolStripMenuItem
             // 
             this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(206, 24);
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(120, 24);
             this.redoToolStripMenuItem.Text = "Redo";
             // 
             // cellToolStripMenuItem
@@ -120,6 +120,7 @@
             this.changeBackgroundColorToolStripMenuItem.Name = "changeBackgroundColorToolStripMenuItem";
             this.changeBackgroundColorToolStripMenuItem.Size = new System.Drawing.Size(253, 24);
             this.changeBackgroundColorToolStripMenuItem.Text = "Change background color...";
+            this.changeBackgroundColorToolStripMenuItem.Click += new System.EventHandler(this.ChangeBackgroundColorToolStripMenuItem_Click);
             // 
             // Form1
             // 

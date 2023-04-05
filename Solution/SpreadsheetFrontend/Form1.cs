@@ -163,6 +163,49 @@ namespace SpreadsheetFrontEnd
         }
 
         /// <summary>
+        /// Event handler for change background color menu strip item. Prompt user to select a color.
+        /// </summary>
+        /// <param name="sender"> object. </param>
+        /// <param name="e"> event. </param>
+        private void ChangeBackgroundColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                List<Cell> selectedCells = new List<Cell>();
+                uint color = (uint)colorDialog.Color.ToArgb();
+
+                foreach (DataGridViewCell dgvCell in this.dataGridView1.SelectedCells)
+                {
+                    if (dgvCell != null)
+                    {
+                        Cell? cell = this.spreadsheet.GetCell(dgvCell.RowIndex, dgvCell.ColumnIndex);
+
+                        if (cell != null && cell.BGColor != color)
+                        {
+                            selectedCells.Add(cell);
+                        }
+                    }
+                }
+
+                foreach (Cell cell in selectedCells)
+                {
+                    cell.BGColor = color;
+                }
+
+                // if numbers of cell selected greater than 0, means some cell we have to color update.
+                // then, create command and push it to undo stack.
+                //if (selectedCells.Count > 0)
+                //{
+                //    ColorCommand colorCommand = new ColorCommand(selectedCells, newColor);
+                //    this.spreadsheet.NewCommandAdd(colorCommand);
+                //    this.SetUndoRedoMeanuVisibilityAndInfo();
+                //}
+            }
+        }
+
+        /// <summary>
         /// Button that initiates a demo of the spreadsheet by filling random cells with text values in order
         /// to show that the broadcaster/observer pattern is working. When a cell object is modified, the cell
         /// signals to the spreadsheet object, which signals to the UI (Form.cs).
