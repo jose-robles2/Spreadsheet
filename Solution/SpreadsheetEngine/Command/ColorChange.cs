@@ -17,7 +17,7 @@ namespace SpreadsheetEngine.Command
     public class ColorChange
     {
         /// <summary>
-        /// Cells we need to change.
+        /// Cell we need to change.
         /// </summary>
         private Cell cell;
 
@@ -27,7 +27,7 @@ namespace SpreadsheetEngine.Command
         private uint newColor;
 
         /// <summary>
-        /// List of old colors we could change to.
+        /// Old color we could change to.
         /// </summary>
         private uint oldColor;
 

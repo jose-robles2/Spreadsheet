@@ -155,7 +155,13 @@ namespace SpreadsheetFrontEnd
                 {
                     // Assign the dgv value being edited to/back to the cell text field and assign
                     // The current cell value back to the dgv value since editing has stopped
-                    cell.Text = dgvCell.Value.ToString();
+
+                    TextChange textChange = new TextChange(cell, dgvCell.Value.ToString(), cell.Text);
+                    this.commandManager.ExecuteCommand(new TextCommand(textChange));
+                    // text changes work for the most part. For some reason, string.Empty commands are being saved
+                        // so when we do undo/redo, empty text is shown -> DEBUG
+                    // every time a command is executed, UN GRAY the undo and redo
+                    // cell.Text = dgvCell.Value.ToString();
                     dgvCell.Value = cell.Value;
                 }
                 else

@@ -18,15 +18,16 @@ namespace SpreadsheetEngine.Command.Commands
         /// <summary>
         /// Domain object to change color.
         /// </summary>
-        private List<TextChange> textChanges = new List<TextChange>();
+        private TextChange textChange;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TextCommand"/> class.
         /// Add a color change domain obj.
         /// </summary>
-        /// <param name="colorChange"> color change. </param>
-        public void AddColorChange(TextChange colorChange)
+        /// <param name="textChange"> text change. </param>
+        public TextCommand(TextChange textChange)
         {
-            this.textChanges.Add(colorChange);
+            this.textChange = textChange;
         }
 
         /// <summary>
@@ -34,10 +35,7 @@ namespace SpreadsheetEngine.Command.Commands
         /// </summary>
         public void Execute()
         {
-            foreach (TextChange textChange in this.textChanges)
-            {
-                textChange.Redo();
-            }
+            this.textChange.Redo();
         }
 
         /// <summary>
@@ -45,10 +43,7 @@ namespace SpreadsheetEngine.Command.Commands
         /// </summary>
         public void Unexecute()
         {
-            foreach (TextChange textChange in this.textChanges)
-            {
-                textChange.Undo();
-            }
+            this.textChange.Undo();
         }
     }
 }

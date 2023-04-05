@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SpreadsheetEngine.Spreadsheet;
 
 namespace SpreadsheetEngine.Command
 {
@@ -16,10 +17,39 @@ namespace SpreadsheetEngine.Command
     public class TextChange
     {
         /// <summary>
+        /// Cell we need to change.
+        /// </summary>
+        private Cell cell;
+
+        /// <summary>
+        /// Text we need to change to.
+        /// </summary>
+        private string newText;
+
+        /// <summary>
+        /// Old text we could change to.
+        /// </summary>
+        private string oldText;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextChange"/> class.
+        /// </summary>
+        /// <param name="cell"> Cell whose text will be changed. </param>
+        /// <param name="newText"> New text. </param>
+        /// <param name="oldText"> Old text. </param>
+        public TextChange(Cell cell, string newText, string oldText)
+        {
+            this.cell = cell;
+            this.newText = newText;
+            this.oldText = oldText;
+        }
+
+        /// <summary>
         /// Undo a text change.
         /// </summary>
         public void Undo()
         {
+            this.cell.Text = this.oldText;
         }
 
         /// <summary>
@@ -27,6 +57,7 @@ namespace SpreadsheetEngine.Command
         /// </summary>
         public void Redo()
         {
+            this.cell.Text = this.newText;
         }
     }
 }
