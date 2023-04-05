@@ -417,9 +417,12 @@ namespace SpreadsheetEngine.Spreadsheet
 
             foreach (string variable in variables)
             {
-                ConcreteCell? varCell = (ConcreteCell?)this.GetCell(variable);
-
                 double value;
+                ConcreteCell? varCell = (ConcreteCell?)this.GetCell(variable);
+                if (varCell == null)
+                {
+                    return;
+                }
 
                 if (!double.TryParse(varCell.Value, out value))
                 {
