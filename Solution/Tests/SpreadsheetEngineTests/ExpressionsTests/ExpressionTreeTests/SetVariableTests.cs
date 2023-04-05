@@ -53,7 +53,6 @@ namespace Tests.SpreadsheetEngineTests.ExpressionTreeTests.ExpressionTree
         [Test]
         public void SetVariableTestNullTest()
         {
-            // maybe still throw expression tree exceptions, just catch them in the spreadsheet
             Assert.Throws<KeyNotFoundException>(() => tree.SetVariable("nonExistant", 100));
         }
     }
