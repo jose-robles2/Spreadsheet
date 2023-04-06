@@ -160,12 +160,8 @@ namespace SpreadsheetFrontEnd
                 {
                     // Assign the dgv value being edited to/back to the cell text field and assign
                     // The current cell value back to the dgv value since editing has stopped
-
                     TextChange textChange = new TextChange(cell, dgvCell.Value.ToString(), cell.Text);
                     this.commandManager.ExecuteCommand(new TextCommand(textChange));
-                    // text changes work for the most part. For some reason, string.Empty commands are being saved
-                        // so when we do undo/redo, empty text is shown -> DEBUG
-
                     this.UpdateUndoRedoMenuItems();
                     dgvCell.Value = cell.Value;
                 }
@@ -174,7 +170,9 @@ namespace SpreadsheetFrontEnd
                     // If the dgv value is null, then user entered/cleared the existing cell text
                     if (dgvCell.Value == null)
                     {
-                        cell.Text = string.Empty;
+                        TextChange textChange = new TextChange(cell, string.Empty, cell.Text);
+                        this.commandManager.ExecuteCommand(new TextCommand(textChange));
+                        this.UpdateUndoRedoMenuItems();
                     }
                 }
             }
@@ -272,7 +270,6 @@ namespace SpreadsheetFrontEnd
         private void DemoButton_Click(object sender, EventArgs e)
         {
             // Lambda expression to generate unique random indices to assign "Hello 321" to cells randomly.
-            // Stylcop treated this lambda as a variable so camelcase was used.
             Func<List<Tuple<int, int>>, Tuple<int, int>> generateIndices = (indicesOfRandomCells) =>
             {
                 Random random = new Random();
@@ -294,6 +291,15 @@ namespace SpreadsheetFrontEnd
                 return tuple;
             };
 
+            Func<uint> generateRandomColor = () =>
+            {
+                Random random = new Random();
+                byte r = (byte)random.Next(0, 256);
+                byte g = (byte)random.Next(0, 256);
+                byte b = (byte)random.Next(0, 256);
+                return (uint)((r << 16) | (g << 8) | b);
+            };
+
             // Reset the spreadsheet object for this demo
             this.spreadsheet = new Spreadsheet(NUMROWS, NUMCOLS);
             this.spreadsheet.CellPropertyChanged += this.HandleCellPropertyChanged;
@@ -305,6 +311,14 @@ namespace SpreadsheetFrontEnd
             {
                 Tuple<int, int> tuple = generateIndices(indicesOfRandomCells);
                 this.spreadsheet.GetCell(tuple.Item1, tuple.Item2).Text = "Hello 321";
+            }
+
+            // Set the color in 50 random Cells
+            for (int i = 0; i < 50; i++)
+            {
+                Tuple<int, int> tuple = generateIndices(indicesOfRandomCells);
+                uint color = generateRandomColor();
+                this.spreadsheet.GetCell(tuple.Item1, tuple.Item2).BGColor = color;
             }
 
             // Set the text in every cell in column B to "This is cell B#"
