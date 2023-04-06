@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SpreadsheetEngine.Command.Changes;
 
 namespace SpreadsheetEngine.Command.Commands
 {
@@ -19,6 +20,12 @@ namespace SpreadsheetEngine.Command.Commands
         /// Domain object to change color.
         /// </summary>
         private List<ColorChange> colorChanges = new List<ColorChange>();
+
+        /// <summary>
+        /// Get change count.
+        /// </summary>
+        /// <returns> int. </returns>
+        public int GetColorChangesCount() => this.colorChanges.Count;
 
         /// <summary>
         /// Add a color change domain obj.

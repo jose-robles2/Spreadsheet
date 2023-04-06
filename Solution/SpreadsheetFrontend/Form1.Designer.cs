@@ -98,14 +98,14 @@
             // UndoToolStripMenuItem
             // 
             this.UndoToolStripMenuItem.Name = "UndoToolStripMenuItem";
-            this.UndoToolStripMenuItem.Size = new System.Drawing.Size(206, 24);
+            this.UndoToolStripMenuItem.Size = new System.Drawing.Size(120, 24);
             this.UndoToolStripMenuItem.Text = "Undo";
             this.UndoToolStripMenuItem.Click += new System.EventHandler(this.UndoToolStripMenuItem_Click);
             // 
             // RedoToolStripMenuItem
             // 
             this.RedoToolStripMenuItem.Name = "RedoToolStripMenuItem";
-            this.RedoToolStripMenuItem.Size = new System.Drawing.Size(206, 24);
+            this.RedoToolStripMenuItem.Size = new System.Drawing.Size(120, 24);
             this.RedoToolStripMenuItem.Text = "Redo";
             this.RedoToolStripMenuItem.Click += new System.EventHandler(this.RedoToolStripMenuItem_Click);
             // 

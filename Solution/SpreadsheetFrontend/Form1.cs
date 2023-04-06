@@ -4,6 +4,7 @@
 
 using System.ComponentModel;
 using SpreadsheetEngine.Command;
+using SpreadsheetEngine.Command.Changes;
 using SpreadsheetEngine.Command.Commands;
 using SpreadsheetEngine.Spreadsheet;
 
@@ -213,7 +214,6 @@ namespace SpreadsheetFrontEnd
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
                 ColorCommand colorCommand = new ColorCommand();
-                List<Cell> selectedCells = new List<Cell>();
                 uint color = (uint)colorDialog.Color.ToArgb();
 
                 foreach (DataGridViewCell dgvCell in this.dataGridView1.SelectedCells)
@@ -226,12 +226,11 @@ namespace SpreadsheetFrontEnd
                         {
                             ColorChange colorChange = new ColorChange(cell, color, cell.BGColor);
                             colorCommand.AddColorChange(colorChange);
-                            selectedCells.Add(cell);
                         }
                     }
                 }
 
-                if (selectedCells.Count > 0)
+                if (colorCommand.GetColorChangesCount() > 0)
                 {
                     this.commandManager.ExecuteCommand(colorCommand);
                     this.UpdateUndoRedoMenuItems();
@@ -322,7 +321,5 @@ namespace SpreadsheetFrontEnd
                 this.spreadsheet.GetCell(row, columnIndex).Text = "=B" + (row + 1); // Add one to corres. w/ the GUI indexes
             }
         }
-
-
     }
 }

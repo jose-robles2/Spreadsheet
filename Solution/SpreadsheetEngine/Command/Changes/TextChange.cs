@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SpreadsheetEngine.Command.Changes;
 using SpreadsheetEngine.Spreadsheet;
 
 namespace SpreadsheetEngine.Command
@@ -14,23 +15,8 @@ namespace SpreadsheetEngine.Command
     /// <summary>
     /// Class that interacts with the domain to invoke a text change. This is called by our command.
     /// </summary>
-    public class TextChange
+    public class TextChange : Change
     {
-        /// <summary>
-        /// Cell we need to change.
-        /// </summary>
-        private Cell cell;
-
-        /// <summary>
-        /// Text we need to change to.
-        /// </summary>
-        private string newText;
-
-        /// <summary>
-        /// Old text we could change to.
-        /// </summary>
-        private string oldText;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TextChange"/> class.
         /// </summary>
@@ -38,26 +24,24 @@ namespace SpreadsheetEngine.Command
         /// <param name="newText"> New text. </param>
         /// <param name="oldText"> Old text. </param>
         public TextChange(Cell cell, string newText, string oldText)
+        : base(cell, newText, oldText)
         {
-            this.cell = cell;
-            this.newText = newText;
-            this.oldText = oldText;
         }
 
         /// <summary>
         /// Undo a text change.
         /// </summary>
-        public void Undo()
+        public override void Undo()
         {
-            this.cell.Text = this.oldText;
+            this.cell.Text = this.oldValue;
         }
 
         /// <summary>
         /// Redo a text change that was undone.
         /// </summary>
-        public void Redo()
+        public override void Redo()
         {
-            this.cell.Text = this.newText;
+            this.cell.Text = this.newValue;
         }
     }
 }
