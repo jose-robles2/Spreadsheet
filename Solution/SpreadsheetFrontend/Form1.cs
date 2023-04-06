@@ -165,15 +165,11 @@ namespace SpreadsheetFrontEnd
                     this.UpdateUndoRedoMenuItems();
                     dgvCell.Value = cell.Value;
                 }
-                else
+                else if (dgvCell.Value == null)
                 {
-                    // If the dgv value is null, then user entered/cleared the existing cell text
-                    if (dgvCell.Value == null)
-                    {
-                        TextChange textChange = new TextChange(cell, string.Empty, cell.Text);
-                        this.commandManager.ExecuteCommand(new TextCommand(textChange));
-                        this.UpdateUndoRedoMenuItems();
-                    }
+                    TextChange textChange = new TextChange(cell, string.Empty, cell.Text);
+                    this.commandManager.ExecuteCommand(new TextCommand(textChange));
+                    this.UpdateUndoRedoMenuItems();
                 }
             }
         }
