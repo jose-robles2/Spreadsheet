@@ -194,6 +194,21 @@ namespace SpreadsheetEngine.Spreadsheet
         }
 
         /// <summary>
+        /// Add a change cell to a list if its fields are not default values.
+        /// </summary>
+        /// <param name="cell"> cell. </param>
+        private void AddChangedCell(ConcreteCell cell)
+        {
+            if (cell.Text != string.Empty || cell.BGColor != Cell.DEFAULTCOLOR)
+            {
+                if (!this.changedCells.Contains(cell))
+                {
+                    this.changedCells.Add(cell);
+                }
+            }
+        }
+
+        /// <summary>
         /// Instantiates each cell of the matrix with a new concrete cell object.
         /// </summary>
         private void FillMatrix()
@@ -229,8 +244,6 @@ namespace SpreadsheetEngine.Spreadsheet
                 return;
             }
 
-            this.changedCells.Add(cell);
-
             if (e.PropertyName == "Text")
             {
                 if (cell.Text.StartsWith("="))
@@ -264,6 +277,8 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Color"));
             }
+
+            this.AddChangedCell(cell);
         }
 
         /// <summary>

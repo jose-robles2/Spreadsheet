@@ -49,24 +49,20 @@ namespace SpreadsheetEngine.Spreadsheet
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("spreadsheet");
 
-            foreach (Cell cell in this.spreadsheet.Matrix)
+            foreach (Cell cell in this.spreadsheet.ChangedCells)
             {
-                // Only save cells that have been edited
-                if (cell.Text != string.Empty || cell.BGColor != Cell.DEFAULTCOLOR)
-                {
-                    xmlWriter.WriteStartElement("cell");
-                    xmlWriter.WriteAttributeString("name", cell.Name);
+                xmlWriter.WriteStartElement("cell");
+                xmlWriter.WriteAttributeString("name", cell.Name);
 
-                    xmlWriter.WriteStartElement("text");
-                    xmlWriter.WriteString(cell.Text);
-                    xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("text");
+                xmlWriter.WriteString(cell.Text);
+                xmlWriter.WriteEndElement();
 
-                    xmlWriter.WriteStartElement("bgcolor");
-                    xmlWriter.WriteString(cell.BGColor.ToString("X"));
-                    xmlWriter.WriteEndElement();
+                xmlWriter.WriteStartElement("bgcolor");
+                xmlWriter.WriteString(cell.BGColor.ToString("X"));
+                xmlWriter.WriteEndElement();
 
-                    xmlWriter.WriteEndElement();
-                }
+                xmlWriter.WriteEndElement();
             }
 
             xmlWriter.WriteEndElement();
