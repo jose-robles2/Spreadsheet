@@ -14,6 +14,11 @@ namespace SpreadsheetEngine.Spreadsheet
     public abstract class Cell : INotifyPropertyChanged
     {
         /// <summary>
+        /// White.
+        /// </summary>
+        public static readonly uint DEFAULTCOLOR = 0xFFFFFFFF;
+
+        /// <summary>
         /// Index for a row.
         /// </summary>
         protected readonly int rowIndex;
@@ -42,11 +47,6 @@ namespace SpreadsheetEngine.Spreadsheet
         /// Cell's background color.
         /// </summary>
         protected uint bgColor;
-
-        /// <summary>
-        /// White.
-        /// </summary>
-        private const uint DEFAULTCOLOR = 0xFFFFFFFF;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
