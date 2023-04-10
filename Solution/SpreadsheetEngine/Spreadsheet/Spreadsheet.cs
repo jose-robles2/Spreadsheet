@@ -92,7 +92,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// <summary>
         /// 2D array that contains the cells that correspond to the UI's cells.
         /// </summary>
-        private Cell[,] matrix;
+        private readonly Cell[,] matrix;
 
         /// <summary>
         /// Dictionary that serves to allow for quick access of Cells when only given a cell name.
@@ -138,6 +138,14 @@ namespace SpreadsheetEngine.Spreadsheet
         public int ColumnCount
         {
             get { return this.columnCount; }
+        }
+
+        /// <summary>
+        /// Gets the matrix of cells.
+        /// </summary>
+        public Cell[,] Matrix
+        {
+            get { return this.matrix; }
         }
 
         /// <summary>
