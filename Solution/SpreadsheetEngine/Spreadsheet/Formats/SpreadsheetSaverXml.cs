@@ -75,8 +75,10 @@ namespace SpreadsheetEngine.Spreadsheet
         /// Load to a file using xml.
         /// </summary>
         /// <param name="stream"> stream. </param>
-        public void Load(Stream stream)
+        /// <returns> spreadsheet. </returns>
+        public Spreadsheet Load(Stream stream)
         {
+            return null;
         }
     }
 }

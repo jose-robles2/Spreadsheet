@@ -25,6 +25,7 @@ namespace SpreadsheetEngine.Spreadsheet.Formats
         /// Load from a file.
         /// </summary>
         /// <param name="stream"> stream. </param>
-        void Load(Stream stream);
+        /// <returns> spreadsheet. </returns>
+        Spreadsheet Load(Stream stream);
     }
 }
