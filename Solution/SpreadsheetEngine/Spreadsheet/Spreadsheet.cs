@@ -95,14 +95,19 @@ namespace SpreadsheetEngine.Spreadsheet
         private readonly Cell[,] matrix;
 
         /// <summary>
+        /// Keep a list of all changed cells.
+        /// </summary>
+        private readonly List<Cell> changedCells = new List<Cell>();
+
+        /// <summary>
         /// Dictionary that serves to allow for quick access of Cells when only given a cell name.
         /// </summary>
-        private Dictionary<string, Tuple<int, int>> cellIndexes;
+        private Dictionary<string, Tuple<int, int>> cellIndexes = new Dictionary<string, Tuple<int, int>>();
 
         /// <summary>
         /// Dictionary that maps a string cellname to a hashset of cell name dependencies.
         /// </summary>
-        private Dictionary<string, HashSet<string>> cellDependencies;
+        private Dictionary<string, HashSet<string>> cellDependencies = new Dictionary<string, HashSet<string>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Spreadsheet"/> class.
@@ -112,8 +117,6 @@ namespace SpreadsheetEngine.Spreadsheet
         public Spreadsheet(int rows, int cols)
         {
             this.matrix = new ConcreteCell[rows, cols];
-            this.cellIndexes = new Dictionary<string, Tuple<int, int>>();
-            this.cellDependencies = new Dictionary<string, HashSet<string>>();
             this.rowCount = rows;
             this.columnCount = cols;
             this.FillMatrix();
@@ -141,11 +144,11 @@ namespace SpreadsheetEngine.Spreadsheet
         }
 
         /// <summary>
-        /// Gets the matrix of cells.
+        /// Gets the changed cells.
         /// </summary>
-        public Cell[,] Matrix
+        public List<Cell> ChangedCells
         {
-            get { return this.matrix; }
+            get { return this.changedCells; }
         }
 
         /// <summary>
@@ -225,6 +228,8 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 return;
             }
+
+            this.changedCells.Add(cell);
 
             if (e.PropertyName == "Text")
             {
