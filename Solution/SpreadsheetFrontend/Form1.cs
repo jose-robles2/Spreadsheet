@@ -233,6 +233,24 @@ namespace SpreadsheetFrontEnd
         }
 
         /// <summary>
+        /// Prompt user to save their spreadsheet to a file.
+        /// </summary>
+        /// <param name="sender"> object. </param>
+        /// <param name="e"> event. </param>
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        /// <summary>
+        /// Prompt user to load their spreadsheet from a file.
+        /// </summary>
+        /// <param name="sender"> object. </param>
+        /// <param name="e"> event. </param>
+        private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        /// <summary>
         /// Allow for undo/redo if a command has been executed.
         /// </summary>
         private void UpdateUndoRedoMenuItems()
