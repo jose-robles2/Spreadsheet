@@ -118,7 +118,7 @@ namespace SpreadsheetEngine.Spreadsheet
             set
             {
                 // We are overwriting an existing formula, must update dependencies
-                if (this.text.StartsWith("=") && value.StartsWith("=") && this.text != value)
+                if (this.text.StartsWith("=") && this.text != value)
                 {
                     string oldFormula = this.text, newFormula = value;
                     this.text = newFormula;
