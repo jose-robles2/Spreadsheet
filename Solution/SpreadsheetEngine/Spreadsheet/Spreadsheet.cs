@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using SpreadsheetEngine.Expressions;
@@ -194,6 +193,22 @@ namespace SpreadsheetEngine.Spreadsheet
         }
 
         /// <summary>
+        /// Add a cell to list of changed cells if it's been changed, if it's been restored to default remove it.
+        /// </summary>
+        /// <param name="cell"> cell. </param>
+        private void HandleChangedCell(ConcreteCell cell)
+        {
+            if (cell.Text == string.Empty && cell.BGColor == Cell.DEFAULTCOLOR && this.changedCells.Contains(cell))
+            {
+                this.changedCells.Remove(cell);
+            }
+            else
+            {
+                this.AddChangedCell(cell);
+            }
+        }
+
+        /// <summary>
         /// Add a change cell to a list if its fields are not default values.
         /// </summary>
         /// <param name="cell"> cell. </param>
@@ -268,8 +283,6 @@ namespace SpreadsheetEngine.Spreadsheet
                 if (e is CellChangedEventArgs newE)
                 {
                     this.RemoveCellDependency(cell, newE.OldFormula);
-
-                    // Now that we removed the old dependencies, call the method again to handle the new formula
                     this.HandleCellPropertyChanged(cell, new PropertyChangedEventArgs("Text"));
                 }
             }
@@ -278,7 +291,7 @@ namespace SpreadsheetEngine.Spreadsheet
                 this.CellPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("Color"));
             }
 
-            this.AddChangedCell(cell);
+            this.HandleChangedCell(cell);
         }
 
         /// <summary>
@@ -377,6 +390,11 @@ namespace SpreadsheetEngine.Spreadsheet
                     if (this.cellDependencies[variable].Contains(cell.Name))
                     {
                         this.cellDependencies[variable].Remove(cell.Name);
+
+                        if (this.cellDependencies[variable].Count == 0)
+                        {
+                            this.cellDependencies.Remove(variable);
+                        }
                     }
                 }
                 catch
