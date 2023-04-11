@@ -102,5 +102,14 @@ namespace SpreadsheetEngine.Command
         {
             return this.redoStack.Count;
         }
+
+        /// <summary>
+        /// Clear stacks.
+        /// </summary>
+        public void ClearStacks()
+        {
+            this.undoStack.Clear();
+            this.redoStack.Clear();
+        }
     }
 }
