@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,9 +37,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// Save/write to a file using xml. Xmlwriter is utilized to create an xml structure of.
         /// <spreadsheet>
         ///     <cell>
-        ///         <cellAttrN>
-        ///
-        ///         </cellAttrN>
+        ///         <cellAttrN> </cellAttrN>
         ///     </cell>
         /// </spreadsheet>
         /// </summary>
@@ -76,9 +76,76 @@ namespace SpreadsheetEngine.Spreadsheet
         /// </summary>
         /// <param name="stream"> stream. </param>
         /// <returns> spreadsheet. </returns>
-        public Spreadsheet Load(Stream stream)
+        public Spreadsheet? Load(Stream stream)
         {
-            return null;
+            this.ClearSpreadsheet();
+
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(stream);
+
+            XmlNode? xmlRootNode = xmlDocument.SelectSingleNode("spreadsheet");
+
+            if (xmlRootNode == null)
+            {
+                return null;
+            }
+
+            // are we handling mismatched xml tags? -> I think so cause we have if,else if, and else to handle diff tags.
+            // are we handling non existing xml tags? -> I think so cause we have an else with a continue to skip unknown tags.
+
+            foreach (XmlNode childNode in xmlRootNode.ChildNodes)
+            {
+                XmlElement element = (XmlElement)childNode;
+
+                if (element.Name != "cell")
+                {
+                    continue;
+                }
+
+                string cellName = element.GetAttribute("name");
+                Cell? cell = this.spreadsheet.GetCell(cellName);
+
+                if (cell == null)
+                {
+                    continue;
+                }
+
+                foreach (XmlNode nestedChildNode in childNode.ChildNodes)
+                {
+                    XmlElement childElement = (XmlElement)nestedChildNode;
+
+                    if (childElement.Name == "text")
+                    {
+                        cell.Text = childElement.InnerText;
+                    }
+                    else if (childElement.Name == "bgcolor")
+                    {
+                        string color = childElement.InnerText;
+                        cell.BGColor = uint.Parse(color, NumberStyles.HexNumber);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }
+
+            return this.spreadsheet;
+        }
+
+        /// <summary>
+        /// Clear the spreadsheet since a load overwrites the current sheet. Don't create
+        /// a new object because then we'll have to resub. the delegates to events. Other 
+        /// spreadsheet members will be cleared within the spreadsheet object.
+        /// </summary>
+        private void ClearSpreadsheet()
+        {
+            List<Cell> changedCells = new List<Cell>(this.spreadsheet.ChangedCells);
+            foreach (Cell changedCell in changedCells)
+            {
+                changedCell.Text = string.Empty;
+                changedCell.BGColor = Cell.DEFAULTCOLOR;
+            }
         }
     }
 }
