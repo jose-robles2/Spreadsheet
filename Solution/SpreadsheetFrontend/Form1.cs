@@ -239,6 +239,16 @@ namespace SpreadsheetFrontEnd
         /// <param name="e"> event. </param>
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "XML files | *.xml";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Stream stream = saveFileDialog.OpenFile();
+                SpreadsheetSaverXml spreadsheetSaver = new SpreadsheetSaverXml(this.spreadsheet);
+                spreadsheetSaver.Save(stream);
+                stream.Close();
+            }
         }
 
         /// <summary>
@@ -248,6 +258,16 @@ namespace SpreadsheetFrontEnd
         /// <param name="e"> event. </param>
         private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "XML files | *.xml";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Stream stream = openFileDialog.OpenFile();
+                SpreadsheetSaverXml spreadsheetSaver = new SpreadsheetSaverXml(this.spreadsheet);
+                Spreadsheet newSpreadsheet = spreadsheetSaver.Load(stream);
+                stream.Close();
+            }
         }
 
         /// <summary>
