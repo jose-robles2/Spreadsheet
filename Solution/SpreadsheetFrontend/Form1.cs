@@ -265,7 +265,14 @@ namespace SpreadsheetFrontEnd
             {
                 Stream stream = openFileDialog.OpenFile();
                 SpreadsheetSaverXml spreadsheetSaver = new SpreadsheetSaverXml(this.spreadsheet);
-                Spreadsheet newSpreadsheet = spreadsheetSaver.Load(stream);
+                Spreadsheet? s = spreadsheetSaver.Load(stream);
+
+                if (s != null)
+                {
+                    this.spreadsheet = s;
+                    this.commandManager.ClearStacks();
+                }
+
                 stream.Close();
             }
         }
