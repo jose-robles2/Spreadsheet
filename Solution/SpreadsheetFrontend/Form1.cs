@@ -271,6 +271,7 @@ namespace SpreadsheetFrontEnd
                 {
                     this.spreadsheet = s;
                     this.commandManager.ClearStacks();
+                    this.UpdateUndoRedoMenuItems();
                 }
 
                 stream.Close();

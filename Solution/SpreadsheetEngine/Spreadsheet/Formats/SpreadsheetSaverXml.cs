@@ -137,6 +137,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// </summary>
         private void ClearSpreadsheet()
         {
+            // Deep copy - ChangedCells changes during iteration below.
             List<Cell> changedCells = new List<Cell>(this.spreadsheet.ChangedCells);
             foreach (Cell changedCell in changedCells)
             {
