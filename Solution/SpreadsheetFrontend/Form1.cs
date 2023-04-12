@@ -33,7 +33,7 @@ namespace SpreadsheetFrontEnd
         /// <summary>
         /// Invoker object that is called from the client (form1.cs).
         /// </summary>
-        private CommandManager commandManager = new CommandManager();
+        private CommandManager commandManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
@@ -43,6 +43,7 @@ namespace SpreadsheetFrontEnd
             this.InitializeComponent();
             this.InitializeDataGrid();
             this.InitializeSpreadSheetObject();
+            this.InitializeCommandManager();
         }
 
         /// <summary>
@@ -87,6 +88,28 @@ namespace SpreadsheetFrontEnd
         {
             this.spreadsheet = new Spreadsheet(NUMROWS, NUMCOLS);
             this.spreadsheet.CellPropertyChanged += this.HandleCellPropertyChanged;
+        }
+
+        /// <summary>
+        /// Initialize the command manager object. Subscribe the form1.cs delegate to its event.
+        /// </summary>
+        private void InitializeCommandManager()
+        {
+            this.commandManager = new CommandManager();
+            this.commandManager.PropertyChanged += this.HandleCommandManagerStackChange;
+        }
+
+        /// <summary>
+        /// On Command manager stack change, update the UI menu items - redo/undo.
+        /// </summary>
+        /// <param name="sender"> Object associated with the event. </param>
+        /// <param name="e"> The event. </param>
+        private void HandleCommandManagerStackChange(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Stack")
+            {
+                this.UpdateUndoRedoMenuItems();
+            }
         }
 
         /// <summary>
@@ -162,14 +185,12 @@ namespace SpreadsheetFrontEnd
                     // The current cell value back to the dgv value since editing has stopped
                     TextChange textChange = new TextChange(cell, dgvCell.Value.ToString(), cell.Text);
                     this.commandManager.ExecuteCommand(new TextCommand(textChange));
-                    this.UpdateUndoRedoMenuItems();
                     dgvCell.Value = cell.Value;
                 }
                 else if (dgvCell.Value == null)
                 {
                     TextChange textChange = new TextChange(cell, string.Empty, cell.Text);
                     this.commandManager.ExecuteCommand(new TextCommand(textChange));
-                    this.UpdateUndoRedoMenuItems();
                 }
             }
         }
@@ -182,7 +203,6 @@ namespace SpreadsheetFrontEnd
         private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.commandManager.Undo();
-            this.UpdateUndoRedoMenuItems();
         }
 
         /// <summary>
@@ -193,7 +213,6 @@ namespace SpreadsheetFrontEnd
         private void RedoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.commandManager.Redo();
-            this.UpdateUndoRedoMenuItems();
         }
 
         /// <summary>
@@ -227,7 +246,6 @@ namespace SpreadsheetFrontEnd
                 if (colorCommand.GetColorChangesCount() > 0)
                 {
                     this.commandManager.ExecuteCommand(colorCommand);
-                    this.UpdateUndoRedoMenuItems();
                 }
             }
         }
@@ -271,7 +289,6 @@ namespace SpreadsheetFrontEnd
                 {
                     this.spreadsheet = s;
                     this.commandManager.ClearStacks();
-                    this.UpdateUndoRedoMenuItems();
                 }
 
                 stream.Close();

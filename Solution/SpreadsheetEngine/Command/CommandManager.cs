@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace SpreadsheetEngine.Command
     /// Invoker responsible for taking parameters from the SpreadsheetFrontend to initiate requests
     /// to the domain by triggering commands rather than directly sending them to the domain.
     /// </summary>
-    public class CommandManager
+    public class CommandManager : INotifyPropertyChanged
     {
         /// <summary>
         /// Contains commands that have been executed so that they can be undone.
@@ -40,6 +41,11 @@ namespace SpreadsheetEngine.Command
         }
 
         /// <summary>
+        /// Event to notify the Form1.cs when there has been stack changes.
+        /// </summary>
+        public event PropertyChangedEventHandler? PropertyChanged = (sender, e) => { };
+
+        /// <summary>
         /// Execute the command, add the newly done task to undo so it can be undone, and clear
         /// the redo stack since when something is executed, there's nothing left to redo.
         /// </summary>
@@ -49,6 +55,7 @@ namespace SpreadsheetEngine.Command
             command.Execute();
             this.undoStack.Push(command);
             this.redoStack.Clear();
+            this.InvokePropertyChanged("Stack");
         }
 
         /// <summary>
@@ -61,6 +68,7 @@ namespace SpreadsheetEngine.Command
                 ICommand command = this.undoStack.Pop();
                 command.Unexecute();
                 this.redoStack.Push(command);
+                this.InvokePropertyChanged("Stack");
             }
             else
             {
@@ -78,6 +86,7 @@ namespace SpreadsheetEngine.Command
                 ICommand command = this.redoStack.Pop();
                 command.Execute();
                 this.undoStack.Push(command);
+                this.InvokePropertyChanged("Stack");
             }
             else
             {
@@ -110,6 +119,16 @@ namespace SpreadsheetEngine.Command
         {
             this.undoStack.Clear();
             this.redoStack.Clear();
+            this.InvokePropertyChanged("Stack");
+        }
+
+        /// <summary>
+        /// Wrapper method to invoke a property changed.
+        /// </summary>
+        /// <param name="propertyName"> Property name. </param>
+        private void InvokePropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
