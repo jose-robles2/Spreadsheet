@@ -76,7 +76,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// </summary>
         /// <param name="stream"> stream. </param>
         /// <returns> spreadsheet. </returns>
-        public Spreadsheet? Load(Stream stream)
+        public Spreadsheet Load(Stream stream)
         {
             this.ClearSpreadsheet();
 
@@ -89,9 +89,6 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 return null;
             }
-
-            // are we handling mismatched xml tags? -> I think so cause we have if,else if, and else to handle diff tags.
-            // are we handling non existing xml tags? -> I think so cause we have an else with a continue to skip unknown tags.
 
             foreach (XmlNode childNode in xmlRootNode.ChildNodes)
             {
@@ -135,7 +132,7 @@ namespace SpreadsheetEngine.Spreadsheet
 
         /// <summary>
         /// Clear the spreadsheet since a load overwrites the current sheet. Don't create
-        /// a new object because then we'll have to resub. the delegates to events. Other 
+        /// a new object because then we'll have to resub. the delegates to events. Other
         /// spreadsheet members will be cleared within the spreadsheet object.
         /// </summary>
         private void ClearSpreadsheet()
