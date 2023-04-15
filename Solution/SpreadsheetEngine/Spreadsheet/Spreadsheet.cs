@@ -3,13 +3,15 @@
 // </copyright>
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 using SpreadsheetEngine.Expressions;
+using SpreadsheetEngine.Expressions.Nodes;
 
 namespace SpreadsheetEngine.Spreadsheet
 {
@@ -410,6 +412,25 @@ namespace SpreadsheetEngine.Spreadsheet
         /// <param name="cell"> cell being edited. </param>
         private void Evaluate(ConcreteCell cell)
         {
+            Action<ConcreteCell> setTextHelper = dependentCell => { };
+            setTextHelper = dependentCell =>
+            {
+                if (dependentCell.Text.StartsWith("="))
+                {
+                    string formula = dependentCell.Text.Substring(1);
+                    if (Expression.TokenizeExpression(formula)?.Count > 1)
+                    {
+                        dependentCell.SetValue("#VALUE!");
+                    }
+                    else
+                    {
+                        this.EvaluateFormula(dependentCell);
+                    }
+
+                    this.UpdateCellDependencies(dependentCell, setTextHelper);
+                }
+            };
+
             if (string.IsNullOrEmpty(cell.Text))
             {
                 cell.SetValue(string.Empty);
@@ -417,31 +438,20 @@ namespace SpreadsheetEngine.Spreadsheet
             }
             else if (cell.Text.StartsWith("=") && !string.IsNullOrEmpty(cell.Text.Substring(1)))
             {
-                this.EvaluateFormula(cell);
-                this.UpdateCellDependencies(cell, this.Evaluate);
+                if (this.IsCellReferencingCellWithStringValue(cell))
+                {
+                    cell.SetValue("#VALUE!");
+                    this.UpdateCellDependencies(cell, setTextHelper);
+                }
+                else
+                {
+                    this.EvaluateFormula(cell);
+                    this.UpdateCellDependencies(cell, this.Evaluate);
+                }
             }
             else
             {
                 double value;
-                Action<ConcreteCell> setTextHelper = dependentCell => { };
-                setTextHelper = dependentCell =>
-                {
-                    if (dependentCell.Text.StartsWith("="))
-                    {
-                        string formula = dependentCell.Text.Substring(1);
-                        if (Expression.TokenizeExpression(formula)?.Count > 1)
-                        {
-                            dependentCell.SetValue("#VALUE!");
-                            this.UpdateCellDependencies(dependentCell, setTextHelper);
-                        }
-                        else
-                        {
-                            this.EvaluateFormula(dependentCell);
-                            this.UpdateCellDependencies(dependentCell, setTextHelper);
-                        }
-                    }
-                };
-
                 cell.SetValue(cell.Text);
 
                 // Are we setting a double or string to the cell's value
@@ -608,6 +618,73 @@ namespace SpreadsheetEngine.Spreadsheet
         private bool IsCellNameValid(string cellName)
         {
             return this.GetCell(cellName) != null ? true : false;
+        }
+
+        /// <summary>
+        /// Check to see if a cell's formula contains just one variable, if so then we return false because we can just grab the
+        /// string value of that one cell. If the cell's text contains more than one variable, that implies there's an operand. So
+        /// we need to check if the variables have double vals, if not then it's not a valid operation and we should return true.
+        /// </summary>
+        /// <param name="cell"> cell. </param>
+        /// <returns> bool. </returns>
+        private bool IsCellReferencingCellWithStringValue(ConcreteCell cell)
+        {
+            ExpressionTree cellExpression = new ExpressionTree(cell.Text.Substring(1));
+
+            if (cellExpression.ExpressionTokenCount > 1)
+            {
+                if (this.IsCellReferencingCellWithStringValueHelper(cell))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Helper method, traverse "up" the cell dependency hiearchy. If cell contains "=A1+A2+...+An+...1" we need to look for all
+        /// the cell's A1...An that have the current cell as a dependent. If those precedent cells do not contain doubles, then it is
+        /// an invalid operation, return true so we can set current cell to #VALUE! and update the current cell's dependents if needed.
+        /// </summary>
+        /// <param name="cell"> cell. </param>
+        /// <returns> bool. </returns>
+        private bool IsCellReferencingCellWithStringValueHelper(ConcreteCell cell)
+        {
+            if (cell == null)
+            {
+                return false;
+            }
+
+            double value;
+            foreach (string precedentCellName in this.cellDependencies.Keys)
+            {
+                if (this.cellDependencies[precedentCellName].Contains(cell.Name))
+                {
+                    // A1="hi" , //B1="A1+1" -> We have found that A1 contains B1 as a dependent
+                    ConcreteCell? precedentCell = (ConcreteCell?)this.GetCell(precedentCellName);
+
+                    // Precedent cell includes a formula -> need recursion to look for precedent cell's precedents
+                    if (precedentCell.Text.StartsWith("="))
+                    {
+                        ExpressionTree expressionTree = new ExpressionTree(precedentCell.Text.Substring(1));
+                        if (this.IsCellReferencingCellWithStringValueHelper(precedentCell))
+                        {
+                            return true;
+                        }
+                    }
+                    else if (!double.TryParse(precedentCell.Value, out value) && precedentCell.Value != string.Empty)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }
