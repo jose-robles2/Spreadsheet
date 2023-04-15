@@ -64,6 +64,14 @@ namespace SpreadsheetEngine.Expressions
         }
 
         /// <summary>
+        /// Gets the count of infix expr tokens.
+        /// </summary>
+        public int ExpressionTokenCount
+        {
+            get { return this.inFixExpressionTokens.Count; }
+        }
+
+        /// <summary>
         /// Set a variable with a value.
         /// </summary>
         /// <param name="varName"> Name of variable. </param>
