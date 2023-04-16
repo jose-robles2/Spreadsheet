@@ -407,7 +407,9 @@ namespace SpreadsheetEngine.Spreadsheet
         }
 
         /// <summary>
-        /// Evaluate the cell's text (can be formula) that is currently being edited.
+        /// Evaluate the cell's text, can evaluate a text string, a double string
+        /// or a string containing a formula. If formula, we must check if the formula
+        /// points to cells containing double values or text strings.
         /// </summary>
         /// <param name="cell"> cell being edited. </param>
         private void Evaluate(ConcreteCell cell)
