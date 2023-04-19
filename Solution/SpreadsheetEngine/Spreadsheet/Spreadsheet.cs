@@ -35,7 +35,13 @@ namespace SpreadsheetEngine.Spreadsheet
             public ConcreteCell(int rowIndex = 0, int columnIndex = 0, string text = "", string value = "")
                 : base(rowIndex, columnIndex, text, value)
             {
+                this.BadReferenceValue = string.Empty;
             }
+
+            /// <summary>
+            /// Gets or sets a cell's bad reference value, IF ANY.
+            /// </summary>
+            public string BadReferenceValue { get; set; }
 
             /// <summary>
             /// Determine if a our cell is equal to another cell.
@@ -310,6 +316,8 @@ namespace SpreadsheetEngine.Spreadsheet
             // scheme. Unrecognized ops, mismatched parenths, bad syntax.
             if (exprTree.Size == 0)
             {
+                //cell.SetValue(Cell.UNKNOWNOPERATOR);
+                cell.BadReferenceValue = Cell.UNKNOWNOPERATOR;
                 return false;
             }
 
@@ -332,6 +340,7 @@ namespace SpreadsheetEngine.Spreadsheet
         {
             if (this.IsSelfReference(currentCell, currentCellExpr))
             {
+                currentCell.BadReferenceValue = Cell.SELFREFERENCE;
                 return false;
             }
 
@@ -339,6 +348,7 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 if (!this.IsCellNameValid(variable))
                 {
+                    currentCell.BadReferenceValue = Cell.BADREFERENCE;
                     return false;
                 }
             }
@@ -350,6 +360,7 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 // Circular reference found, remove the dependency we just added
                 this.RemoveCellDependency(currentCell, "=" + currentCellExpr.Expression);
+                currentCell.BadReferenceValue = Cell.CIRCULARREFERENCE;
                 return false;
             }
 
@@ -536,7 +547,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// <param name="cell"> Current cell. </param>
         private void HandleBadCellReference(ConcreteCell cell)
         {
-            cell.SetValue(Cell.BADREFERENCE);
+            cell.SetValue(cell.BadReferenceValue);
         }
 
         /// <summary>
