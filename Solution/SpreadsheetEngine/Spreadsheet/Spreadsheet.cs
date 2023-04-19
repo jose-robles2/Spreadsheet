@@ -316,7 +316,6 @@ namespace SpreadsheetEngine.Spreadsheet
             // scheme. Unrecognized ops, mismatched parenths, bad syntax.
             if (exprTree.Size == 0)
             {
-                //cell.SetValue(Cell.UNKNOWNOPERATOR);
                 cell.BadReferenceValue = Cell.UNKNOWNOPERATOR;
                 return false;
             }
@@ -449,7 +448,7 @@ namespace SpreadsheetEngine.Spreadsheet
                 cell.SetValue(string.Empty);
                 this.UpdateCellDependencies(cell, this.Evaluate);
             }
-            else if (cell.Text.StartsWith("=") && !string.IsNullOrEmpty(cell.Text.Substring(1)))
+            else if (cell.Text.StartsWith("=")) 
             {
                 if (this.IsCellReferencingCellWithStringValue(cell))
                 {
@@ -680,7 +679,6 @@ namespace SpreadsheetEngine.Spreadsheet
                     // Precedent cell includes a formula -> need recursion to look for precedent cell's precedents
                     if (precedentCell.Text.StartsWith("="))
                     {
-                        ExpressionTree expressionTree = new ExpressionTree(precedentCell.Text.Substring(1));
                         if (this.IsCellReferencingCellWithStringValueHelper(precedentCell))
                         {
                             return true;
