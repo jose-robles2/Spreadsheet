@@ -19,6 +19,11 @@ namespace SpreadsheetEngine.Spreadsheet
         public static readonly uint DEFAULTCOLOR = 0xFFFFFFFF;
 
         /// <summary>
+        /// Bad reference, set to a cells value.
+        /// </summary>
+        public static readonly string BADREFERENCE = "!(bad reference)";
+
+        /// <summary>
         /// Index for a row.
         /// </summary>
         protected readonly int rowIndex;

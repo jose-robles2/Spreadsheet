@@ -536,7 +536,7 @@ namespace SpreadsheetEngine.Spreadsheet
         /// <param name="cell"> Current cell. </param>
         private void HandleBadCellReference(ConcreteCell cell)
         {
-            this.CellPropertyChanged?.Invoke(cell, new PropertyChangedEventArgs("Bad Reference"));
+            cell.SetValue(Cell.BADREFERENCE);
         }
 
         /// <summary>
