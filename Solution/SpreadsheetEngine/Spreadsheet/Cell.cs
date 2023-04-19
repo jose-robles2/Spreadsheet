@@ -19,9 +19,24 @@ namespace SpreadsheetEngine.Spreadsheet
         public static readonly uint DEFAULTCOLOR = 0xFFFFFFFF;
 
         /// <summary>
-        /// Bad reference, set to a cells value.
+        /// Bad reference -> unknown cell name.
         /// </summary>
         public static readonly string BADREFERENCE = "!(bad reference)";
+
+        /// <summary>
+        /// Bad reference -> self referece.
+        /// </summary>
+        public static readonly string SELFREFERENCE = "!(self reference)";
+
+        /// <summary>
+        /// Bad reference -> circular reference.
+        /// </summary>
+        public static readonly string CIRCULARREFERENCE = "!(circular reference)";
+
+        /// <summary>
+        /// Bad reference -> unknown operator.
+        /// </summary>
+        public static readonly string UNKNOWNOPERATOR = "!(unkown operator)";
 
         /// <summary>
         /// Index for a row.
