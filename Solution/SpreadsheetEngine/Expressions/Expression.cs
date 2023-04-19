@@ -137,15 +137,22 @@ namespace SpreadsheetEngine.Expressions
 
                     if (currentOp.Associativity == Associative.Left)
                     {
-                        while (opStack.Count > 0 &&
-                            opStack.Peek() is not ParenthLeft &&
-                            currentOp.Precedence <= opStack.Peek().Precedence &&
-                            currentOp.Associativity == Associative.Left)
+                        try
                         {
-                            output.Add(opStack.Pop().OperatorToken);
-                        }
+                            while (opStack.Count > 0 &&
+                                opStack.Peek() is not ParenthLeft &&
+                                currentOp.Precedence <= opStack.Peek().Precedence &&
+                                currentOp.Associativity == Associative.Left)
+                            {
+                                output.Add(opStack.Pop().OperatorToken);
+                            }
 
-                        opStack.Push(currentOp);
+                            opStack.Push(currentOp);
+                        }
+                        catch
+                        {
+                            return null;
+                        }
                     }
                     else
                     {
@@ -159,13 +166,21 @@ namespace SpreadsheetEngine.Expressions
                 }
                 else if (IsTokenRightParenths(token))
                 {
-                    while (opStack.Count > 0 && opStack.Peek() is not ParenthLeft)
+                    try
                     {
-                        output.Add(opStack.Pop().OperatorToken);
-                    }
+                        while (opStack.Count > 0 && opStack.Peek() is not ParenthLeft)
+                        {
 
-                    opStack.Pop();
-                    leftParenthesesCount--;
+                            output.Add(opStack.Pop().OperatorToken);
+                        }
+
+                        opStack.Pop();
+                        leftParenthesesCount--;
+                    }
+                    catch
+                    {
+                        return null;
+                    }
                 }
                 else
                 {
@@ -182,9 +197,16 @@ namespace SpreadsheetEngine.Expressions
                 return null;
             }
 
-            while (opStack.Count > 0)
+            try
             {
-                output.Add(opStack.Pop().OperatorToken);
+                while (opStack.Count > 0)
+                {
+                    output.Add(opStack.Pop().OperatorToken);
+                }
+            }
+            catch
+            {
+                return null;
             }
 
             return output;
