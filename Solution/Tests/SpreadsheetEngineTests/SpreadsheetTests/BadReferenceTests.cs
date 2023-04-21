@@ -19,7 +19,7 @@ namespace Tests.SpreadsheetEngineTests.SpreadsheetTests
             Spreadsheet spreadsheet = new Spreadsheet(1, 1);
             Cell cell = spreadsheet.GetCell(0, 0);
             cell.Text = "=A1";
-            Assert.That(cell.Value, Is.EqualTo(Cell.SELFREFERENCE));
+            Assert.That(cell.Value, Is.EqualTo(Cell.SELFREFERENCESTR));
         }
 
         [Test]
@@ -28,7 +28,7 @@ namespace Tests.SpreadsheetEngineTests.SpreadsheetTests
             Spreadsheet spreadsheet = new Spreadsheet(1, 1);
             Cell cell = spreadsheet.GetCell(0, 0);
             cell.Text = "=A55264355241";
-            Assert.That(cell.Value, Is.EqualTo(Cell.BADREFERENCE));
+            Assert.That(cell.Value, Is.EqualTo(Cell.BADREFERENCESTR));
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace Tests.SpreadsheetEngineTests.SpreadsheetTests
             Spreadsheet spreadsheet = new Spreadsheet(1, 1);
             Cell cell = spreadsheet.GetCell(0, 0);
             cell.Text = "=A15";
-            Assert.That(cell.Value, Is.EqualTo(Cell.BADREFERENCE));
+            Assert.That(cell.Value, Is.EqualTo(Cell.BADREFERENCESTR));
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace Tests.SpreadsheetEngineTests.SpreadsheetTests
             Spreadsheet spreadsheet = new Spreadsheet(1, 1);
             Cell cell = spreadsheet.GetCell(0, 0);
             cell.Text = "=A4";
-            Assert.That(cell.Value, Is.EqualTo(Cell.BADREFERENCE));
+            Assert.That(cell.Value, Is.EqualTo(Cell.BADREFERENCESTR));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace Tests.SpreadsheetEngineTests.SpreadsheetTests
             Spreadsheet spreadsheet = new Spreadsheet(1, 3);
             Cell cell = spreadsheet.GetCell(0, 0);
             cell.Text = "=A2&A3";
-            Assert.That(cell.Value, Is.EqualTo(Cell.UNKNOWNOPERATOR));
+            Assert.That(cell.Value, Is.EqualTo(Cell.UNKNOWNOPERATORSTR));
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace Tests.SpreadsheetEngineTests.SpreadsheetTests
             Spreadsheet spreadsheet = new Spreadsheet(1, 3);
             Cell cell = spreadsheet.GetCell(0, 0);
             cell.Text = "=A2#A3";
-            Assert.That(cell.Value, Is.EqualTo(Cell.UNKNOWNOPERATOR));
+            Assert.That(cell.Value, Is.EqualTo(Cell.UNKNOWNOPERATORSTR));
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace Tests.SpreadsheetEngineTests.SpreadsheetTests
             spreadsheet.GetCell("A1").Text = "=B1";
             spreadsheet.GetCell("B1").Text = "=B2";
 
-            Assert.That(spreadsheet.GetCell("B1").Value, Is.EqualTo(Cell.CIRCULARREFERENCE));
+            Assert.That(spreadsheet.GetCell("B1").Value, Is.EqualTo(Cell.CIRCULARREFERENCESTR));
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Tests.SpreadsheetEngineTests.SpreadsheetTests
             spreadsheet.GetCell("B2").Text = "=C1";
             spreadsheet.GetCell("C1").Text = "=B1";
 
-            Assert.That(spreadsheet.GetCell("C1").Value, Is.EqualTo(Cell.CIRCULARREFERENCE));
+            Assert.That(spreadsheet.GetCell("C1").Value, Is.EqualTo(Cell.CIRCULARREFERENCESTR));
         }
     }
 }
