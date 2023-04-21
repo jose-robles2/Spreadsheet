@@ -21,22 +21,37 @@ namespace SpreadsheetEngine.Spreadsheet
         /// <summary>
         /// Bad reference -> unknown cell name.
         /// </summary>
-        public static readonly string BADREFERENCE = "!(bad reference)";
+        public static readonly string BADREFERENCESTR = "#BAD REF!";
 
         /// <summary>
         /// Bad reference -> self referece.
         /// </summary>
-        public static readonly string SELFREFERENCE = "!(self reference)";
+        public static readonly string SELFREFERENCESTR = "#SELF REF!";
 
         /// <summary>
         /// Bad reference -> circular reference.
         /// </summary>
-        public static readonly string CIRCULARREFERENCE = "!(circular reference)";
+        public static readonly string CIRCULARREFERENCESTR = "#CIRCULAR REF!";
 
         /// <summary>
         /// Bad reference -> unknown operator.
         /// </summary>
-        public static readonly string UNKNOWNOPERATOR = "!(unkown operator)";
+        public static readonly string UNKNOWNOPERATORSTR = "#UNKNOWN OP!";
+
+        /// <summary>
+        /// Operator applied on a string.
+        /// </summary>
+        public static readonly string OPERATORAPPLIEDTOSTRING = "#VALUE!";
+
+        /// <summary>
+        /// Div by zero string.
+        /// </summary>
+        public static readonly string DIVBYZEROSTR = "#DIV/0!";
+
+        /// <summary>
+        /// Overflow string.
+        /// </summary>
+        public static readonly string OVERFLOWSTR = "#OVERFLOW!";
 
         /// <summary>
         /// Index for a row.

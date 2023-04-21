@@ -316,7 +316,7 @@ namespace SpreadsheetEngine.Spreadsheet
             // scheme. Unrecognized ops, mismatched parenths, bad syntax.
             if (exprTree.Size == 0)
             {
-                cell.BadReferenceValue = Cell.UNKNOWNOPERATOR;
+                cell.BadReferenceValue = Cell.UNKNOWNOPERATORSTR;
                 return false;
             }
 
@@ -339,7 +339,7 @@ namespace SpreadsheetEngine.Spreadsheet
         {
             if (this.IsSelfReference(currentCell, currentCellExpr))
             {
-                currentCell.BadReferenceValue = Cell.SELFREFERENCE;
+                currentCell.BadReferenceValue = Cell.SELFREFERENCESTR;
                 return false;
             }
 
@@ -347,7 +347,7 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 if (!this.IsCellNameValid(variable))
                 {
-                    currentCell.BadReferenceValue = Cell.BADREFERENCE;
+                    currentCell.BadReferenceValue = Cell.BADREFERENCESTR;
                     return false;
                 }
             }
@@ -359,7 +359,7 @@ namespace SpreadsheetEngine.Spreadsheet
             {
                 // Circular reference found, remove the dependency we just added
                 this.RemoveCellDependency(currentCell, "=" + currentCellExpr.Expression);
-                currentCell.BadReferenceValue = Cell.CIRCULARREFERENCE;
+                currentCell.BadReferenceValue = Cell.CIRCULARREFERENCESTR;
                 return false;
             }
 
@@ -432,7 +432,7 @@ namespace SpreadsheetEngine.Spreadsheet
                     string formula = dependentCell.Text.Substring(1);
                     if (Expression.TokenizeExpression(formula)?.Count > 1)
                     {
-                        dependentCell.SetValue("#VALUE!");
+                        dependentCell.SetValue(Cell.OPERATORAPPLIEDTOSTRING);
                     }
                     else
                     {
@@ -448,11 +448,11 @@ namespace SpreadsheetEngine.Spreadsheet
                 cell.SetValue(string.Empty);
                 this.UpdateCellDependencies(cell, this.Evaluate);
             }
-            else if (cell.Text.StartsWith("=")) 
+            else if (cell.Text.StartsWith("="))
             {
                 if (this.IsCellReferencingCellWithStringValue(cell))
                 {
-                    cell.SetValue("#VALUE!");
+                    cell.SetValue(Cell.OPERATORAPPLIEDTOSTRING);
                     this.UpdateCellDependencies(cell, setTextHelper);
                 }
                 else
@@ -528,11 +528,11 @@ namespace SpreadsheetEngine.Spreadsheet
         {
             if (result == double.MinValue)
             {
-                cell.SetValue("#DIV/0!");
+                cell.SetValue(Cell.DIVBYZEROSTR);
             }
             else if (result == double.MaxValue)
             {
-                cell.SetValue("#OVERFLOW!");
+                cell.SetValue(Cell.OVERFLOWSTR);
             }
             else
             {
@@ -634,27 +634,6 @@ namespace SpreadsheetEngine.Spreadsheet
         }
 
         /// <summary>
-        /// Checks to see if a cell contains a reference to itself.
-        /// </summary>
-        /// <param name="cell"> cell we are checking. </param>
-        /// <param name="exprTree"> tree for cell we are checking. </param>
-        /// <returns> bool. </returns>
-        private bool IsSelfReference(ConcreteCell cell, ExpressionTree exprTree)
-        {
-            return exprTree.GetVariables().Contains(cell.Name) ? true : false;
-        }
-
-        /// <summary>
-        /// Check if the cell name is valid.
-        /// </summary>
-        /// <param name="cellName"> name of cell. </param>
-        /// <returns> bool. </returns>
-        private bool IsCellNameValid(string cellName)
-        {
-            return this.GetCell(cellName) != null ? true : false;
-        }
-
-        /// <summary>
         /// Check to see if a cell's formula contains just one variable, if so then we return false because we can just grab the
         /// string value of that one cell. If the cell's text contains more than one variable, that implies there's an operand. So
         /// we need to check if the variables have double vals, if not then it's not a valid operation and we should return true.
@@ -718,6 +697,27 @@ namespace SpreadsheetEngine.Spreadsheet
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Checks to see if a cell contains a reference to itself.
+        /// </summary>
+        /// <param name="cell"> cell we are checking. </param>
+        /// <param name="exprTree"> tree for cell we are checking. </param>
+        /// <returns> bool. </returns>
+        private bool IsSelfReference(ConcreteCell cell, ExpressionTree exprTree)
+        {
+            return exprTree.GetVariables().Contains(cell.Name) ? true : false;
+        }
+
+        /// <summary>
+        /// Check if the cell name is valid.
+        /// </summary>
+        /// <param name="cellName"> name of cell. </param>
+        /// <returns> bool. </returns>
+        private bool IsCellNameValid(string cellName)
+        {
+            return this.GetCell(cellName) != null ? true : false;
         }
     }
 }
