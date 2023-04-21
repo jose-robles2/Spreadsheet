@@ -151,11 +151,15 @@ namespace SpreadsheetEngine.Spreadsheet
         }
 
         /// <summary>
-        /// Gets the changed cells.
+        /// Gets the changed cells via a deep copy.
         /// </summary>
         public List<Cell> ChangedCells
         {
-            get { return this.changedCells; }
+            get
+            {
+                List<Cell> changedCellsCopy = new List<Cell>(this.changedCells);
+                return changedCellsCopy;
+            }
         }
 
         /// <summary>
