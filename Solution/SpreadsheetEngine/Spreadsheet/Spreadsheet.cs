@@ -515,7 +515,29 @@ namespace SpreadsheetEngine.Spreadsheet
                 }
             }
 
-            cell.SetValue(exprTree.Evaluate().ToString());
+            double result = exprTree.Evaluate();
+            this.AssignExprValueToCell(cell, result);
+        }
+
+        /// <summary>
+        /// Handle potential exceptions within ExpressionTree.Evaluate() - Divide by zero error or overflow.
+        /// </summary>
+        /// <param name="cell"> cell. </param>
+        /// <param name="result"> result. </param>
+        private void AssignExprValueToCell(ConcreteCell cell, double result)
+        {
+            if (result == double.MinValue)
+            {
+                cell.SetValue("#DIV/0!");
+            }
+            else if (result == double.MaxValue)
+            {
+                cell.SetValue("#OVERFLOW!");
+            }
+            else
+            {
+                cell.SetValue(result.ToString());
+            }
         }
 
         /// <summary>
