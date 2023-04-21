@@ -38,7 +38,22 @@ namespace SpreadsheetEngine.Expressions.Operators
         /// <returns> double. </returns>
         public override double Evaluate(double left, double right)
         {
-            return left * right;
+            double result;
+            try
+            {
+                result = left * right;
+                if (double.IsInfinity(result))
+                {
+                    result = double.MaxValue;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR: " + e);
+                result = double.MaxValue;
+            }
+
+            return result;
         }
     }
 }

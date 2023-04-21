@@ -40,7 +40,7 @@ namespace SpreadsheetEngine.Expressions.Operators
         {
             if (right == 0)
             {
-                throw new DivideByZeroException();
+                return double.MinValue;
             }
 
             return left / right;
