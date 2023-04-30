@@ -4,6 +4,10 @@ Jose Robles
 
 11706967
 
+## App Details
+Spreadsheet application created using C# and Winforms on Visual Studio 2022 via .NET 6.0
+Implemented events to update the backend and frontend effectively. Followed OOP and design principles to create a modular and extendible application.
+
 ## Current Stylecop suppressions: 
 [assembly: SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1401:Field should be private", Justification = "<Fields of the Cell.cs class needed to be protected, and this stylecop warning needed to be suppressed in order to comply with the requirements for this assignment.>", Scope = "type", Target = "~T:SpreadsheetEngine.Cell")]
 
